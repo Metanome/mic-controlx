@@ -844,6 +844,17 @@ For support and source code, visit my GitHub repository.";
                     {
                         var productName = key.GetValue("ProductName")?.ToString() ?? "";
                         var displayVersion = key.GetValue("DisplayVersion")?.ToString() ?? "";
+                        var currentBuild = key.GetValue("CurrentBuild")?.ToString() ?? "";
+                        
+                        // Fix Windows 11 detection - check build number
+                        if (!string.IsNullOrEmpty(currentBuild) && int.TryParse(currentBuild, out int buildNumber))
+                        {
+                            // Windows 11 started with build 22000
+                            if (buildNumber >= 22000 && productName.Contains("Windows 10"))
+                            {
+                                productName = productName.Replace("Windows 10", "Windows 11");
+                            }
+                        }
                         
                         if (!string.IsNullOrEmpty(productName) && !string.IsNullOrEmpty(displayVersion))
                         {

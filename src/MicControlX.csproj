@@ -30,12 +30,15 @@
     <!-- Application properties -->
     <AssemblyTitle>MicControlX</AssemblyTitle>
     <AssemblyDescription>Advanced microphone control utility for Windows with Lenovo gaming laptop optimization</AssemblyDescription>
-    <AssemblyCompany>Metanome</AssemblyCompany>
+    <AssemblyCompany>MicControlX</AssemblyCompany>
     <AssemblyProduct>MicControlX</AssemblyProduct>
-    <Copyright>Copyright © 2025 Dr. Skinner</Copyright>
     <AssemblyVersion>3.1.1.0</AssemblyVersion>
     <AssemblyFileVersion>3.1.1.0</AssemblyFileVersion>
     <AssemblyInformationalVersion>3.1.1-gamma</AssemblyInformationalVersion>
+
+    <Copyright>Copyright © 2025 Dr. Skinner</Copyright>
+    <FileVersion>3.1.1.0</FileVersion>
+    <Version>3.1.1-gamma</Version>
     
     <!-- Application icon -->
     <ApplicationIcon>..\assets\icons\logo.ico</ApplicationIcon>
