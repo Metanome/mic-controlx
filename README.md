@@ -100,7 +100,3 @@ dotnet build --configuration Release
 - Confirm you have a Lenovo system
 - Install Lenovo Vantage or Legion Toolkit if desired
 - Restart MicControlX after installing Lenovo software
-
-## Support
-
-For issues or feature requests, visit: https://github.com/Metanome/mic-controlx/issues
