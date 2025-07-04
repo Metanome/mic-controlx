@@ -2,10 +2,6 @@
 
 Advanced microphone control application for Windows with Lenovo gaming laptop optimization.
 
-**Version:** 3.1.1-gamma
-**Platform:** Windows 7/8/10/11 (x64)
-**Framework:** .NET 8.0
-
 ## Features
 
 - Global hotkey microphone toggle (F1-F24 keys)
@@ -19,7 +15,7 @@ Advanced microphone control application for Windows with Lenovo gaming laptop op
 
 ## System Requirements
 
-- Windows 10 or Windows 11 (64-bit)
+- Windows OS (32/64-bit)
 - .NET 8.0 Runtime
 - 15MB RAM, 8MB disk space
 
