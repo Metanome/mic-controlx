@@ -1,1 +1,1 @@
-# mic-controlx
+# MicControlX
