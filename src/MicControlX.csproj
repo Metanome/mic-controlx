@@ -1,0 +1,94 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- Framework-dependent single-file publishing for smaller size -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    
+    <!-- Security and obfuscation settings -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PublishTrimmed>false</PublishTrimmed>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IncludeSource>false</IncludeSource>
+    
+    <!-- Remove source file paths from release builds -->
+    <PathMap Condition="'$(Configuration)' == 'Release'">$(MSBuildProjectDirectory)=X:\source\</PathMap>
+    <Deterministic>true</Deterministic>
+    
+    <!-- Application properties -->
+    <AssemblyTitle>MicControlX</AssemblyTitle>
+    <AssemblyDescription>Advanced microphone control utility for Windows with Lenovo gaming laptop optimization</AssemblyDescription>
+    <AssemblyCompany>Metanome</AssemblyCompany>
+    <AssemblyProduct>MicControlX</AssemblyProduct>
+    <Copyright>Copyright © 2025 Dr. Skinner</Copyright>
+    <AssemblyVersion>3.1.1.0</AssemblyVersion>
+    <AssemblyFileVersion>3.1.1.0</AssemblyFileVersion>
+    <AssemblyInformationalVersion>3.1.1-gamma</AssemblyInformationalVersion>
+    
+    <!-- Application icon -->
+    <ApplicationIcon>..\assets\icons\logo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\assets\icons\logo.ico">
+      <LogicalName>logo.ico</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\icons\logo_active.ico">
+      <LogicalName>logo_active.ico</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\icons\logo_muted.ico">
+      <LogicalName>logo_muted.ico</LogicalName>
+    </EmbeddedResource>
+    <!-- Add sound files as embedded resources from assets folder -->
+    <EmbeddedResource Include="..\assets\sounds\mic_mute.wav">
+      <LogicalName>mic_mute.wav</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\sounds\mic_unmute.wav">
+      <LogicalName>mic_unmute.wav</LogicalName>
+    </EmbeddedResource>
+    <!-- PNG icons for UI -->
+    <EmbeddedResource Include="..\assets\icons\settings_light.png">
+      <LogicalName>settings_light.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\icons\settings_dark.png">
+      <LogicalName>settings_dark.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\icons\info_light.png">
+      <LogicalName>info_light.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\icons\info_dark.png">
+      <LogicalName>info_dark.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\icons\mic_mute.png">
+      <LogicalName>mic_mute.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\icons\mic_unmute.png">
+      <LogicalName>mic_unmute.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\icons\mic_mute-rounded_square.png">
+      <LogicalName>mic_mute-rounded_square.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\icons\mic_unmute-rounded_square.png">
+      <LogicalName>mic_unmute-rounded_square.png</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
