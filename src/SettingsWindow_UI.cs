@@ -21,7 +21,7 @@ namespace MicControlX
         private void InitializeComponent()
         {
             this.Text = "Settings";
-            this.Size = new Size(500, 360); // Reduced height after removing PTT controls
+            this.Size = new Size(500, 400); // Increased height for OK/Cancel buttons
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -32,6 +32,7 @@ namespace MicControlX
             CreateHotkeyGroup();
             CreateDisplayGroup();
             CreateApplicationGroup();
+            CreateActionButtons();
         }
 
         private void CreateMainTitle()
@@ -192,7 +193,33 @@ namespace MicControlX
             soundFeedbackCheckBox.CheckedChanged += SoundFeedbackCheckBox_CheckedChanged;
             appGroup.Controls.Add(soundFeedbackCheckBox);
             
-            // No Save/Cancel buttons - all changes are real-time
+        }
+
+        private void CreateActionButtons()
+        {
+            // OK Button
+            Button okButton = new Button();
+            okButton.Text = "OK";
+            okButton.DialogResult = DialogResult.OK;
+            okButton.Location = new Point(300, 340);
+            okButton.Size = new Size(80, 25);
+            okButton.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+            okButton.Click += okButton_Click;
+            this.Controls.Add(okButton);
+
+            // Cancel Button
+            Button cancelButton = new Button();
+            cancelButton.Text = "Cancel";
+            cancelButton.DialogResult = DialogResult.Cancel;
+            cancelButton.Location = new Point(390, 340);
+            cancelButton.Size = new Size(80, 25);
+            cancelButton.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+            cancelButton.Click += cancelButton_Click;
+            this.Controls.Add(cancelButton);
+
+            // Set form's AcceptButton and CancelButton
+            this.AcceptButton = okButton;
+            this.CancelButton = cancelButton;
         }
 
         private void UpdateOsdStyleVisibility(bool showOsdOptions)

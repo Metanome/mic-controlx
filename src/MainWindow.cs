@@ -45,43 +45,49 @@ namespace MicControlX
         [DllImport("user32.dll")]
         private static extern short GetAsyncKeyState(int vKey);
 
-        public MainWindow()
-        {   
+        public MainWindow(bool startMinimized = false)
+        {
             // Load configuration first
             config = ConfigurationManager.LoadConfiguration();
-            
+
             // Initialize single-click timer
             InitializeSingleClickTimer();
-            
+
             // Initialize PTT hold timer
             InitializePTTTimer();
-            
+
             // Initialize OSD with configured style (no theme parameter - OSD has fixed styling)
             osd = new OsdOverlay(config.OSDStyle);
-            
+
             // Load default embedded icons
             osd.LoadDefaultIcons();
-            
+
             InitializeComponent();
             LoadApplicationIcon();
             InitializeSystemTray();
             RegisterGlobalHotKey();
-            
+
             // Apply theme to main form
             ThemeManager.ApplyTheme(this, config.AppUITheme);
-            
+
             // Wire up microphone controller events
             micController.MuteStateChanged += OnMuteStateChanged;
             micController.ErrorOccurred += OnMicrophoneError;
             micController.ExternalChangeDetected += OnExternalChangeDetected;
-            
-            this.Load += (s, e) => {
-                this.Hide();
+
+            this.Load += (s, e) =>
+            {
+                if (startMinimized)
+                {
+                    this.WindowState = FormWindowState.Minimized;
+                    this.Hide();
+                }
                 CheckInitialMicrophoneStatus();
             };
-            
+
             // Handle window state changes
-            this.Resize += (s, e) => {
+            this.Resize += (s, e) =>
+            {
                 if (this.WindowState == FormWindowState.Minimized)
                 {
                     this.Hide();
@@ -581,53 +587,39 @@ namespace MicControlX
 
         private void ShowConfigDialog()
         {
-            // Capture the current config state BEFORE creating SettingsWindow
-            var oldConfigSnapshot = new ApplicationConfig
+            // Create a deep copy of the current config to be edited.
+            // This allows the user to cancel their changes.
+            var configCopy = new ApplicationConfig
             {
+                // User-configurable settings
                 HotKeyVirtualKey = config.HotKeyVirtualKey,
                 HotKeyDisplayName = config.HotKeyDisplayName,
                 OSDStyle = config.OSDStyle,
                 AppUITheme = config.AppUITheme,
                 ShowOSD = config.ShowOSD,
                 ShowNotifications = config.ShowNotifications,
+                AutoStart = config.AutoStart,
+                EnableSoundFeedback = config.EnableSoundFeedback,
+
+                // System-detected properties needed for the UI
                 DetectedBrand = config.DetectedBrand,
                 DetectedModel = config.DetectedModel,
                 EnableLenovoFeatures = config.EnableLenovoFeatures,
                 HasLenovoVantage = config.HasLenovoVantage,
-                HasLegionToolkit = config.HasLegionToolkit,
-                AutoStart = config.AutoStart,
-                EnableSoundFeedback = config.EnableSoundFeedback
+                HasLegionToolkit = config.HasLegionToolkit
             };
-            
-            var configForm = new SettingsWindow(config);
-            
-            // Subscribe to real-time configuration changes
-            configForm.ConfigurationChanged += (sender, newConfig) =>
+
+            // Pass the copy to the settings window
+            using (var configForm = new SettingsWindow(configCopy))
             {
-                HandleConfigurationChange(oldConfigSnapshot, newConfig);
-                
-                // Update the old config snapshot for the next change
-                oldConfigSnapshot = new ApplicationConfig
+                // Show the window as a dialog, which blocks until it's closed.
+                if (configForm.ShowDialog() == DialogResult.OK)
                 {
-                    HotKeyVirtualKey = newConfig.HotKeyVirtualKey,
-                    HotKeyDisplayName = newConfig.HotKeyDisplayName,
-                    OSDStyle = newConfig.OSDStyle,
-                    AppUITheme = newConfig.AppUITheme,
-                    ShowOSD = newConfig.ShowOSD,
-                    ShowNotifications = newConfig.ShowNotifications,
-                    DetectedBrand = newConfig.DetectedBrand,
-                    DetectedModel = newConfig.DetectedModel,
-                    EnableLenovoFeatures = newConfig.EnableLenovoFeatures,
-                    HasLenovoVantage = newConfig.HasLenovoVantage,
-                    HasLegionToolkit = newConfig.HasLegionToolkit,
-                    AutoStart = newConfig.AutoStart,
-                    EnableSoundFeedback = newConfig.EnableSoundFeedback
-                };
-            };
-            
-            // Show as modal dialog (no DialogResult needed since changes are real-time)
-            configForm.ShowDialog();
-            configForm.Dispose();
+                    // If the user clicked OK, apply the changes from the copy to the main config.
+                    HandleConfigurationChange(config, configForm.Configuration);
+                }
+                // If the user clicks Cancel or closes the window, the changes in configCopy are discarded.
+            }
         }
 
         private async void ShowInfoDialog()
@@ -693,79 +685,50 @@ For support and source code, visit my GitHub repository.";
         {
             lock (configLock)
             {
-                try
+                // Determine what changed
+                bool hotkeyChanged = oldConfig.HotKeyVirtualKey != newConfig.HotKeyVirtualKey;
+                bool osdStyleChanged = oldConfig.OSDStyle != newConfig.OSDStyle;
+                bool themeChanged = oldConfig.AppUITheme != newConfig.AppUITheme;
+
+                // Apply all the new settings to the main config object
+                config.HotKeyVirtualKey = newConfig.HotKeyVirtualKey;
+                config.HotKeyDisplayName = newConfig.HotKeyDisplayName;
+                config.OSDStyle = newConfig.OSDStyle;
+                config.AppUITheme = newConfig.AppUITheme;
+                config.ShowOSD = newConfig.ShowOSD;
+                config.ShowNotifications = newConfig.ShowNotifications;
+                config.AutoStart = newConfig.AutoStart;
+                config.EnableSoundFeedback = newConfig.EnableSoundFeedback;
+
+                // Save the updated main config
+                ConfigurationManager.SaveConfiguration(config);
+
+                // React to the changes
+                if (hotkeyChanged)
                 {
-                    // Compare specific properties to detect changes using the passed old config
-                    bool hotkeyChanged = (oldConfig.HotKeyVirtualKey != newConfig.HotKeyVirtualKey);
-                    bool osdStyleChanged = (oldConfig.OSDStyle != newConfig.OSDStyle);
-                    bool themeChanged = (oldConfig.AppUITheme != newConfig.AppUITheme);
-                    
-                    // If no changes detected, exit early
-                    if (!hotkeyChanged && !osdStyleChanged && !themeChanged)
+                    ResetPTTState();
+                    if (!TryRegisterHotKey(config.HotKeyVirtualKey, config.HotKeyDisplayName))
                     {
-                        return;
+                        MessageBox.Show($"Failed to register {config.HotKeyDisplayName} hotkey.", "Hotkey Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    
-                    // Update configuration 
-                    config = newConfig;
-                    ConfigurationManager.SaveConfiguration(config);
-                    
-                    // Handle hotkey change
-                    if (hotkeyChanged)
+                    UpdateTrayIcon();
+                    var hotkeyLabel = this.Controls.Find("HotkeyLabel", true).FirstOrDefault() as Label;
+                    if (hotkeyLabel != null)
                     {
-                        // Reset PTT state to prevent conflicts
-                        ResetPTTState();
-                        
-                        // Use the robust hotkey registration method
-                        if (!TryRegisterHotKey(newConfig.HotKeyVirtualKey, newConfig.HotKeyDisplayName))
-                        {
-                            MessageBox.Show($"Failed to register {newConfig.HotKeyDisplayName} hotkey. The key might be in use by another application.", 
-                                           "Hotkey Registration", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                        
-                        // Update tray icon and UI after successful registration
-                        UpdateTrayIcon();
-                        
-                        // Update hotkey label text (now using the updated config)
-                        var hotkeyLabel = this.Controls.Find("HotkeyLabel", true);
-                        if (hotkeyLabel.Length > 0 && hotkeyLabel[0] is Label label)
-                        {
-                            label.Text = $"Press {config.HotKeyDisplayName} to toggle, hold to mute/unmute temporarily";
-                        }
-                    }
-                    
-                    // Handle OSD style change (only reload images if OSD style actually changed)
-                    if (osdStyleChanged && osd != null)
-                    {
-                        osd.SetOSDStyle(config.OSDStyle);
-                    }
-                    
-                    // Handle theme change
-                    if (themeChanged)
-                    {
-                        // Apply updated theme to main form
-                        ThemeManager.ApplyTheme(this, config.AppUITheme);
-                        
-                        // Update PNG buttons for new theme
-                        UpdatePngButtonsForTheme();
-                        
-                        // Force UI refresh to ensure changes are visible
-                        this.Refresh();
-                        
-                        // Re-apply dynamic status color after theme change
-                        var statusLabel = this.Controls.Find("StatusLabel", true);
-                        if (statusLabel.Length > 0)
-                        {
-                            string currentStatus = statusLabel[0].Text;
-                            UpdateStatusLabel(currentStatus.Replace("Current Status: ", ""));
-                        }
+                        hotkeyLabel.Text = $"Press {config.HotKeyDisplayName} to toggle, hold to mute/unmute temporarily";
                     }
                 }
-                catch (Exception ex)
+
+                if (osdStyleChanged && osd != null)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Configuration change error: {ex.Message}");
-                    MessageBox.Show($"Error applying configuration changes: {ex.Message}", 
-                                   "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    osd.SetOSDStyle(config.OSDStyle);
+                }
+
+                if (themeChanged)
+                {
+                    ThemeManager.ApplyTheme(this, config.AppUITheme);
+                    UpdatePngButtonsForTheme();
+                    this.Refresh();
                 }
             }
         }

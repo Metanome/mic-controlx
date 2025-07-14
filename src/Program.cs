@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -28,22 +29,25 @@ namespace MicControlX
         private const int SW_SHOW = 5;
 
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             // Check if another instance is already running
             bool isNewInstance;
             applicationMutex = new Mutex(true, APP_MUTEX_NAME, out isNewInstance);
-            
+
             if (!isNewInstance)
             {
                 // Another instance is running, try to bring it to foreground
                 BringExistingInstanceToFront();
                 return;
             }
-            
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWindow());
+            
+            // Start minimized if --minimized flag is present
+            bool startMinimized = args.Contains("--minimized");
+            Application.Run(new MainWindow(startMinimized));
             
             // Release mutex when application exits
             applicationMutex?.ReleaseMutex();

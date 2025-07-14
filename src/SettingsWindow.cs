@@ -12,26 +12,10 @@ namespace MicControlX
     public partial class SettingsWindow : Form
     {
         public ApplicationConfig Configuration { get; private set; }
-        public event EventHandler<ApplicationConfig>? ConfigurationChanged;
 
         public SettingsWindow(ApplicationConfig currentConfig)
         {
-            Configuration = new ApplicationConfig
-            {
-                HotKeyVirtualKey = currentConfig.HotKeyVirtualKey,
-                HotKeyDisplayName = currentConfig.HotKeyDisplayName,
-                ShowOSD = currentConfig.ShowOSD,
-                ShowNotifications = currentConfig.ShowNotifications,
-                OSDStyle = currentConfig.OSDStyle,
-                AppUITheme = currentConfig.AppUITheme,
-                DetectedBrand = currentConfig.DetectedBrand,
-                DetectedModel = currentConfig.DetectedModel,
-                EnableLenovoFeatures = currentConfig.EnableLenovoFeatures,
-                HasLenovoVantage = currentConfig.HasLenovoVantage,
-                HasLegionToolkit = currentConfig.HasLegionToolkit,
-                AutoStart = currentConfig.AutoStart,
-                EnableSoundFeedback = currentConfig.EnableSoundFeedback
-            };
+            Configuration = currentConfig; // Work on the provided config object
             
             InitializeComponent();
             LoadCurrentSettings();
@@ -127,7 +111,7 @@ namespace MicControlX
             {
                 Configuration.HotKeyVirtualKey = selectedItem.VirtualKey;
                 Configuration.HotKeyDisplayName = selectedItem.DisplayName;
-                OnConfigurationChanged();
+                // Changes are no longer saved in real-time.
             }
         }
 
@@ -145,7 +129,7 @@ namespace MicControlX
                     _ => LenovoOSDStyle.WindowsDefault // Default or any other case
                 };
                 
-                OnConfigurationChanged();
+                // Changes are no longer saved in real-time.
             }
         }
 
@@ -156,7 +140,7 @@ namespace MicControlX
                 Configuration.ShowOSD = false;
                 Configuration.ShowNotifications = true;
                 UpdateOSDControlsVisibility();
-                OnConfigurationChanged();
+                // Changes are no longer saved in real-time.
             }
         }
 
@@ -172,7 +156,7 @@ namespace MicControlX
             
             Configuration.AppUITheme = selectedTheme;
             ThemeManager.ApplyTheme(this, selectedTheme);
-            OnConfigurationChanged();
+            // Changes are no longer saved in real-time.
         }
         
         private void OsdNotificationRadio_CheckedChanged(object? sender, EventArgs e)
@@ -182,7 +166,7 @@ namespace MicControlX
                 Configuration.ShowOSD = true;
                 Configuration.ShowNotifications = false;
                 UpdateOSDControlsVisibility();
-                OnConfigurationChanged();
+                // Changes are no longer saved in real-time.
             }
         }
 
@@ -215,9 +199,16 @@ namespace MicControlX
             }
         }
 
-        private void OnConfigurationChanged()
+        private void okButton_Click(object? sender, EventArgs e)
         {
-            ConfigurationChanged?.Invoke(this, Configuration);
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void cancelButton_Click(object? sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
         }
 
         private void AutoStartCheckBox_CheckedChanged(object? sender, EventArgs e)
@@ -246,13 +237,13 @@ namespace MicControlX
                 Configuration.AutoStart = autoStartCheckBox.Checked;
             }
             
-            OnConfigurationChanged();
+            // Changes are no longer saved in real-time.
         }
 
         private void SoundFeedbackCheckBox_CheckedChanged(object? sender, EventArgs e)
         {
             Configuration.EnableSoundFeedback = soundFeedbackCheckBox.Checked;
-            OnConfigurationChanged();
+            // Changes are no longer saved in real-time.
         }
 
         private class ComboBoxItem

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows.Forms;
 
 namespace MicControlX
@@ -16,6 +17,7 @@ namespace MicControlX
         public string HotKeyDisplayName { get; set; } = "F11";
         public bool ShowOSD { get; set; } = true;
         public bool ShowNotifications { get; set; } = false;
+        [JsonIgnore]
         public int OSDDisplayTime { get; set; } = 2000; // milliseconds
         
         /// <summary>OSD style specifically for Lenovo gaming laptops</summary>
@@ -27,28 +29,31 @@ namespace MicControlX
         /// <summary>Auto-start with Windows</summary>
         public bool AutoStart { get; set; } = false;
         
-        /// <summary>Start minimized to system tray</summary>
-        public bool StartMinimized { get; set; } = true;
-        
         /// <summary>Enable sound feedback on mute/unmute</summary>
         public bool EnableSoundFeedback { get; set; } = false;
         
         /// <summary>Detected laptop brand (Lenovo, HP, Acer, etc.)</summary>
+        [JsonIgnore]
         public string DetectedBrand { get; set; } = "Unknown";
         
         /// <summary>Detected laptop model for Lenovo systems</summary>
+        [JsonIgnore]
         public string DetectedModel { get; set; } = "Unknown";
         
         /// <summary>Enable Lenovo-specific features (OSD styles, Legion integration)</summary>
+        [JsonIgnore]
         public bool EnableLenovoFeatures { get; set; } = true;
         
         /// <summary>Detected Lenovo Vantage installation status</summary>
+        [JsonIgnore]
         public bool HasLenovoVantage { get; set; } = false;
         
         /// <summary>Detected Legion Toolkit installation status</summary>
+        [JsonIgnore]
         public bool HasLegionToolkit { get; set; } = false;
         
         /// <summary>Application version</summary>
+        [JsonIgnore]
         public string AppVersion { get; set; } = "3.1.1-gamma";
         
         /// <summary>
@@ -101,39 +106,13 @@ namespace MicControlX
         /// </summary>
         private static string GetConfigFilePath()
         {
-            try
-            {
-                // Try to save config next to executable for portability
-                var exeDirectory = Path.GetDirectoryName(Application.ExecutablePath) ?? "";
-                var portableConfigPath = Path.Combine(exeDirectory, "config.json");
-                
-                // Test if we can write to the executable directory
-                try
-                {
-                    File.WriteAllText(portableConfigPath, "test");
-                    File.Delete(portableConfigPath);
-                    return portableConfigPath; // Use portable config
-                }
-                catch
-                {
-                    // Fall back to AppData if executable directory is read-only
-                    var appDataPath = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                        "MicControlX",
-                        "config.json"
-                    );
-                    return appDataPath;
-                }
-            }
-            catch
-            {
-                // Final fallback to AppData
-                return Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "MicControlX",
-                    "config.json"
-                );
-            }
+            // Use AppData for reliable, user-specific configuration storage
+            var appDataPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "MicControlX",
+                "config.json"
+            );
+            return appDataPath;
         }
 
         /// <summary>
@@ -141,70 +120,67 @@ namespace MicControlX
         /// </summary>
         public static ApplicationConfig LoadConfiguration()
         {
-            try
+            if (File.Exists(ConfigFilePath))
             {
-                if (File.Exists(ConfigFilePath))
+                try
                 {
                     string json = File.ReadAllText(ConfigFilePath);
-                    var config = JsonSerializer.Deserialize<ApplicationConfig>(json) ?? new ApplicationConfig();
-                    DetectAndConfigureSystem(config);
-                    return config;
+                    if (!string.IsNullOrWhiteSpace(json))
+                    {
+                        var config = JsonSerializer.Deserialize<ApplicationConfig>(json);
+                        if (config != null)
+                        {
+                            // Successfully loaded existing config, just detect dynamic properties
+                            DetectSystemProperties(config);
+                            return config;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the error and proceed to create a new config
+                    System.Diagnostics.Debug.WriteLine($"Failed to load or parse config file: {ex.Message}");
                 }
             }
-            catch (Exception ex)
-            {
-                // If config is corrupted, create new one
-                System.Diagnostics.Debug.WriteLine($"Config load error: {ex.Message}");
-            }
             
+            // If file doesn't exist, is empty, or is corrupt, create a new one.
+            return CreateNewConfiguration();
+        }
+
+        /// <summary>
+        /// Creates a new configuration, applies default settings, and saves it.
+        /// </summary>
+        private static ApplicationConfig CreateNewConfiguration()
+        {
             var newConfig = new ApplicationConfig();
-            DetectAndConfigureSystem(newConfig);
-            SaveConfiguration(newConfig);
+            DetectSystemProperties(newConfig); // Detect properties first
+            ApplyDefaultSettings(newConfig);   // Then apply defaults based on detection
+            SaveConfiguration(newConfig);      // Save the new config
             return newConfig;
         }
 
         /// <summary>
-        /// Detect system information and configure Lenovo-specific features
+        /// Detects dynamic system properties without overwriting user settings.
+        /// This should be run every time the application starts.
         /// </summary>
-        private static void DetectAndConfigureSystem(ApplicationConfig config)
+        private static void DetectSystemProperties(ApplicationConfig config)
         {
             try
             {
-                // Detect system manufacturer and model using registry
                 config.DetectedBrand = GetSystemInfo("SystemManufacturer") ?? "Unknown";
                 config.DetectedModel = GetSystemInfo("SystemProductName") ?? "Unknown";
-                
-                // Enable Lenovo-specific features for Lenovo systems
+
                 if (config.DetectedBrand.ToUpper().Contains("LENOVO"))
                 {
                     config.EnableLenovoFeatures = true;
-                    
-                    // Detect Lenovo software installations
                     config.HasLenovoVantage = IsLenovoVantageInstalled();
                     config.HasLegionToolkit = IsLegionToolkitInstalled();
-                    
-                    // Configure OSD style based on detected model and available software
-                    var modelUpper = config.DetectedModel.ToUpper();
-                    if (modelUpper.Contains("LEGION") && config.HasLegionToolkit)
-                    {
-                        config.OSDStyle = LenovoOSDStyle.LegionStyle;
-                    }
-                    else if (config.HasLenovoVantage)
-                    {
-                        config.OSDStyle = LenovoOSDStyle.LenovoStyle;
-                    }
-                    else
-                    {
-                        config.OSDStyle = LenovoOSDStyle.WindowsDefault;
-                    }
                 }
                 else
                 {
-                    // Non-Lenovo systems
                     config.EnableLenovoFeatures = false;
                     config.HasLenovoVantage = false;
                     config.HasLegionToolkit = false;
-                    config.OSDStyle = LenovoOSDStyle.WindowsDefault;
                 }
             }
             catch (Exception ex)
@@ -212,9 +188,36 @@ namespace MicControlX
                 System.Diagnostics.Debug.WriteLine($"Error detecting system info: {ex.Message}");
                 // Fallback to safe defaults
                 config.EnableLenovoFeatures = false;
-                config.OSDStyle = LenovoOSDStyle.WindowsDefault;
                 config.DetectedBrand = "Unknown";
                 config.DetectedModel = "Unknown";
+            }
+        }
+
+        /// <summary>
+        /// Applies default settings to a new configuration based on detected system properties.
+        /// This should only be run when creating a new config file.
+        /// </summary>
+        private static void ApplyDefaultSettings(ApplicationConfig config)
+        {
+            if (config.EnableLenovoFeatures)
+            {
+                var modelUpper = config.DetectedModel.ToUpper();
+                if (modelUpper.Contains("LEGION") && config.HasLegionToolkit)
+                {
+                    config.OSDStyle = LenovoOSDStyle.LegionStyle;
+                }
+                else if (config.HasLenovoVantage)
+                {
+                    config.OSDStyle = LenovoOSDStyle.LenovoStyle;
+                }
+                else
+                {
+                    config.OSDStyle = LenovoOSDStyle.WindowsDefault;
+                }
+            }
+            else
+            {
+                config.OSDStyle = LenovoOSDStyle.WindowsDefault;
             }
         }
 
@@ -241,7 +244,7 @@ namespace MicControlX
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to save configuration: {ex.Message}", 
+                MessageBox.Show($"Failed to save configuration: {ex.Message}",
                                "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -410,7 +413,7 @@ namespace MicControlX
                         {
                             // Get current executable path dynamically
                             var exePath = Application.ExecutablePath;
-                            key.SetValue(AppName, $"\"{exePath}\"");
+                            key.SetValue(AppName, $"\"{exePath}\" --minimized");
                         }
                         else
                         {
