@@ -11,8 +11,6 @@
 
 MicControlX is a powerful universal Windows application designed to provide seamless microphone control for any Windows system. It offers instant mute/unmute functionality through customizable hotkeys, system tray integration, and visual feedback with multiple aesthetic styles inspired by popular software designs.
 
-### Key Features
-
 ## Key Features
 
 - **Universal Compatibility**: Works with any Windows-compatible microphone and audio hardware
