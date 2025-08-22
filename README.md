@@ -1,6 +1,6 @@
 # MicControlX
 
-**Advanced Microphone Control Utility for Windows with Lenovo Gaming Laptop Optimization**
+**Advanced Universal Microphone Control Utility for Windows**
 
 [![Version](https://img.shields.io/badge/version-3.1.1--gamma-blue.svg)](https://github.com/Metanome/mic-controlx)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
@@ -9,17 +9,19 @@
 
 ## Overview
 
-MicControlX is a powerful Windows application designed to provide seamless microphone control with special optimizations for Lenovo gaming laptops (Legion, LOQ, IdeaPad series). It offers instant mute/unmute functionality through customizable hotkeys, system tray integration, and visual feedback that matches Lenovo's design language.
+MicControlX is a powerful universal Windows application designed to provide seamless microphone control for any Windows system. It offers instant mute/unmute functionality through customizable hotkeys, system tray integration, and visual feedback with multiple aesthetic styles inspired by popular software designs.
 
 ### Key Features
 
-- **Lenovo Gaming Laptop Optimization**: Native integration with Legion Toolkit and Lenovo Vantage
-- **Instant Hotkey Control**: Customizable function key hotkeys (F1-F24) for quick mute/unmute
-- **Smart Audio Management**: Automatic detection and control of default microphone devices
-- **Visual OSD Overlays**: Multiple styles including Lenovo Vantage and Legion Toolkit themes
-- **System Tray Integration**: Persistent background operation with tray icon status
-- **Audio Feedback**: Optional sound notifications for mute state changes
-- **Modern UI**: WPF-based interface with dark/light theme support
+## Key Features
+
+- **Universal Compatibility**: Works with any Windows-compatible microphone and audio hardware
+- **Global Hotkeys**: System-wide microphone toggle with intelligent conflict detection
+- **Visual Feedback**: Multiple OSD styles with aesthetic themes
+- **System Integration**: Windows startup support and system tray functionality  
+- **Modern UI**: Fluent Design with dark/light theme support
+- **Audio Notifications**: Optional sound feedback for mute/unmute actions
+- **Smart Error Handling**: Helpful guidance when settings conflicts occur
 - **Single Instance**: Prevents multiple instances from running simultaneously
 - **Auto-startup**: Optional Windows startup integration
 - **Real-time Monitoring**: Detects external microphone state changes
@@ -29,7 +31,7 @@ MicControlX is a powerful Windows application designed to provide seamless micro
 - **Operating System**: Windows 10/11 (x64)
 - **Framework**: .NET 8.0 Runtime
 - **Hardware**: Any Windows-compatible microphone
-- **Optimized for**: Lenovo Legion, LOQ, and IdeaPad gaming laptops
+- **Compatibility**: Universal - works with all Windows systems and audio hardware
 
 ## Installation
 
@@ -66,11 +68,13 @@ dotnet publish src\MicControlX.csproj --configuration Release --runtime win-x64 
 3. Click OK to save the new configuration
 4. The new hotkey is immediately active
 
+**Note**: Some keys like F8 and F12 may conflict with system functions or other applications but that depends on your system's configuration. The app will notify you if a hotkey fails to register and suggest alternatives.
+
 ### OSD Styles
 Choose from three visual overlay styles:
-- **Windows Default**: Clean, universal design
-- **Lenovo Style**: Matches Lenovo Vantage notifications
-- **Legion Style**: Dark theme matching Legion Toolkit notifications
+- **Windows Default**: Clean, universal design suitable for all systems
+- **Lenovo Vantage Style**: Layered icon design inspired by Lenovo Vantage aesthetics
+- **Lenovo Legion Toolkit Style**: Dark theme design inspired by Legion Toolkit aesthetics
 
 ## Architecture
 
@@ -101,7 +105,7 @@ Settings are automatically saved to `%AppData%\MicControlX\config.json`:
   "HotKeyDisplayName": "F11",
   "ShowOSD": true,
   "ShowNotifications": false,
-  "OSDStyle": 1,
+  "OSDStyle": 0,
   "Theme": 0,
   "AutoStart": false,
   "EnableSoundFeedback": false
@@ -109,18 +113,14 @@ Settings are automatically saved to `%AppData%\MicControlX\config.json`:
 ```
 
 ### Available Options
-- **HotKeyVirtualKey**: Function key codes (F1=112, F2=113, ..., F24=135)
+- **HotKeyVirtualKey**: Function key codes (F1=0x70, F2=0x71, ..., F24=0x87)
 - **HotKeyDisplayName**: Name of the hotkey for display in the UI
 - **ShowOSD**: Enable/disable visual overlays
 - **ShowNotifications**: Enable/disable system tray notifications
-- **OSDStyle**: `WindowsDefault (0)`, `LenovoStyle (1)`, or `LegionStyle (2)`
+- **OSDStyle**: `WindowsDefault (0)`, `VantageStyle (1)`, or `LLTStyle (2)`
 - **Theme**: `System (0)`, `Dark (1)`, or `Light (2)`
 - **AutoStart**: Launch with Windows
 - **EnableSoundFeedback**: Play sounds on mute/unmute
-
-### Features
-- **Lenovo Vantage and LLT Software Compatibility**: Coexists with Lenovo's software microphone controls
-- **Hardware Fn Key Support**: Works alongside Lenovo's hardware Fn+F4 mute/unmute functionality
 
 ## Development
 
@@ -144,7 +144,7 @@ mic-controlx/
 - **NAudio**: Audio device management
 - **WPF-UI**: Modern Fluent Design components
 - **Hardcodet.NotifyIcon.Wpf**: System tray functionality
-- **System.Management**: Hardware detection
+- **System.Management**: System information detection
 
 ### Building
 The project targets **.NET 8.0-windows** and produces a single-file executable for easy distribution.
@@ -154,14 +154,14 @@ The project targets **.NET 8.0-windows** and produces a single-file executable f
 Contributions are welcome! Please feel free to:
 - Report bugs and request features via [Issues](https://github.com/Metanome/mic-controlx/issues)
 - Submit pull requests for improvements
-- Share feedback about Lenovo laptop compatibility
+- Share feedback about compatibility with different systems
 
 ## Acknowledgments
 
 - **NAudio**: Professional audio library for .NET
 - **WPF-UI**: Modern Fluent Design components
-- **Lenovo Discord Community**: Feedback and testing support
-- **Legion Toolkit**: Inspiration for Lenovo-specific features
+- **Community Contributors**: Feedback and testing support
+- **Design Inspirations**: Lenovo Vantage and Legion Toolkit for visual style inspiration
 
 ## Support
 
@@ -171,4 +171,4 @@ Contributions are welcome! Please feel free to:
 
 ---
 
-**Made with ❤️ for the Windows and Lenovo gaming community**
+**Made with ❤️ for the Windows community**

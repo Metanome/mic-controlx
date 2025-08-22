@@ -1,0 +1,27 @@
+<Application x:Class="MicControlX.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- WPF UI Theme Dictionary - default to Light, will be updated dynamically -->
+                <ui:ThemesDictionary Theme="Light" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Lenovo Legion Toolkit inspired style colors -->
+            <SolidColorBrush x:Key="AccentColorBrush" Color="#FF2121"/>
+            <SolidColorBrush x:Key="LLTRedBrush" Color="#FF2121"/>
+            
+            <!-- Override default WPF-UI colors to match Lenovo Legion Toolkit style -->
+            <Color x:Key="ApplicationAccentColor">#FF2121</Color>
+            <SolidColorBrush x:Key="ApplicationAccentColorPrimaryBrush" Color="#FF2121"/>
+            <SolidColorBrush x:Key="ApplicationAccentColorSecondaryBrush" Color="#E01E1E"/>
+            <SolidColorBrush x:Key="ApplicationAccentColorTertiaryBrush" Color="#C41B1B"/>
+            
+            <!-- Fix missing WPF-UI resource -->
+            <SolidColorBrush x:Key="AccentStrokeColorDefaultBrush" Color="#FF2121"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

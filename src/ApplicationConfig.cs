@@ -2,14 +2,41 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Windows.Forms;
+using System.Windows.Input;
+using System.Windows;
+using System.Media;
 
 namespace MicControlX
 {
     /// <summary>
+    /// OSD visual styles with different aesthetic inspirations
+    /// </summary>
+    public enum OSDStyles
+    {
+        /// <summary>Windows Default - Universal clean style</summary>
+        WindowsDefault,
+        /// <summary>Vantage Style - Transparent background with rounded border around icon (inspired by Lenovo Vantage)</summary>
+        VantageStyle,
+        /// <summary>LLT Style - Dark background with icon + text (inspired by Legion Toolkit)</summary>
+        LLTStyle
+    }
+
+    /// <summary>
+    /// Theme modes for application UI
+    /// </summary>
+    public enum AppTheme
+    {
+        /// <summary>Follow system theme</summary>
+        System,
+        /// <summary>Always use dark theme</summary>
+        Dark,
+        /// <summary>Always use light theme</summary>
+        Light
+    }
+
+    /// <summary>
     /// Enhanced configuration settings for the MicControlX application
-    /// Optimized for Lenovo gaming laptops (Legion, LOQ, IdeaPad) with universal Windows compatibility
-    /// Works seamlessly with Lenovo Vantage, Legion Toolkit, Windows settings, and hardware Fn keys
+    /// Universal Windows microphone control utility with multiple visual styles
     /// </summary>
     public class ApplicationConfig
     {
@@ -20,11 +47,11 @@ namespace MicControlX
         [JsonIgnore]
         public int OSDDisplayTime { get; set; } = 2000; // milliseconds
         
-        /// <summary>OSD style specifically for Lenovo gaming laptops</summary>
-        public LenovoOSDStyle OSDStyle { get; set; } = LenovoOSDStyle.WindowsDefault;
+        /// <summary>OSD visual style preference</summary>
+        public OSDStyles OSDStyle { get; set; } = OSDStyles.WindowsDefault;
         
-        /// <summary>Application UI theme (Dark/Light/System) - does not affect OSD overlay styling</summary>
-        public AppTheme AppUITheme { get; set; } = AppTheme.System;
+        /// <summary>Application UI theme (Dark/Light/System)</summary>
+        public AppTheme Theme { get; set; } = AppTheme.System;
         
         /// <summary>Auto-start with Windows</summary>
         public bool AutoStart { get; set; } = false;
@@ -32,25 +59,13 @@ namespace MicControlX
         /// <summary>Enable sound feedback on mute/unmute</summary>
         public bool EnableSoundFeedback { get; set; } = false;
         
-        /// <summary>Detected laptop brand (Lenovo, HP, Acer, etc.)</summary>
+        /// <summary>Detected system brand (Dell, HP, Acer, Lenovo, etc.)</summary>
         [JsonIgnore]
         public string DetectedBrand { get; set; } = "Unknown";
         
-        /// <summary>Detected laptop model for Lenovo systems</summary>
+        /// <summary>Detected system model</summary>
         [JsonIgnore]
         public string DetectedModel { get; set; } = "Unknown";
-        
-        /// <summary>Enable Lenovo-specific features (OSD styles, Legion integration)</summary>
-        [JsonIgnore]
-        public bool EnableLenovoFeatures { get; set; } = true;
-        
-        /// <summary>Detected Lenovo Vantage installation status</summary>
-        [JsonIgnore]
-        public bool HasLenovoVantage { get; set; } = false;
-        
-        /// <summary>Detected Legion Toolkit installation status</summary>
-        [JsonIgnore]
-        public bool HasLegionToolkit { get; set; } = false;
         
         /// <summary>Application version</summary>
         [JsonIgnore]
@@ -72,28 +87,7 @@ namespace MicControlX
         /// <summary>Get recommended settings description based on detected system</summary>
         public string GetRecommendedSettingsDescription()
         {
-            if (!EnableLenovoFeatures)
-            {
-                return "Windows Default OSD recommended for universal compatibility";
-            }
-            
-            var modelUpper = DetectedModel.ToUpper();
-            if (modelUpper.Contains("LEGION"))
-            {
-                return "Legion-style OSD recommended for Legion gaming laptops";
-            }
-            else if (modelUpper.Contains("LOQ") || modelUpper.Contains("IDEAPAD"))
-            {
-                return "Lenovo-style OSD recommended for LOQ/IdeaPad laptops";
-            }
-            else if (modelUpper.Contains("THINKPAD"))
-            {
-                return "Lenovo-style OSD recommended for ThinkPad laptops";
-            }
-            else
-            {
-                return "Lenovo-style OSD recommended for Lenovo laptops";
-            }
+            return "Choose any OSD style based on your preference - all styles work universally";
         }
     }
 
@@ -139,7 +133,7 @@ namespace MicControlX
                 catch (Exception ex)
                 {
                     // Log the error and proceed to create a new config
-                    System.Diagnostics.Debug.WriteLine($"Failed to load or parse config file: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"ConfigManager: Failed to load config - {ex.Message}");
                 }
             }
             
@@ -160,65 +154,43 @@ namespace MicControlX
         }
 
         /// <summary>
-        /// Detects dynamic system properties without overwriting user settings.
+        /// Detects basic system information for display purposes only.
+        /// Also syncs AutoStart setting with registry to prevent mismatches.
         /// This should be run every time the application starts.
         /// </summary>
         private static void DetectSystemProperties(ApplicationConfig config)
         {
             try
             {
+                // Detect system info
                 config.DetectedBrand = GetSystemInfo("SystemManufacturer") ?? "Unknown";
                 config.DetectedModel = GetSystemInfo("SystemProductName") ?? "Unknown";
-
-                if (config.DetectedBrand.ToUpper().Contains("LENOVO"))
+                
+                // Sync AutoStart setting with registry to prevent mismatches
+                bool registryAutoStart = StartupManager.IsAutoStartEnabled();
+                if (config.AutoStart != registryAutoStart)
                 {
-                    config.EnableLenovoFeatures = true;
-                    config.HasLenovoVantage = IsLenovoVantageInstalled();
-                    config.HasLegionToolkit = IsLegionToolkitInstalled();
-                }
-                else
-                {
-                    config.EnableLenovoFeatures = false;
-                    config.HasLenovoVantage = false;
-                    config.HasLegionToolkit = false;
+                    System.Diagnostics.Debug.WriteLine($"ConfigManager: AutoStart mismatch - Config: {config.AutoStart}, Registry: {registryAutoStart}. Syncing to registry value.");
+                    config.AutoStart = registryAutoStart;
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error detecting system info: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"ConfigManager: Error detecting system info - {ex.Message}");
                 // Fallback to safe defaults
-                config.EnableLenovoFeatures = false;
                 config.DetectedBrand = "Unknown";
                 config.DetectedModel = "Unknown";
             }
         }
 
         /// <summary>
-        /// Applies default settings to a new configuration based on detected system properties.
+        /// Applies default settings to a new configuration.
         /// This should only be run when creating a new config file.
         /// </summary>
         private static void ApplyDefaultSettings(ApplicationConfig config)
         {
-            if (config.EnableLenovoFeatures)
-            {
-                var modelUpper = config.DetectedModel.ToUpper();
-                if (modelUpper.Contains("LEGION") && config.HasLegionToolkit)
-                {
-                    config.OSDStyle = LenovoOSDStyle.LegionStyle;
-                }
-                else if (config.HasLenovoVantage)
-                {
-                    config.OSDStyle = LenovoOSDStyle.LenovoStyle;
-                }
-                else
-                {
-                    config.OSDStyle = LenovoOSDStyle.WindowsDefault;
-                }
-            }
-            else
-            {
-                config.OSDStyle = LenovoOSDStyle.WindowsDefault;
-            }
+            // Always use Windows Default as the universal choice
+            config.OSDStyle = OSDStyles.WindowsDefault;
         }
 
         private static string? GetSystemInfo(string keyName)
@@ -244,8 +216,21 @@ namespace MicControlX
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to save configuration: {ex.Message}",
-                               "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                System.Diagnostics.Debug.WriteLine($"ConfigManager: Failed to save configuration - {ex.Message}");
+                MessageBox.Show(
+                    $"Failed to save configuration settings.\n\n" +
+                    $"Error: {ex.Message}\n\n" +
+                    $"This may be caused by:\n" +
+                    $"• Insufficient permissions to write to AppData folder\n" +
+                    $"• Disk space issues\n" +
+                    $"• Antivirus software blocking file access\n\n" +
+                    $"Please try:\n" +
+                    $"• Running the application as administrator\n" +
+                    $"• Checking available disk space\n" +
+                    $"• Temporarily disabling antivirus real-time protection",
+                    "Configuration Save Error", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
             }
         }
 
@@ -289,105 +274,46 @@ namespace MicControlX
                     _ => $"Key{virtualKey:X}"
                 };
             }
-        }
 
-        /// <summary>
-        /// Detect if Lenovo Vantage is installed on the system
-        /// </summary>
-        private static bool IsLenovoVantageInstalled()
-        {
-            try
+            /// <summary>
+            /// Get information about common conflicts for specific function keys
+            /// </summary>
+            public static string GetKeyConflictInfo(int virtualKey)
             {
-                // Check for Lenovo Vantage process
-                var vantageProcesses = System.Diagnostics.Process.GetProcessesByName("LenovoVantage");
-                if (vantageProcesses.Length > 0)
+                return virtualKey switch
                 {
-                    return true;
-                }
-                
-                // Check for Lenovo Vantage service
-                var vantageService = System.Diagnostics.Process.GetProcessesByName("LenovoVantageService");
-                if (vantageService.Length > 0)
-                {
-                    return true;
-                }
-                
-                // Check registry for Lenovo Vantage installation
-                using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"))
-                {
-                    if (key != null)
-                    {
-                        foreach (string subKeyName in key.GetSubKeyNames())
-                        {
-                            using (var subKey = key.OpenSubKey(subKeyName))
-                            {
-                                var displayName = subKey?.GetValue("DisplayName")?.ToString();
-                                if (displayName != null && displayName.Contains("Lenovo Vantage"))
-                                {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                return false;
+                    VK_F1 => "F1 is commonly used by applications for Help dialogs",
+                    VK_F2 => "F2 is often used for renaming files in Windows Explorer",
+                    VK_F3 => "F3 is commonly used for search functions",
+                    VK_F4 => "F4 is used by Windows (Alt+F4 to close windows)",
+                    VK_F5 => "F5 is commonly used for refresh/reload in browsers and applications",
+                    VK_F6 => "F6 is used for navigation between UI elements",
+                    VK_F7 => "F7 is used by some applications for spell checking",
+                    VK_F8 => "F8 is reserved by Windows for Safe Mode boot and may conflict with system functions",
+                    VK_F9 => "F9 is relatively safe for global hotkeys",
+                    VK_F10 => "F10 is relatively safe for global hotkeys",
+                    VK_F11 => "F11 is commonly used for fullscreen mode but generally works for global hotkeys",
+                    VK_F12 => "F12 is heavily used by developer tools and debuggers - high conflict potential",
+                    _ when virtualKey >= VK_F13 && virtualKey <= VK_F24 => "Higher function keys (F13-F24) are usually safe but may not exist on all keyboards",
+                    _ => "Unknown key conflict information"
+                };
             }
-            catch (Exception ex)
+
+            /// <summary>
+            /// Get suggested alternative keys when a hotkey fails to register
+            /// </summary>
+            public static string[] GetSuggestedAlternatives(int failedKey)
             {
-                System.Diagnostics.Debug.WriteLine($"Error detecting Lenovo Vantage: {ex.Message}");
-                return false;
+                // Recommend generally safer function keys
+                return failedKey switch
+                {
+                    VK_F1 or VK_F2 or VK_F3 or VK_F4 or VK_F5 => new[] { "F9", "F10", "F11" },
+                    VK_F8 or VK_F12 => new[] { "F9", "F10", "F11", "F7" },
+                    _ => new[] { "F9", "F10", "F11" }
+                };
             }
         }
 
-        /// <summary>
-        /// Detect if Lenovo Legion Toolkit (LLT) is installed on the system
-        /// </summary>
-        private static bool IsLegionToolkitInstalled()
-        {
-            try
-            {
-                // Check for Legion Toolkit process
-                var lltProcesses = System.Diagnostics.Process.GetProcessesByName("Lenovo.Legion.Toolkit");
-                if (lltProcesses.Length > 0)
-                {
-                    return true;
-                }
-                
-                // Check for LLT service
-                var lltService = System.Diagnostics.Process.GetProcessesByName("LegionService");
-                if (lltService.Length > 0)
-                {
-                    return true;
-                }
-                
-                // Check registry for Legion Toolkit installation
-                using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"))
-                {
-                    if (key != null)
-                    {
-                        foreach (string subKeyName in key.GetSubKeyNames())
-                        {
-                            using (var subKey = key.OpenSubKey(subKeyName))
-                            {
-                                var displayName = subKey?.GetValue("DisplayName")?.ToString();
-                                if (displayName != null && (displayName.Contains("Legion Toolkit") || displayName.Contains("Lenovo Legion Toolkit")))
-                                {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                return false;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error detecting Legion Toolkit: {ex.Message}");
-                return false;
-            }
-        }
     }
 
     /// <summary>
@@ -412,8 +338,10 @@ namespace MicControlX
                         if (enable)
                         {
                             // Get current executable path dynamically
-                            var exePath = Application.ExecutablePath;
-                            key.SetValue(AppName, $"\"{exePath}\" --minimized");
+                            var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName 
+                                         ?? Path.Combine(AppContext.BaseDirectory, "MicControlX.exe");
+                            var registryValue = $"\"{exePath}\" --minimized";
+                            key.SetValue(AppName, registryValue);
                         }
                         else
                         {
@@ -421,11 +349,15 @@ namespace MicControlX
                         }
                         return true;
                     }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"StartupManager: Could not open registry key");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Startup registry error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"StartupManager: Registry operation failed - {ex.Message}");
                 return false;
             }
             return false;
@@ -443,68 +375,41 @@ namespace MicControlX
                     if (key != null)
                     {
                         var value = key.GetValue(AppName)?.ToString();
-                        return !string.IsNullOrEmpty(value);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Startup check error: {ex.Message}");
-            }
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Manages sound feedback for microphone state changes
-    /// </summary>
-    public static class SoundFeedback
-    {
-        /// <summary>
-        /// Play embedded sound resource
-        /// </summary>
-        public static void PlayEmbeddedSound(string resourceName)
-        {
-            try
-            {
-                var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-                using (var stream = assembly.GetManifestResourceStream(resourceName))
-                {
-                    if (stream != null)
-                    {
-                        // Use SoundPlayer for simple WAV playback from embedded resource
-                        using (var player = new System.Media.SoundPlayer(stream))
-                        {
-                            player.Play(); // Async playback to avoid blocking
-                        }
+                        bool isEnabled = !string.IsNullOrEmpty(value);
+                        return isEnabled;
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"Sound resource not found: {resourceName}");
+                        System.Diagnostics.Debug.WriteLine($"StartupManager: Could not open registry key for reading");
                     }
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Sound playback error: {ex.Message}");
-                // Silent failure - don't interrupt app functionality
+                System.Diagnostics.Debug.WriteLine($"StartupManager: Registry check failed - {ex.Message}");
             }
+            return false;
         }
 
         /// <summary>
-        /// Play mute sound from embedded resource
+        /// Sync config AutoStart setting with registry state and save if needed
         /// </summary>
-        public static void PlayMuteSound()
+        public static void SyncAutoStartSetting(ApplicationConfig config)
         {
-            PlayEmbeddedSound("mic_mute.wav");
-        }
-
-        /// <summary>
-        /// Play unmute sound from embedded resource
-        /// </summary>
-        public static void PlayUnmuteSound()
-        {
-            PlayEmbeddedSound("mic_unmute.wav");
+            try
+            {
+                bool registryEnabled = IsAutoStartEnabled();
+                if (config.AutoStart != registryEnabled)
+                {
+                    System.Diagnostics.Debug.WriteLine($"AutoStart mismatch detected. Config: {config.AutoStart}, Registry: {registryEnabled}");
+                    config.AutoStart = registryEnabled;
+                    ConfigurationManager.SaveConfiguration(config);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"AutoStart sync error: {ex.Message}");
+            }
         }
     }
 }

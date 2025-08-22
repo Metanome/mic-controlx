@@ -4,8 +4,9 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>MicControlX.App</StartupObject>
     
     <!-- Framework-dependent single-file publishing for smaller size -->
     <PublishSingleFile>true</PublishSingleFile>
@@ -48,6 +49,8 @@
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="System.Management" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
+    <PackageReference Include="WPF-UI" Version="4.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,31 +70,19 @@
     <EmbeddedResource Include="..\assets\sounds\mic_unmute.wav">
       <LogicalName>mic_unmute.wav</LogicalName>
     </EmbeddedResource>
-    <!-- PNG icons for UI -->
-    <EmbeddedResource Include="..\assets\icons\settings_light.png">
-      <LogicalName>settings_light.png</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\assets\icons\settings_dark.png">
-      <LogicalName>settings_dark.png</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\assets\icons\info_light.png">
-      <LogicalName>info_light.png</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\assets\icons\info_dark.png">
-      <LogicalName>info_dark.png</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\assets\icons\mic_mute.png">
-      <LogicalName>mic_mute.png</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\assets\icons\mic_unmute.png">
-      <LogicalName>mic_unmute.png</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\assets\icons\mic_mute-rounded_square.png">
-      <LogicalName>mic_mute-rounded_square.png</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\assets\icons\mic_unmute-rounded_square.png">
-      <LogicalName>mic_unmute-rounded_square.png</LogicalName>
-    </EmbeddedResource>
+    <!-- Microphone icons for OSD and status -->
+    <Resource Include="..\assets\icons\mic_mute.png">
+      <Link>assets\icons\mic_mute.png</Link>
+    </Resource>
+    <Resource Include="..\assets\icons\mic_unmute.png">
+      <Link>assets\icons\mic_unmute.png</Link>
+    </Resource>
+    <Resource Include="..\assets\icons\mic_mute-rounded_square.png">
+      <Link>assets\icons\mic_mute-rounded_square.png</Link>
+    </Resource>
+    <Resource Include="..\assets\icons\mic_unmute-rounded_square.png">
+      <Link>assets\icons\mic_unmute-rounded_square.png</Link>
+    </Resource>
   </ItemGroup>
 
 </Project>
