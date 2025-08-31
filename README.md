@@ -91,6 +91,7 @@ Choose from three visual overlay styles:
 
 ### Core Components
 
+- **`HotkeyManager.cs`**: Dedicated global hotkey handling using message-only windows for reliable background operation
 - **`AudioController.cs`**: NAudio-based microphone control and monitoring
 - **`MainWindow.xaml`**: Primary WPF interface with Fluent UI styling
 - **`ApplicationConfig.cs`**: Configuration management and persistence
