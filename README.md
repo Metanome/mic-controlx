@@ -3,6 +3,7 @@
 **Advanced Universal Microphone Control Utility for Windows**
 
 [![Version](https://img.shields.io/badge/version-4.0.1-blue.svg)](https://github.com/Metanome/mic-controlx)
+[![Downloads](https://img.shields.io/github/downloads/Metanome/mic-controlx/total?color=brightgreen)](https://github.com/Metanome/mic-controlx/releases)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://github.com/Metanome/mic-controlx)
 [![.NET](https://img.shields.io/badge/.NET-8.0--windows-purple.svg)](https://github.com/Metanome/mic-controlx)
