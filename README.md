@@ -2,7 +2,7 @@
 
 **Advanced Universal Microphone Control Utility for Windows**
 
-[![Version](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://github.com/Metanome/mic-controlx)
+[![Version](https://img.shields.io/badge/version-4.0.1-blue.svg)](https://github.com/Metanome/mic-controlx)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://github.com/Metanome/mic-controlx)
 [![.NET](https://img.shields.io/badge/.NET-8.0--windows-purple.svg)](https://github.com/Metanome/mic-controlx)
@@ -15,6 +15,7 @@ MicControlX is a powerful universal Windows application designed to provide seam
 
 - **Universal Compatibility**: Works with any Windows-compatible microphone and audio hardware
 - **Global Hotkeys**: System-wide microphone toggle with intelligent conflict detection
+- **Push-to-Talk Mode**: Hold hotkey for temporary mute/unmute, release to restore original state
 - **Visual Feedback**: Multiple OSD styles with aesthetic themes
 - **System Integration**: Windows startup support and system tray functionality  
 - **Modern UI**: Fluent Design with dark/light theme support
@@ -56,7 +57,8 @@ dotnet publish src\MicControlX.csproj --configuration Release --runtime win-x64 
 
 ### Basic Operations
 - **Launch**: Run `MicControlX.exe` - the application will appear in the system tray and show the main window
-- **Mute/Unmute**: Press your configured hotkey (default: F11)
+- **Quick Toggle**: Press your configured hotkey (default: F11) to permanently toggle mute/unmute
+- **Push-to-Talk**: Hold your configured hotkey for temporary mute/unmute - releases back to original state when you let go
 - **Settings**: Right-click the tray icon or click the Settings button in the main window
 - **Exit**: Right-click tray icon → Exit, or close the main window
 
@@ -67,6 +69,17 @@ dotnet publish src\MicControlX.csproj --configuration Release --runtime win-x64 
 4. The new hotkey is immediately active
 
 **Note**: Some keys like F8 and F12 may conflict with system functions or other applications but that depends on your system's configuration. The app will notify you if a hotkey fails to register and suggest alternatives.
+
+### Push-to-Talk Feature
+MicControlX includes an intelligent dual-mode hotkey system:
+
+- **Quick Press** (under 400ms): Permanently toggles mute/unmute state
+- **Hold** (400ms or longer): Temporarily changes mute state while held
+  
+This is perfect for:
+- **Quick meetings**: Hold to unmute briefly, then auto-mute when done speaking
+- **Gaming**: Hold to talk to team, release to return to muted state
+- **Streaming**: Temporarily unmute for audience interaction without forgetting to mute again
 
 ### OSD Styles
 Choose from three visual overlay styles:

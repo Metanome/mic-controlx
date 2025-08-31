@@ -17,15 +17,6 @@ namespace MicControlX
     public partial class MainWindow : FluentWindow
     {
         #region Windows API
-        private const int WM_HOTKEY = 0x0312;
-        private const int HOTKEY_ID = 1;
-        
-        [DllImport("user32.dll")]
-        private static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk);
-        
-        [DllImport("user32.dll")]
-        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
-
         [DllImport("user32.dll")]
         private static extern short GetAsyncKeyState(int vKey);
         #endregion
@@ -45,6 +36,7 @@ namespace MicControlX
         private const int KEY_MONITOR_INTERVAL = 30; // ms to check key release
         private readonly object configLock = new object();
         private TaskbarIcon? trayIcon;
+        private HotkeyManager? hotkeyManager;
         #endregion
 
         #region Constructor
@@ -67,10 +59,13 @@ namespace MicControlX
                 micController.ErrorOccurred += OnMicrophoneError;
                 micController.ExternalChangeDetected += OnExternalChangeDetected;
                 
-            // Handle window events
-            Loaded += MainWindow_Loaded;
-            Closing += MainWindow_Closing;
-            StateChanged += MainWindow_StateChanged;                // Start normally - user can minimize to tray
+                // Initialize hotkey manager (works regardless of window visibility)
+                InitializeHotkeyManager();
+                
+                // Handle window events
+                Loaded += MainWindow_Loaded;
+                Closing += MainWindow_Closing;
+                StateChanged += MainWindow_StateChanged;
                 WindowState = WindowState.Normal;
                 ShowInTaskbar = true;
                 
@@ -125,6 +120,39 @@ namespace MicControlX
         private void InitializeOsd()
         {
             osd = new OsdOverlay(config.OSDStyle);
+        }
+
+        private void InitializeHotkeyManager()
+        {
+            try
+            {
+                hotkeyManager = new HotkeyManager();
+                hotkeyManager.HotkeyPressed += HandleHotkey;
+                
+                // Register the current hotkey
+                bool success = hotkeyManager.RegisterHotkey(config.HotKeyVirtualKey);
+                if (!success)
+                {
+                    var conflictInfo = ConfigurationManager.VirtualKeys.GetKeyConflictInfo(config.HotKeyVirtualKey);
+                    var alternatives = string.Join(", ", ConfigurationManager.VirtualKeys.GetSuggestedAlternatives(config.HotKeyVirtualKey));
+                    
+                    MessageBox.Show(
+                        $"Failed to register the {config.HotKeyDisplayName} hotkey.\n\n" +
+                        $"Reason: {conflictInfo}\n\n" +
+                        $"Suggested alternatives: {alternatives}\n\n" +
+                        $"You can:\n" +
+                        $"• Change the hotkey in Settings\n" +
+                        $"• Use the system tray icon to toggle the microphone\n" +
+                        $"• Close applications that might be using {config.HotKeyDisplayName}",
+                        "Hotkey Registration Failed", 
+                        System.Windows.MessageBoxButton.OK, 
+                        System.Windows.MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Hotkey manager initialization failed: {ex.Message}");
+            }
         }
 
         private void InitializeSystemTray()
@@ -405,29 +433,6 @@ namespace MicControlX
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            // Register hotkey
-            var hwndSource = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
-            hwndSource.AddHook(HwndHook);
-            
-            bool hotkeyRegistered = RegisterHotKey(new WindowInteropHelper(this).Handle, HOTKEY_ID, 0, config.HotKeyVirtualKey);
-            if (!hotkeyRegistered)
-            {
-                var conflictInfo = ConfigurationManager.VirtualKeys.GetKeyConflictInfo(config.HotKeyVirtualKey);
-                var alternatives = string.Join(", ", ConfigurationManager.VirtualKeys.GetSuggestedAlternatives(config.HotKeyVirtualKey));
-                
-                MessageBox.Show(
-                    $"Failed to register the {config.HotKeyDisplayName} hotkey.\n\n" +
-                    $"Reason: {conflictInfo}\n\n" +
-                    $"Suggested alternatives: {alternatives}\n\n" +
-                    $"You can:\n" +
-                    $"• Change the hotkey in Settings\n" +
-                    $"• Use the system tray icon to toggle the microphone\n" +
-                    $"• Close applications that might be using {config.HotKeyDisplayName}",
-                    "Hotkey Registration Failed", 
-                    System.Windows.MessageBoxButton.OK, 
-                    System.Windows.MessageBoxImage.Warning);
-            }
-            
             // Don't hide automatically - let user decide when to minimize to tray
             // The window will show normally and user can minimize it manually
         }
@@ -449,16 +454,6 @@ namespace MicControlX
                     trayIcon.Visibility = Visibility.Visible;
                 }
             }
-        }
-
-        private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            if (msg == WM_HOTKEY && wParam.ToInt32() == HOTKEY_ID)
-            {
-                HandleHotkey();
-                handled = true;
-            }
-            return IntPtr.Zero;
         }
 
         private void HandleHotkey()
@@ -732,9 +727,9 @@ namespace MicControlX
                     UpdateUI();
                     
                     // Re-register hotkeys with new settings
-                    UnregisterHotKey(new WindowInteropHelper(this).Handle, HOTKEY_ID);
-                    bool hotkeyRegistered = RegisterHotKey(new WindowInteropHelper(this).Handle, HOTKEY_ID, 0, config.HotKeyVirtualKey);
-                    if (!hotkeyRegistered)
+                    hotkeyManager?.UnregisterCurrentHotkey();
+                    bool success = hotkeyManager?.RegisterHotkey(config.HotKeyVirtualKey) ?? false;
+                    if (!success)
                     {
                         var conflictInfo = ConfigurationManager.VirtualKeys.GetKeyConflictInfo(config.HotKeyVirtualKey);
                         var alternatives = string.Join(", ", ConfigurationManager.VirtualKeys.GetSuggestedAlternatives(config.HotKeyVirtualKey));
@@ -794,8 +789,8 @@ namespace MicControlX
                 pttHoldTimer?.Stop();
                 keyReleaseMonitor?.Stop();
                 
-                // Unregister hotkey
-                UnregisterHotKey(new WindowInteropHelper(this).Handle, HOTKEY_ID);
+                // Dispose hotkey manager
+                hotkeyManager?.Dispose();
                 
                 // Dispose resources
                 trayIcon?.Dispose();
