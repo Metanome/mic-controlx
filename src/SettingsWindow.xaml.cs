@@ -22,13 +22,16 @@ namespace MicControlX
                 
                 InitializeComponent();
                 
+                // Subscribe to language changes
+                LocalizationManager.LanguageChanged += OnLanguageChanged;
+                
                 // Load settings with error handling
                 LoadCurrentSettings();
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"SettingsWindow initialization error: {ex.Message}\n\nStack trace:\n{ex.StackTrace}", 
-                    "Settings Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(string.Format(Strings.ErrorSettingsInitMessage, ex.Message, ex.StackTrace), 
+                    Strings.ErrorSettingsTitle, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                 throw;
             }
         }
@@ -67,17 +70,21 @@ namespace MicControlX
                     TrayNotificationRadio.Checked += TrayNotificationRadio_Checked;
                 
                 // Populate and select app theme
-                PopulateAppThemeComboBox();
+                PopulateThemeComboBox();
                 
-                // Set checkbox states
-                if (AutoStartCheckBox != null)
-                    AutoStartCheckBox.IsChecked = Configuration.AutoStart;
-                if (SoundFeedbackCheckBox != null)
-                    SoundFeedbackCheckBox.IsChecked = Configuration.EnableSoundFeedback;
+                // Set toggle switch states
+                if (AutoStartToggleSwitch != null)
+                    AutoStartToggleSwitch.IsChecked = Configuration.AutoStart;
+                if (SoundFeedbackToggleSwitch != null)
+                    SoundFeedbackToggleSwitch.IsChecked = Configuration.EnableSoundFeedback;
+                
+                // Populate and select language
+                PopulateLanguageComboBox();
+                SelectCurrentLanguage();
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"LoadCurrentSettings error: {ex.Message}", "Settings Error", 
+                System.Windows.MessageBox.Show(string.Format(Strings.ErrorLoadSettingsMessage, ex.Message), Strings.ErrorSettingsTitle, 
                     System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                 throw;
             }
@@ -134,24 +141,24 @@ namespace MicControlX
             }
         }
 
-        private void PopulateAppThemeComboBox()
+        private void PopulateThemeComboBox()
         {
-            if (AppThemeComboBox == null) return;
+            if (ThemeComboBox == null) return;
             
-            AppThemeComboBox.Items.Clear();
+            ThemeComboBox.Items.Clear();
             
             // Add theme options
             foreach (AppTheme theme in Enum.GetValues<AppTheme>())
             {
-                AppThemeComboBox.Items.Add(new ThemeItem(GetThemeDisplayName(theme), theme));
+                ThemeComboBox.Items.Add(new ThemeItem(GetThemeDisplayName(theme), theme));
             }
             
             // Select current theme
-            for (int i = 0; i < AppThemeComboBox.Items.Count; i++)
+            for (int i = 0; i < ThemeComboBox.Items.Count; i++)
             {
-                if (AppThemeComboBox.Items[i] is ThemeItem item && item.Theme == Configuration.Theme)
+                if (ThemeComboBox.Items[i] is ThemeItem item && item.Theme == Configuration.Theme)
                 {
-                    AppThemeComboBox.SelectedIndex = i;
+                    ThemeComboBox.SelectedIndex = i;
                     break;
                 }
             }
@@ -161,9 +168,9 @@ namespace MicControlX
         {
             return style switch
             {
-                OSDStyles.WindowsDefault => "Windows Default",
-                OSDStyles.VantageStyle => "Lenovo Vantage Style",
-                OSDStyles.LLTStyle => "Lenovo Legion Toolkit Style",
+                OSDStyles.DefaultStyle => Strings.OSDDefaultStyle,
+                OSDStyles.VantageStyle => Strings.OSDVantageStyle,
+                OSDStyles.LLTStyle => Strings.OSDLLTStyle,
                 _ => style.ToString()
             };
         }
@@ -172,11 +179,49 @@ namespace MicControlX
         {
             return theme switch
             {
-                AppTheme.Light => "Light",
-                AppTheme.Dark => "Dark",
-                AppTheme.System => "System Default",
+                AppTheme.Light => Strings.ThemeLight,
+                AppTheme.Dark => Strings.ThemeDark,
+                AppTheme.System => Strings.ThemeSystem,
                 _ => theme.ToString()
             };
+        }
+
+        private void PopulateLanguageComboBox()
+        {
+            if (LanguageComboBox == null) return;
+            
+            LanguageComboBox.Items.Clear();
+            
+            // Add language options using localized strings
+            LanguageComboBox.Items.Add(new LanguageItem(GetLanguageDisplayName("auto"), "auto"));
+            LanguageComboBox.Items.Add(new LanguageItem(GetLanguageDisplayName("en"), "en"));
+            LanguageComboBox.Items.Add(new LanguageItem(GetLanguageDisplayName("tr"), "tr"));
+        }
+
+        private string GetLanguageDisplayName(string languageCode)
+        {
+            return languageCode switch
+            {
+                "auto" => Strings.LanguageAuto,
+                "en" => Strings.LanguageEnglish,
+                "tr" => Strings.LanguageTurkish,
+                _ => languageCode
+            };
+        }
+
+        private void SelectCurrentLanguage()
+        {
+            if (LanguageComboBox == null) return;
+            
+            // Select current language
+            for (int i = 0; i < LanguageComboBox.Items.Count; i++)
+            {
+                if (LanguageComboBox.Items[i] is LanguageItem item && item.Code == Configuration.Language)
+                {
+                    LanguageComboBox.SelectedIndex = i;
+                    break;
+                }
+            }
         }
 
         private void OsdNotificationRadio_Checked(object sender, RoutedEventArgs e)
@@ -196,6 +241,12 @@ namespace MicControlX
                 if (OsdStylePanel != null)
                     OsdStylePanel.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void LanguageComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            // Language change will be applied when user clicks OK button
+            // For immediate effect, you could apply it here, but it's better to apply on OK
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
@@ -242,7 +293,7 @@ namespace MicControlX
                 }
 
                 // Apply app theme
-                if (AppThemeComboBox.SelectedItem is ThemeItem themeItem)
+                if (ThemeComboBox.SelectedItem is ThemeItem themeItem)
                 {
                     if (Configuration.Theme != themeItem.Theme)
                     {
@@ -253,9 +304,21 @@ namespace MicControlX
                     }
                 }
 
+                // Apply language setting
+                if (LanguageComboBox.SelectedItem is LanguageItem languageItem)
+                {
+                    if (Configuration.Language != languageItem.Code)
+                    {
+                        Configuration.Language = languageItem.Code;
+                        // Apply language immediately
+                        LocalizationManager.SetLanguage(languageItem.Code);
+                        hasChanges = true;
+                    }
+                }
+
                 // Apply other settings
-                bool newAutoStart = AutoStartCheckBox.IsChecked == true;
-                bool newSoundFeedback = SoundFeedbackCheckBox.IsChecked == true;
+                bool newAutoStart = AutoStartToggleSwitch.IsChecked == true;
+                bool newSoundFeedback = SoundFeedbackToggleSwitch.IsChecked == true;
                 
                 if (Configuration.AutoStart != newAutoStart)
                 {
@@ -284,16 +347,10 @@ namespace MicControlX
                 {
                     System.Diagnostics.Debug.WriteLine($"SettingsWindow: StartupManager failed - {startupEx.Message}");
                     
-                    string startupAction = Configuration.AutoStart ? "enable" : "disable";
+                    string startupAction = Configuration.AutoStart ? Strings.ActionEnable : Strings.ActionDisable;
                     System.Windows.MessageBox.Show(
-                        $"Warning: Failed to {startupAction} Windows startup setting.\n\n" +
-                        $"Error: {startupEx.Message}\n\n" +
-                        $"This may be due to:\n" +
-                        $"• Insufficient registry permissions\n" +
-                        $"• Antivirus software blocking registry changes\n" +
-                        $"• Group policy restrictions\n\n" +
-                        $"Your other settings have been saved successfully.",
-                        "Startup Setting Failed",
+                        string.Format(Strings.ErrorStartupSettingMessage, startupAction, startupEx.Message),
+                        Strings.ErrorStartupSettingTitle,
                         System.Windows.MessageBoxButton.OK,
                         System.Windows.MessageBoxImage.Warning);
                 }
@@ -304,7 +361,7 @@ namespace MicControlX
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Exception in OkButton_Click: {ex.Message}\n\nStack trace: {ex.StackTrace}", "Settings Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.MessageBox.Show(string.Format(Strings.ErrorSettingsException, ex.Message, ex.StackTrace), Strings.ErrorSettingsTitle, System.Windows.MessageBoxButton.OK);
                 // Don't set SettingsWereSaved to true if there was an error
             }
         }
@@ -313,6 +370,59 @@ namespace MicControlX
         {
             DialogResult = false;
             Close();
+        }
+
+        private void OnLanguageChanged(object? sender, EventArgs e)
+        {
+            // The XAML bindings will automatically update when language changes
+            // We need to update ComboBox items that are populated from code
+            Dispatcher.Invoke(() =>
+            {
+                // Refresh all ComboBox items with new translations
+                PopulateLanguageComboBox();
+                PopulateOsdStyleComboBox();
+                PopulateThemeComboBox();
+                
+                // Restore selections
+                SelectCurrentLanguage();
+                SelectCurrentOsdStyle();
+                SelectCurrentTheme();
+            });
+        }
+
+        private void SelectCurrentOsdStyle()
+        {
+            if (OsdStyleComboBox == null) return;
+            
+            for (int i = 0; i < OsdStyleComboBox.Items.Count; i++)
+            {
+                if (OsdStyleComboBox.Items[i] is OsdStyleItem item && item.Style == Configuration.OSDStyle)
+                {
+                    OsdStyleComboBox.SelectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        private void SelectCurrentTheme()
+        {
+            if (ThemeComboBox == null) return;
+            
+            for (int i = 0; i < ThemeComboBox.Items.Count; i++)
+            {
+                if (ThemeComboBox.Items[i] is ThemeItem item && item.Theme == Configuration.Theme)
+                {
+                    ThemeComboBox.SelectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            // Unsubscribe from language changes to prevent memory leaks
+            LocalizationManager.LanguageChanged -= OnLanguageChanged;
+            base.OnClosed(e);
         }
     }
 
@@ -354,6 +464,20 @@ namespace MicControlX
         {
             DisplayName = displayName;
             Theme = theme;
+        }
+
+        public override string ToString() => DisplayName;
+    }
+
+    public class LanguageItem
+    {
+        public string DisplayName { get; }
+        public string Code { get; }
+
+        public LanguageItem(string displayName, string code)
+        {
+            DisplayName = displayName;
+            Code = code;
         }
 
         public override string ToString() => DisplayName;

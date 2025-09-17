@@ -1,7 +1,9 @@
 <Window x:Class="MicControlX.OsdOverlay"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MicControlX OSD" 
+        xmlns:res="clr-namespace:MicControlX"
+        xmlns:local="clr-namespace:MicControlX"
+        Title="{Binding AppTitle, Source={x:Static local:LocalizationManager.Instance}}" 
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -32,8 +34,8 @@
     
     <Grid Name="MainContainer">
         
-        <!-- Windows Default Style - Custom Modern Material Design Inspired -->
-        <Border Name="WindowsDefaultContent" 
+        <!-- Default Style - MicControlX standard notification design -->
+        <Border Name="DefaultStyleContent" 
                 Background="#1E1E1E" 
                 BorderBrush="#404040"
                 BorderThickness="1"
@@ -46,13 +48,13 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Margin="20,12">
-                <Ellipse Name="WindowsDefaultIndicator"
+                <Ellipse Name="DefaultStyleIndicator"
                          Width="16"
                          Height="16"
                          Margin="0,0,12,0"
                          VerticalAlignment="Center"/>
-                <TextBlock Name="WindowsDefaultText"
-                           Text="Microphone Status"
+                <TextBlock Name="DefaultStyleText"
+                           Text="{Binding MicrophoneStatus, Source={x:Static local:LocalizationManager.Instance}}"
                            Foreground="White"
                            FontFamily="Segoe UI"
                            FontSize="16"
@@ -110,13 +112,13 @@
                              VerticalAlignment="Center"/>
                 </Border>
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                    <TextBlock Text="Microphone"
+                    <TextBlock Text="{Binding Microphone, Source={x:Static local:LocalizationManager.Instance}}"
                                Foreground="#CCCCCC"
                                FontFamily="Segoe UI"
                                FontSize="11"
                                FontWeight="Normal"/>
                     <TextBlock Name="LLTStyleText"
-                               Text="ACTIVE"
+                               Text="{Binding Active, Source={x:Static local:LocalizationManager.Instance}}"
                                Foreground="White"
                                FontFamily="Segoe UI"
                                FontSize="13"

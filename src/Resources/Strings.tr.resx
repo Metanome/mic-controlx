@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="xml:space" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+  <!-- ============================================ -->
+  <!-- APPLICATION TITLE -->
+  <!-- ============================================ -->
+  <data name="AppTitle" xml:space="preserve">
+    <value>MicControlX</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- MAIN WINDOW -->
+  <!-- ============================================ -->
+  <data name="Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>Hakkında</value>
+  </data>
+  <data name="GlobalHotkey" xml:space="preserve">
+    <value>Genel Kısayol</value>
+  </data>
+  <data name="HotkeyInstruction" xml:space="preserve">
+    <value>Geçiş için F11’e basın, basılı tutarak geçici olarak sessize alın/açın</value>
+  </data>
+  <data name="HotkeyInstructionTemplate" xml:space="preserve">
+    <value>Geçiş için {0} tuşuna basın, basılı tutarak geçici olarak sessize alın/açın</value>
+  </data>
+  <data name="FeaturesCompatibility" xml:space="preserve">
+    <value>Özellikler &amp; Uyumluluk</value>
+  </data>
+  <data name="FeatureUniversal" xml:space="preserve">
+    <value>• Evrensel Windows mikrofon kontrol aracı</value>
+  </data>
+  <data name="FeatureAnyDevice" xml:space="preserve">
+    <value>• Herhangi bir Windows ses aygıtı ve sistem ayarlarıyla çalışır</value>
+  </data>
+  <data name="AlternativeControls" xml:space="preserve">
+    <value>Alternatif Kontroller</value>
+  </data>
+  <data name="ControlSingleClick" xml:space="preserve">
+    <value>• Geçiş için sistem tepsisi simgesine tek tık</value>
+  </data>
+  <data name="ControlDoubleClick" xml:space="preserve">
+    <value>• Uygulamayı açmak için simgeye çift tık</value>
+  </data>
+  <data name="ControlRightClick" xml:space="preserve">
+    <value>• Seçenekler için simgeye sağ tık</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- MICROPHONE STATUS & CONTROL -->
+  <!-- ============================================ -->
+  <data name="MicrophoneStatus" xml:space="preserve">
+    <value>Mikrofon Durumu</value>
+  </data>
+  <data name="Microphone" xml:space="preserve">
+    <value>Mikrofon</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Aktif</value>
+  </data>
+  <data name="Muted" xml:space="preserve">
+    <value>Sessiz</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- SYSTEM INFORMATION -->
+  <!-- ============================================ -->
+  <data name="SystemInformation" xml:space="preserve">
+    <value>Sistem Bilgisi</value>
+  </data>
+  <data name="Brand" xml:space="preserve">
+    <value>Marka: </value>
+  </data>
+  <data name="Platform" xml:space="preserve">
+    <value>Platform: </value>
+  </data>
+  <data name="UnknownSystem" xml:space="preserve">
+    <value>Bilinmeyen Sistem</value>
+  </data>
+  <data name="UnknownSystemDescription" xml:space="preserve">
+    <value>Bilinmeyen Sistem - Evrensel Uyumluluk Modu</value>
+  </data>
+  <data name="RecommendedSettingsDescription" xml:space="preserve">
+    <value>Tercihinize göre herhangi bir OSD stilini seçin - tüm stiller evrensel olarak çalışır</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Bilinmeyen</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- SETTINGS WINDOW -->
+  <!-- ============================================ -->
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>MicControlX Ayarları</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  
+  <!-- Hotkey Settings -->
+  <data name="HotkeySettings" xml:space="preserve">
+    <value>Kısayol Ayarları</value>
+  </data>
+  <data name="GlobalHotkeyLabel" xml:space="preserve">
+    <value>Genel Kısayol:</value>
+  </data>
+
+  <!-- Notification Settings -->
+  <data name="NotificationType" xml:space="preserve">
+    <value>Bildirim Türü</value>
+  </data>
+  <data name="ShowOSDOverlay" xml:space="preserve">
+    <value>OSD katmanını göster</value>
+  </data>
+  <data name="ShowTrayNotifications" xml:space="preserve">
+    <value>Tepsi bildirimlerini göster</value>
+  </data>
+  <data name="OSDStyleLabel" xml:space="preserve">
+    <value>OSD Stili:</value>
+  </data>
+  <data name="OSDDefaultStyle" xml:space="preserve">
+    <value>Varsayılan Stil</value>
+  </data>
+  <data name="OSDVantageStyle" xml:space="preserve">
+    <value>Vantage Stili</value>
+  </data>
+  <data name="OSDLLTStyle" xml:space="preserve">
+    <value>Legion Toolkit Stili</value>
+  </data>  
+  
+  <!-- Language Settings -->
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>Dil:</value>
+  </data>
+  <data name="LanguageAuto" xml:space="preserve">
+    <value>Otomatik (Sistem Varsayılanı)</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>İngilizce</value>
+  </data>
+  <data name="LanguageTurkish" xml:space="preserve">
+    <value>Türkçe</value>
+  </data>
+
+  <!-- Theme Settings -->
+  <data name="ApplicationSettings" xml:space="preserve">
+    <value>Uygulama Ayarları</value>
+  </data>
+  <data name="ThemeLabel" xml:space="preserve">
+    <value>Tema:</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>Otomatik (Sistem Varsayılanı)</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Koyu</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Açık</value>
+  </data>
+
+  <!-- Startup Settings -->
+  <data name="StartWithWindows" xml:space="preserve">
+    <value>Windows ile Başlat</value>
+  </data>
+
+  <!-- Sound Feedback Settings -->
+  <data name="EnableSoundFeedback" xml:space="preserve">
+    <value>Sesli geri bildirimi etkinleştir</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- ABOUT WINDOW -->
+  <!-- ============================================ -->
+  <data name="AboutTitle" xml:space="preserve">
+    <value>MicControlX Hakkında</value>
+  </data>
+  <data name="VersionTemplate" xml:space="preserve">
+    <value>Sürüm {0}</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Sürüm</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Kısayol tuş desteği ve sistem çubuğu entegrasyonu ile global mikrofon kontrol programı.</value>
+  </data>
+
+  <!-- Feature Descriptions -->
+  <data name="Features" xml:space="preserve">
+    <value>Özellikler:</value>
+  </data>
+  <data name="FeatureGlobalHotkey" xml:space="preserve">
+    <value>• Genel kısayol desteği (F1-F24)</value>
+  </data>
+  <data name="FeatureSystemTray" xml:space="preserve">
+    <value>• Bağlam menüsü ile sistem tepsisi entegrasyonu</value>
+  </data>
+  <data name="FeatureMultipleOSD" xml:space="preserve">
+    <value>• Birden fazla OSD bildirim stili</value>
+  </data>
+  <data name="FeatureAudioFeedback" xml:space="preserve">
+    <value>• Özel seslerle sesli geri bildirim</value>
+  </data>
+  <data name="FeatureHoldHotkey" xml:space="preserve">
+    <value>• Geçici olarak sessize almak/açmak için kısayola basılı tut</value>
+  </data>
+  <data name="FeatureAutoStartup" xml:space="preserve">
+    <value>• Otomatik başlatma ve arka planda çalışma</value>
+  </data>
+
+  <data name="AboutDescription" xml:space="preserve">
+    <value>Bu uygulama, kullanıcıların iş akışlarını bölmeden aramalar, yayınlar veya kayıtlar sırasında anında sessize alma/açma işlevine ihtiyaç duyması için hızlı ve güvenilir mikrofon kontrolü sağlar.</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>© 2025 Dr. Skinner - GNU Genel Kamu Lisansı v3.0</value>
+  </data>
+  
+  <!-- Update Functionality -->
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Güncellemeleri Denetle</value>
+  </data>
+  <data name="Checking" xml:space="preserve">
+    <value>Denetleniyor...</value>
+  </data>
+  <data name="UpdateAvailableTitle" xml:space="preserve">
+    <value>Güncelleme Mevcut</value>
+  </data>
+  <data name="UpdateAvailableMessage" xml:space="preserve">
+    <value>Yeni bir sürüm {0} mevcut!
+
+İndirmek ister misiniz?</value>
+  </data>
+  <data name="UpdateCheckFailedTitle" xml:space="preserve">
+    <value>Güncelleme Denetimi Başarısız</value>
+  </data>
+  <data name="UpdateCheckFailedMessage" xml:space="preserve">
+    <value>Güncellemeler denetlenemedi. Lütfen şu adresi ziyaret edin:
+https://github.com/Metanome/mic-controlx/releases</value>
+  </data>
+  <data name="NoUpdatesTitle" xml:space="preserve">
+    <value>Güncelleme Yok</value>
+  </data>
+  <data name="NoUpdatesMessage" xml:space="preserve">
+    <value>En son sürümü kullanıyorsunuz!</value>
+  </data>
+  <data name="NoReleaseNotes" xml:space="preserve">
+    <value>Sürüm notu mevcut değil.</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- CONTEXT MENU & SYSTEM TRAY -->
+  <!-- ============================================ -->
+  <data name="ToggleMicrophone" xml:space="preserve">
+    <value>Mikrofonu Aç/Kapat</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Çıkış</value>
+  </data>
+
+  <!-- Tray Tooltips -->
+  <data name="TrayTooltipMuted" xml:space="preserve">
+    <value>MicControlX - Sessiz</value>
+  </data>
+  <data name="TrayTooltipActive" xml:space="preserve">
+    <value>MicControlX - Aktif</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- STATUS & NOTIFICATION MESSAGES -->
+  <!-- ============================================ -->
+  <!-- Basic Status Messages -->
+  <data name="MicrophoneMuted" xml:space="preserve">
+    <value>Mikrofon Sessizde</value>
+  </data>
+  <data name="MicrophoneActive" xml:space="preserve">
+    <value>Mikrofon Aktif</value>
+  </data>
+  
+  <!-- Notification Messages -->
+  <data name="NotificationMicrophoneMuted" xml:space="preserve">
+    <value>Mikrofon Sessizde</value>
+  </data>
+  <data name="NotificationMicrophoneActive" xml:space="preserve">
+    <value>Mikrofon Aktif</value>
+  </data>
+  <data name="NotificationMicrophoneTemporarilyMuted" xml:space="preserve">
+    <value>Mikrofon Geçici Olarak Sessizde</value>
+  </data>
+  <data name="NotificationMicrophoneTemporarilyActive" xml:space="preserve">
+    <value>Mikrofon Geçici Olarak Aktif</value>
+  </data>
+  
+  <!-- General Status -->
+  <data name="NoActiveMicrophones" xml:space="preserve">
+    <value>Etkin mikrofon bulunamadı</value>
+  </data>
+  <data name="NAudioError" xml:space="preserve">
+    <value>NAudio Hatası</value>
+  </data>
+  <data name="StateCheckError" xml:space="preserve">
+    <value>Durum Denetim Hatası</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- ERROR MESSAGES & WARNINGS -->
+  <!-- ============================================ -->
+  <!-- General Errors -->
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Hata</value>
+  </data>
+  <data name="AppAlreadyRunning" xml:space="preserve">
+    <value>MicControlX zaten çalışıyor. Sistem tepsisini kontrol edin.</value>
+  </data>
+  
+  <!-- Startup Errors -->
+  <data name="ErrorStartupTitle" xml:space="preserve">
+    <value>Başlatma Hatası</value>
+  </data>
+  <data name="StartupError" xml:space="preserve">
+    <value>Başlatma Hatası</value>
+  </data>
+  <data name="ErrorInitializationMessage" xml:space="preserve">
+    <value>Başlatma hatası: {0}
+
+Yığın izleme:
+{1}</value>
+  </data>
+  <data name="ErrorStartupSettingTitle" xml:space="preserve">
+    <value>Başlatma Ayarı Başarısız</value>
+  </data>
+  <data name="ErrorStartupSettingMessage" xml:space="preserve">
+    <value>Uyarı: Windows başlangıç ayarını {0} işlemi başarısız oldu.
+
+Hata: {1}
+
+Bunun nedeni olabilir:
+• Yetersiz kayıt defteri izinleri
+• Kayıt defteri değişikliklerini engelleyen antivirüs yazılımı
+• Grup ilkesi kısıtlamaları
+
+Diğer ayarlarınız başarıyla kaydedildi.</value>
+  </data>
+  
+  <!-- Settings Errors -->
+  <data name="ErrorSettingsTitle" xml:space="preserve">
+    <value>Ayar Hatası</value>
+  </data>
+  <data name="ErrorSettingsInitMessage" xml:space="preserve">
+    <value>AyarlarPenceresi başlatma hatası: {0}
+
+Yığın izi:
+{1}</value>
+  </data>
+  <data name="ErrorLoadSettingsMessage" xml:space="preserve">
+    <value>LoadCurrentSettings hatası: {0}</value>
+  </data>
+  <data name="ErrorSettingsException" xml:space="preserve">
+    <value>OkButton_Click’te özel durum: {0}
+
+Yığın izi: {1}</value>
+  </data>
+  <data name="SettingsErrorMessage" xml:space="preserve">
+    <value>Ayar hatası: {0}</value>
+  </data>
+  <data name="ErrorConfigSaveTitle" xml:space="preserve">
+    <value>Yapılandırma Kaydetme Hatası</value>
+  </data>
+  <data name="ErrorConfigSaveMessage" xml:space="preserve">
+    <value>Yapılandırma ayarları kaydedilemedi.
+
+Hata: {0}
+
+Bunun nedeni olabilir:
+• AppData klasörüne yazmak için yetersiz izin
+• Disk alanı sorunları
+• Dosya erişimini engelleyen antivirüs yazılımı
+
+Ayarlarınız kaydedilemedi.</value>
+  </data>
+  
+  <!-- Hotkey Errors -->
+  <data name="ErrorHotkeyRegistrationTitle" xml:space="preserve">
+    <value>Kısayol Kaydı Başarısız</value>
+  </data>
+  <data name="ErrorHotkeyRegistrationMessage" xml:space="preserve">
+    <value>{0} kısayolu kaydedilemedi.
+
+Olası nedenler:
+• Başka bir uygulama bu tuşu zaten kullanıyor
+• Sistem düzeyinde kısıtlamalar
+• Fonksiyon tuşu çakışmaları
+
+Yapabilecekleriniz:
+• Ayarlardan kısayolu değiştirin
+• Mikrofonu aç/kapat için sistem tepsisi simgesini kullanın
+• {0} tuşunu kullanıyor olabilecek uygulamaları kapatın</value>
+  </data>
+  <data name="ErrorHotkeyConflictMessage" xml:space="preserve">
+    <value>Yeni {0} kısayolu kaydedilemedi.
+
+Neden: {1}
+
+Önerilen alternatifler: {2}
+
+Kısayol ayarı kaydedildi, ancak şunları yapana kadar çalışmayacak:
+• Ayarlardan farklı bir kısayol seçin
+• {0} tuşunu kullanıyor olabilecek diğer uygulamaları kapatın
+• MicControlX’i yeniden başlatın</value>
+  </data>
+  
+  <!-- About Window Errors -->
+  <data name="ErrorAboutWindow" xml:space="preserve">
+    <value>Hakkında penceresi oluşturulurken hata: {0}
+
+Yığın izi:
+{1}</value>
+  </data>
+  
+  <!-- OSD Errors -->
+  <data name="OSDInitializationWarningTitle" xml:space="preserve">
+    <value>OSD Başlatma Uyarısı</value>
+  </data>
+  <data name="OSDInitializationWarningMessage" xml:space="preserve">
+    <value>Uyarı: Görsel katman (OSD) başlatma başarısız.
+
+Hata: {0}
+
+Uygulama normal çalışacak, ancak mikrofonu açıp kapatırken görsel geri bildirim göremeyeceksiniz.
+
+Şunları deneyebilirsiniz:
+• Ayarlardan OSD stilini değiştirmek
+• Sorun devam ederse OSD’yi devre dışı bırakmak</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- UTILITY & HELPER STRINGS -->
+  <!-- ============================================ -->
+  <!-- Action Descriptions -->
+  <data name="ActionEnable" xml:space="preserve">
+    <value>etkinleştir</value>
+  </data>
+  <data name="ActionDisable" xml:space="preserve">
+    <value>devre dışı bırak</value>
+  </data>
+</root>

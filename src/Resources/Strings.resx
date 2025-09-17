@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="xml:space" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+  <!-- ============================================ -->
+  <!-- APPLICATION TITLE -->
+  <!-- ============================================ -->
+  <data name="AppTitle" xml:space="preserve">
+    <value>MicControlX</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- MAIN WINDOW -->
+  <!-- ============================================ -->
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="GlobalHotkey" xml:space="preserve">
+    <value>Global Hotkey</value>
+  </data>
+  <data name="HotkeyInstruction" xml:space="preserve">
+    <value>Press F11 to toggle, hold to mute/unmute temporarily</value>
+  </data>
+  <data name="HotkeyInstructionTemplate" xml:space="preserve">
+    <value>Press {0} to toggle, hold to mute/unmute temporarily</value>
+  </data>
+  <data name="FeaturesCompatibility" xml:space="preserve">
+    <value>Features &amp; Compatibility</value>
+  </data>
+  <data name="FeatureUniversal" xml:space="preserve">
+    <value>• Universal Windows microphone control utility</value>
+  </data>
+  <data name="FeatureAnyDevice" xml:space="preserve">
+    <value>• Works with any Windows audio device and system settings</value>
+  </data>
+  <data name="AlternativeControls" xml:space="preserve">
+    <value>Alternative Controls</value>
+  </data>
+  <data name="ControlSingleClick" xml:space="preserve">
+    <value>• Single-click system tray icon to toggle</value>
+  </data>
+  <data name="ControlDoubleClick" xml:space="preserve">
+    <value>• Double-click tray icon to open app</value>
+  </data>
+  <data name="ControlRightClick" xml:space="preserve">
+    <value>• Right-click tray icon for options</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- MICROPHONE STATUS & CONTROL -->
+  <!-- ============================================ -->
+  <data name="MicrophoneStatus" xml:space="preserve">
+    <value>Microphone Status</value>
+  </data>
+  <data name="Microphone" xml:space="preserve">
+    <value>Microphone</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Muted" xml:space="preserve">
+    <value>Muted</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- SYSTEM INFORMATION -->
+  <!-- ============================================ -->
+  <data name="SystemInformation" xml:space="preserve">
+    <value>System Information</value>
+  </data>
+  <data name="Brand" xml:space="preserve">
+    <value>Brand: </value>
+  </data>
+  <data name="Platform" xml:space="preserve">
+    <value>Platform: </value>
+  </data>
+  <data name="UnknownSystem" xml:space="preserve">
+    <value>Unknown System</value>
+  </data>
+  <data name="UnknownSystemDescription" xml:space="preserve">
+    <value>Unknown System - Universal Compatibility Mode</value>
+  </data>
+  <data name="RecommendedSettingsDescription" xml:space="preserve">
+    <value>Choose any OSD style based on your preference - all styles work universally</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- SETTINGS WINDOW -->
+  <!-- ============================================ -->
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>MicControlX Settings</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  
+  <!-- Hotkey Settings -->
+  <data name="HotkeySettings" xml:space="preserve">
+    <value>Hotkey Settings</value>
+  </data>
+  <data name="GlobalHotkeyLabel" xml:space="preserve">
+    <value>Global Hotkey:</value>
+  </data>
+
+  <!-- Notification Settings -->
+  <data name="NotificationType" xml:space="preserve">
+    <value>Notification Type</value>
+  </data>
+  <data name="ShowOSDOverlay" xml:space="preserve">
+    <value>Show OSD overlay</value>
+  </data>
+  <data name="ShowTrayNotifications" xml:space="preserve">
+    <value>Show tray notifications</value>
+  </data>
+  <data name="OSDStyleLabel" xml:space="preserve">
+    <value>OSD Style:</value>
+  </data>
+  <data name="OSDDefaultStyle" xml:space="preserve">
+    <value>Default Style</value>
+  </data>
+  <data name="OSDVantageStyle" xml:space="preserve">
+    <value>Vantage Style</value>
+  </data>
+  <data name="OSDLLTStyle" xml:space="preserve">
+    <value>Legion Toolkit Style</value>
+  </data>  
+  
+  <!-- Language Settings -->
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>Language:</value>
+  </data>
+  <data name="LanguageAuto" xml:space="preserve">
+    <value>Auto (System Default)</value>
+  </data>
+  <data name="LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="LanguageTurkish" xml:space="preserve">
+    <value>Türkçe</value>
+  </data>
+
+  <!-- Theme Settings -->
+  <data name="ApplicationSettings" xml:space="preserve">
+    <value>Application Settings</value>
+  </data>
+  <data name="ThemeLabel" xml:space="preserve">
+    <value>Theme:</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>Auto (System Default)</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Light</value>
+  </data>
+
+  <!-- Startup Settings -->
+  <data name="StartWithWindows" xml:space="preserve">
+    <value>Start with Windows</value>
+  </data>
+
+  <!-- Sound Feedback Settings -->
+  <data name="EnableSoundFeedback" xml:space="preserve">
+    <value>Enable sound feedback</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- ABOUT WINDOW -->
+  <!-- ============================================ -->
+  <data name="AboutTitle" xml:space="preserve">
+    <value>About MicControlX</value>
+  </data>
+  <data name="VersionTemplate" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Global microphone control utility with hotkey support and system tray integration.</value>
+  </data>
+
+  <!-- Feature Descriptions -->
+  <data name="Features" xml:space="preserve">
+    <value>Features:</value>
+  </data>
+  <data name="FeatureGlobalHotkey" xml:space="preserve">
+    <value>• Global hotkey support (F1-F24)</value>
+  </data>
+  <data name="FeatureSystemTray" xml:space="preserve">
+    <value>• System tray integration with context menu</value>
+  </data>
+  <data name="FeatureMultipleOSD" xml:space="preserve">
+    <value>• Multiple OSD notification styles</value>
+  </data>
+  <data name="FeatureAudioFeedback" xml:space="preserve">
+    <value>• Audio feedback with custom sounds</value>
+  </data>
+  <data name="FeatureHoldHotkey" xml:space="preserve">
+    <value>• Hold hotkey to temporarily mute/unmute</value>
+  </data>
+  <data name="FeatureAutoStartup" xml:space="preserve">
+    <value>• Automatic startup and background operation</value>
+  </data>
+
+  <data name="AboutDescription" xml:space="preserve">
+    <value>This application provides quick and reliable microphone control for users who need instant mute/unmute functionality during calls, streaming, or recording sessions without interrupting their workflow.</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>© 2025 Dr. Skinner - GNU General Public License v3.0</value>
+  </data>
+  
+  <!-- Update Functionality -->
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Check for Updates</value>
+  </data>
+  <data name="Checking" xml:space="preserve">
+    <value>Checking...</value>
+  </data>
+  <data name="UpdateAvailableTitle" xml:space="preserve">
+    <value>Update Available</value>
+  </data>
+  <data name="UpdateAvailableMessage" xml:space="preserve">
+    <value>A new version {0} is available!
+
+Would you like to download it?</value>
+  </data>
+  <data name="UpdateCheckFailedTitle" xml:space="preserve">
+    <value>Update Check Failed</value>
+  </data>
+  <data name="UpdateCheckFailedMessage" xml:space="preserve">
+    <value>Could not check for updates. Please visit:
+https://github.com/Metanome/mic-controlx/releases</value>
+  </data>
+  <data name="NoUpdatesTitle" xml:space="preserve">
+    <value>No Updates</value>
+  </data>
+  <data name="NoUpdatesMessage" xml:space="preserve">
+    <value>You are running the latest version!</value>
+  </data>
+  <data name="NoReleaseNotes" xml:space="preserve">
+    <value>No release notes available.</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- CONTEXT MENU & SYSTEM TRAY -->
+  <!-- ============================================ -->
+  <data name="ToggleMicrophone" xml:space="preserve">
+    <value>Toggle Microphone</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+
+  <!-- Tray Tooltips -->
+  <data name="TrayTooltipMuted" xml:space="preserve">
+    <value>MicControlX - Muted</value>
+  </data>
+  <data name="TrayTooltipActive" xml:space="preserve">
+    <value>MicControlX - Active</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- STATUS & NOTIFICATION MESSAGES -->
+  <!-- ============================================ -->
+  <!-- Basic Status Messages -->
+  <data name="MicrophoneMuted" xml:space="preserve">
+    <value>Microphone Muted</value>
+  </data>
+  <data name="MicrophoneActive" xml:space="preserve">
+    <value>Microphone Active</value>
+  </data>
+  
+  <!-- Notification Messages -->
+  <data name="NotificationMicrophoneMuted" xml:space="preserve">
+    <value>Microphone Muted</value>
+  </data>
+  <data name="NotificationMicrophoneActive" xml:space="preserve">
+    <value>Microphone Active</value>
+  </data>
+  <data name="NotificationMicrophoneTemporarilyMuted" xml:space="preserve">
+    <value>Microphone Temporarily Muted</value>
+  </data>
+  <data name="NotificationMicrophoneTemporarilyActive" xml:space="preserve">
+    <value>Microphone Temporarily Active</value>
+  </data>
+  
+  <!-- General Status -->
+  <data name="NoActiveMicrophones" xml:space="preserve">
+    <value>No active microphones found</value>
+  </data>
+  <data name="NAudioError" xml:space="preserve">
+    <value>NAudio Error</value>
+  </data>
+  <data name="StateCheckError" xml:space="preserve">
+    <value>State Check Error</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- ERROR MESSAGES & WARNINGS -->
+  <!-- ============================================ -->
+  <!-- General Errors -->
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="AppAlreadyRunning" xml:space="preserve">
+    <value>MicControlX is already running. Check the system tray.</value>
+  </data>
+  
+  <!-- Startup Errors -->
+  <data name="ErrorStartupTitle" xml:space="preserve">
+    <value>Startup Error</value>
+  </data>
+  <data name="StartupError" xml:space="preserve">
+    <value>Startup Error</value>
+  </data>
+  <data name="ErrorInitializationMessage" xml:space="preserve">
+    <value>Initialization error: {0}
+
+Stack trace:
+{1}</value>
+  </data>
+  <data name="ErrorStartupSettingTitle" xml:space="preserve">
+    <value>Startup Setting Failed</value>
+  </data>
+  <data name="ErrorStartupSettingMessage" xml:space="preserve">
+    <value>Warning: Failed to {0} Windows startup setting.
+
+Error: {1}
+
+This may be due to:
+• Insufficient registry permissions
+• Antivirus software blocking registry changes
+• Group policy restrictions
+
+Your other settings have been saved successfully.</value>
+  </data>
+  
+  <!-- Settings Errors -->
+  <data name="ErrorSettingsTitle" xml:space="preserve">
+    <value>Settings Error</value>
+  </data>
+  <data name="ErrorSettingsInitMessage" xml:space="preserve">
+    <value>SettingsWindow initialization error: {0}
+
+Stack trace:
+{1}</value>
+  </data>
+  <data name="ErrorLoadSettingsMessage" xml:space="preserve">
+    <value>LoadCurrentSettings error: {0}</value>
+  </data>
+  <data name="ErrorSettingsException" xml:space="preserve">
+    <value>Exception in OkButton_Click: {0}
+
+Stack trace: {1}</value>
+  </data>
+  <data name="SettingsErrorMessage" xml:space="preserve">
+    <value>Settings error: {0}</value>
+  </data>
+  <data name="ErrorConfigSaveTitle" xml:space="preserve">
+    <value>Configuration Save Error</value>
+  </data>
+  <data name="ErrorConfigSaveMessage" xml:space="preserve">
+    <value>Failed to save configuration settings.
+
+Error: {0}
+
+This may be caused by:
+• Insufficient permissions to write to AppData folder
+• Disk space issues
+• Antivirus software blocking file access
+
+Your settings could not be saved.</value>
+  </data>
+  
+  <!-- Hotkey Errors -->
+  <data name="ErrorHotkeyRegistrationTitle" xml:space="preserve">
+    <value>Hotkey Registration Failed</value>
+  </data>
+  <data name="ErrorHotkeyRegistrationMessage" xml:space="preserve">
+    <value>The {0} hotkey could not be registered.
+
+Possible reasons:
+• Another application is already using this key
+• System-level restrictions
+• Function key conflicts
+
+You can:
+• Change the hotkey in Settings
+• Use the system tray icon to toggle the microphone
+• Close applications that might be using {0}</value>
+  </data>
+  <data name="ErrorHotkeyConflictMessage" xml:space="preserve">
+    <value>Failed to register the new {0} hotkey.
+
+Reason: {1}
+
+Suggested alternatives: {2}
+
+The hotkey setting has been saved, but won't work until you:
+• Choose a different hotkey in Settings
+• Close other applications that might be using {0}
+• Restart MicControlX</value>
+  </data>
+  
+  <!-- About Window Errors -->
+  <data name="ErrorAboutWindow" xml:space="preserve">
+    <value>Error creating About window: {0}
+
+Stack trace:
+{1}</value>
+  </data>
+  
+  <!-- OSD Errors -->
+  <data name="OSDInitializationWarningTitle" xml:space="preserve">
+    <value>OSD Initialization Warning</value>
+  </data>
+  <data name="OSDInitializationWarningMessage" xml:space="preserve">
+    <value>Warning: Visual overlay (OSD) initialization failed.
+
+Error: {0}
+
+The application will work normally, but you won't see visual feedback when toggling the microphone.
+
+You can try:
+• Changing the OSD style in Settings
+• Disabling OSD in Settings if the problem persists</value>
+  </data>
+  
+  <!-- ============================================ -->
+  <!-- UTILITY & HELPER STRINGS -->
+  <!-- ============================================ -->
+  <!-- Action Descriptions -->
+  <data name="ActionEnable" xml:space="preserve">
+    <value>enable</value>
+  </data>
+  <data name="ActionDisable" xml:space="preserve">
+    <value>disable</value>
+  </data>
+</root>

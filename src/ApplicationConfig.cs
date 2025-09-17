@@ -13,11 +13,11 @@ namespace MicControlX
     /// </summary>
     public enum OSDStyles
     {
-        /// <summary>Windows Default - Universal clean style</summary>
-        WindowsDefault,
-        /// <summary>Vantage Style - Transparent background with rounded border around icon (inspired by Lenovo Vantage)</summary>
+        /// <summary>Default Style - MicControlX standard notification style</summary>
+        DefaultStyle,
+        /// <summary>Vantage Style - Lenovo Vantage inspired design</summary>
         VantageStyle,
-        /// <summary>LLT Style - Dark background with icon + text (inspired by Legion Toolkit)</summary>
+        /// <summary>LLT Style - Lenovo Legion Toolkit inspired design</summary>
         LLTStyle
     }
 
@@ -48,7 +48,7 @@ namespace MicControlX
         public int OSDDisplayTime { get; set; } = 2000; // milliseconds
         
         /// <summary>OSD visual style preference</summary>
-        public OSDStyles OSDStyle { get; set; } = OSDStyles.WindowsDefault;
+        public OSDStyles OSDStyle { get; set; } = OSDStyles.DefaultStyle;
         
         /// <summary>Application UI theme (Dark/Light/System)</summary>
         public AppTheme Theme { get; set; } = AppTheme.System;
@@ -59,35 +59,36 @@ namespace MicControlX
         /// <summary>Enable sound feedback on mute/unmute</summary>
         public bool EnableSoundFeedback { get; set; } = false;
         
+        /// <summary>Application language (auto, en, tr)</summary>
+        public string Language { get; set; } = "auto";
+        
         /// <summary>Detected system brand (Dell, HP, Acer, Lenovo, etc.)</summary>
         [JsonIgnore]
-        public string DetectedBrand { get; set; } = "Unknown";
+        public string DetectedBrand { get; set; } = Strings.Unknown;
         
         /// <summary>Detected system model</summary>
         [JsonIgnore]
-        public string DetectedModel { get; set; } = "Unknown";
-        
-        /// <summary>Application version</summary>
-        [JsonIgnore]
-        public string AppVersion { get; set; } = "3.1.1-gamma";
+        public string DetectedModel { get; set; } = Strings.Unknown;
         
         /// <summary>
         /// Get a user-friendly description of the detected system
         /// </summary>
         public string GetSystemDescription()
         {
-            if (DetectedBrand == "Unknown" || DetectedModel == "Unknown")
+            if (DetectedBrand == Strings.Unknown || DetectedModel == Strings.Unknown)
             {
-                return "Unknown System - Universal Compatibility Mode";
+                return Strings.UnknownSystemDescription;
             }
             
             return $"{DetectedBrand} {DetectedModel}";
         }
 
-        /// <summary>Get recommended settings description based on detected system</summary>
+        /// <summary>
+        /// Get recommended settings description based on detected system
+        /// </summary>
         public string GetRecommendedSettingsDescription()
         {
-            return "Choose any OSD style based on your preference - all styles work universally";
+            return Strings.RecommendedSettingsDescription;
         }
     }
 
@@ -96,7 +97,7 @@ namespace MicControlX
         private static readonly string ConfigFilePath = GetConfigFilePath();
 
         /// <summary>
-        /// Get configuration file path - prefer next to executable for portability
+        /// Get configuration file path
         /// </summary>
         private static string GetConfigFilePath()
         {
@@ -163,8 +164,8 @@ namespace MicControlX
             try
             {
                 // Detect system info
-                config.DetectedBrand = GetSystemInfo("SystemManufacturer") ?? "Unknown";
-                config.DetectedModel = GetSystemInfo("SystemProductName") ?? "Unknown";
+                config.DetectedBrand = GetSystemInfo("SystemManufacturer") ?? Strings.Unknown;
+                config.DetectedModel = GetSystemInfo("SystemProductName") ?? Strings.Unknown;
                 
                 // Sync AutoStart setting with registry to prevent mismatches
                 bool registryAutoStart = StartupManager.IsAutoStartEnabled();
@@ -178,8 +179,8 @@ namespace MicControlX
             {
                 System.Diagnostics.Debug.WriteLine($"ConfigManager: Error detecting system info - {ex.Message}");
                 // Fallback to safe defaults
-                config.DetectedBrand = "Unknown";
-                config.DetectedModel = "Unknown";
+                config.DetectedBrand = Strings.Unknown;
+                config.DetectedModel = Strings.Unknown;
             }
         }
 
@@ -189,8 +190,8 @@ namespace MicControlX
         /// </summary>
         private static void ApplyDefaultSettings(ApplicationConfig config)
         {
-            // Always use Windows Default as the universal choice
-            config.OSDStyle = OSDStyles.WindowsDefault;
+            // Always use Default Style as the universal choice
+            config.OSDStyle = OSDStyles.DefaultStyle;
         }
 
         private static string? GetSystemInfo(string keyName)
@@ -218,17 +219,8 @@ namespace MicControlX
             {
                 System.Diagnostics.Debug.WriteLine($"ConfigManager: Failed to save configuration - {ex.Message}");
                 MessageBox.Show(
-                    $"Failed to save configuration settings.\n\n" +
-                    $"Error: {ex.Message}\n\n" +
-                    $"This may be caused by:\n" +
-                    $"• Insufficient permissions to write to AppData folder\n" +
-                    $"• Disk space issues\n" +
-                    $"• Antivirus software blocking file access\n\n" +
-                    $"Please try:\n" +
-                    $"• Running the application as administrator\n" +
-                    $"• Checking available disk space\n" +
-                    $"• Temporarily disabling antivirus real-time protection",
-                    "Configuration Save Error", 
+                    string.Format(Strings.ErrorConfigSaveMessage, ex.Message),
+                    Strings.ErrorConfigSaveTitle, 
                     MessageBoxButton.OK, 
                     MessageBoxImage.Error);
             }

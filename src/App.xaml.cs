@@ -23,14 +23,18 @@ namespace MicControlX
                 if (!isNewInstance)
                 {
                     // Another instance is already running
-                    MessageBox.Show("MicControlX is already running. Check the system tray.", 
-                        "MicControlX", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(Strings.AppAlreadyRunning, 
+                        Strings.AppTitle, MessageBoxButton.OK, MessageBoxImage.Information);
                     Current.Shutdown();
                     return;
                 }
 
                 // Load configuration and apply theme BEFORE base.OnStartup
                 var config = ConfigurationManager.LoadConfiguration();
+                
+                // Initialize localization
+                LocalizationManager.Initialize(config.Language);
+                
                 ThemeManager.ApplyTheme(config.Theme);
 
                 // Call base startup
@@ -62,7 +66,7 @@ namespace MicControlX
             {
                 Console.WriteLine($"Exception in OnStartup: {ex.Message}");
                 MessageBox.Show($"Application startup failed:\n{ex.Message}\n\nStack trace:\n{ex.StackTrace}", 
-                    "Startup Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Strings.StartupError, MessageBoxButton.OK, MessageBoxImage.Error);
                 Current.Shutdown();
             }
         }

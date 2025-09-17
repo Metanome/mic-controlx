@@ -49,7 +49,7 @@ namespace MicControlX
                         CurrentVersion = currentVersion.ToString(),
                         ReleaseUrl = release.html_url ?? GITHUB_REPO_URL,
                         DownloadUrl = GetDownloadUrl(release),
-                        ReleaseNotes = release.body ?? "No release notes available.",
+                        ReleaseNotes = release.body ?? Strings.NoReleaseNotes,
                         PublishedAt = release.published_at
                     };
                 }
@@ -175,7 +175,7 @@ namespace MicControlX
         {
             get
             {
-                if (string.IsNullOrEmpty(ReleaseNotes)) return "No release notes available.";
+                if (string.IsNullOrEmpty(ReleaseNotes)) return Strings.NoReleaseNotes;
                 
                 // Limit to first 500 characters for display
                 return ReleaseNotes.Length > 500 

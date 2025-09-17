@@ -2,7 +2,10 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Interop;
+using System.Windows.Media;
 using Wpf.Ui.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using System.Windows.Threading;
@@ -37,6 +40,7 @@ namespace MicControlX
         private readonly object configLock = new object();
         private TaskbarIcon? trayIcon;
         private HotkeyManager? hotkeyManager;
+        private bool isInitializing = true; // Flag to prevent OSD during startup
         #endregion
 
         #region Constructor
@@ -58,6 +62,7 @@ namespace MicControlX
                 micController.MuteStateChanged += OnMuteStateChanged;
                 micController.ErrorOccurred += OnMicrophoneError;
                 micController.ExternalChangeDetected += OnExternalChangeDetected;
+                LocalizationManager.LanguageChanged += OnLanguageChanged;
                 
                 // Initialize hotkey manager (works regardless of window visibility)
                 InitializeHotkeyManager();
@@ -78,21 +83,16 @@ namespace MicControlX
                 {
                     System.Diagnostics.Debug.WriteLine($"OSD initialization failed: {ex.Message}");
                     MessageBox.Show(
-                        $"Warning: Visual overlay (OSD) initialization failed.\n\n" +
-                        $"Error: {ex.Message}\n\n" +
-                        $"The application will work normally, but you won't see visual feedback when toggling the microphone.\n\n" +
-                        $"You can try:\n" +
-                        $"• Changing the OSD style in Settings\n" +
-                        $"• Disabling OSD in Settings if the problem persists",
-                        "OSD Initialization Warning",
+                        string.Format(Strings.OSDInitializationWarningMessage, ex.Message),
+                        Strings.OSDInitializationWarningTitle,
                         System.Windows.MessageBoxButton.OK,
                         System.Windows.MessageBoxImage.Warning);
                 }
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Initialization error: {ex.Message}\n\nStack trace:\n{ex.StackTrace}", 
-                    "Startup Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(string.Format(Strings.ErrorInitializationMessage, ex.Message, ex.StackTrace), 
+                    Strings.ErrorStartupTitle, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                 Application.Current.Shutdown();
             }
         }
@@ -137,14 +137,8 @@ namespace MicControlX
                     var alternatives = string.Join(", ", ConfigurationManager.VirtualKeys.GetSuggestedAlternatives(config.HotKeyVirtualKey));
                     
                     MessageBox.Show(
-                        $"Failed to register the {config.HotKeyDisplayName} hotkey.\n\n" +
-                        $"Reason: {conflictInfo}\n\n" +
-                        $"Suggested alternatives: {alternatives}\n\n" +
-                        $"You can:\n" +
-                        $"• Change the hotkey in Settings\n" +
-                        $"• Use the system tray icon to toggle the microphone\n" +
-                        $"• Close applications that might be using {config.HotKeyDisplayName}",
-                        "Hotkey Registration Failed", 
+                        string.Format(Strings.ErrorHotkeyRegistrationMessage, config.HotKeyDisplayName),
+                        Strings.ErrorHotkeyRegistrationTitle, 
                         System.Windows.MessageBoxButton.OK, 
                         System.Windows.MessageBoxImage.Warning);
                 }
@@ -160,7 +154,7 @@ namespace MicControlX
             try
             {
                 trayIcon = new TaskbarIcon();
-                trayIcon.ToolTipText = "MicControlX";
+                trayIcon.ToolTipText = Strings.AppTitle;
                 trayIcon.MenuActivation = Hardcodet.Wpf.TaskbarNotification.PopupActivationMode.RightClick;
                 
                 // Use single click timer to distinguish between single and double clicks
@@ -168,20 +162,7 @@ namespace MicControlX
                 trayIcon.TrayMouseDoubleClick += TrayIcon_DoubleClick;
                 
                 // Create context menu
-                var contextMenu = new System.Windows.Controls.ContextMenu();
-                var toggleItem = new System.Windows.Controls.MenuItem { Header = "_Toggle Microphone" };
-                toggleItem.Click += TrayToggle_Click;
-                var settingsItem = new System.Windows.Controls.MenuItem { Header = "_Settings" };
-                settingsItem.Click += TraySettings_Click;
-                var exitItem = new System.Windows.Controls.MenuItem { Header = "E_xit" };
-                exitItem.Click += TrayExit_Click;
-                
-                contextMenu.Items.Add(toggleItem);
-                contextMenu.Items.Add(settingsItem);
-                contextMenu.Items.Add(new System.Windows.Controls.Separator());
-                contextMenu.Items.Add(exitItem);
-                
-                trayIcon.ContextMenu = contextMenu;
+                CreateContextMenu();
                 
                 // Set initial icon
                 UpdateTrayIcon(micController.IsMuted);
@@ -194,13 +175,39 @@ namespace MicControlX
             }
         }
 
+        private void CreateContextMenu()
+        {
+            if (trayIcon != null)
+            {
+                var contextMenu = new System.Windows.Controls.ContextMenu();
+                var toggleItem = new System.Windows.Controls.MenuItem { Header = Strings.ToggleMicrophone };
+                toggleItem.Click += TrayToggle_Click;
+                var settingsItem = new System.Windows.Controls.MenuItem { Header = Strings.Settings };
+                settingsItem.Click += TraySettings_Click;
+                var exitItem = new System.Windows.Controls.MenuItem { Header = Strings.Exit };
+                exitItem.Click += TrayExit_Click;
+                
+                contextMenu.Items.Add(toggleItem);
+                contextMenu.Items.Add(settingsItem);
+                contextMenu.Items.Add(new System.Windows.Controls.Separator());
+                contextMenu.Items.Add(exitItem);
+                
+                trayIcon.ContextMenu = contextMenu;
+            }
+        }
+
+        private void RefreshContextMenu()
+        {
+            CreateContextMenu();
+        }
+
         private void UpdateUI()
         {
             // Force UI refresh by dispatching to UI thread
             Dispatcher.Invoke(() =>
             {
                 // Update hotkey label
-                var newText = $"Press {config.HotKeyDisplayName} to toggle, hold to mute/unmute temporarily";
+                var newText = string.Format(Strings.HotkeyInstructionTemplate, config.HotKeyDisplayName);
                 HotkeyLabel.Text = newText;
                 
                 // Update system info
@@ -295,11 +302,11 @@ namespace MicControlX
             {
                 var assembly = typeof(NAudio.CoreAudioApi.MMDevice).Assembly;
                 var version = assembly.GetName().Version;
-                return version?.ToString() ?? "Unknown";
+                return version?.ToString() ?? Strings.Unknown;
             }
             catch
             {
-                return "Unknown";
+                return Strings.Unknown;
             }
         }
 
@@ -315,14 +322,14 @@ namespace MicControlX
                     {
                         StatusIcon.Symbol = Wpf.Ui.Controls.SymbolRegular.MicOff24;
                         StatusIcon.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Red);
-                        StatusText.Text = "Muted";
+                        StatusText.Text = Strings.Muted;
                         StatusText.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Red);
                     }
                     else
                     {
                         StatusIcon.Symbol = Wpf.Ui.Controls.SymbolRegular.Mic24;
                         StatusIcon.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Green);
-                        StatusText.Text = "Active";
+                        StatusText.Text = Strings.Active;
                         StatusText.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Green);
                     }
                 }
@@ -334,7 +341,7 @@ namespace MicControlX
             {
                 if (StatusText != null)
                 {
-                    StatusText.Text = "Error";
+                    StatusText.Text = Strings.ErrorTitle;
                 }
                 Debug.WriteLine($"Status update error: {ex.Message}");
             }
@@ -383,7 +390,7 @@ namespace MicControlX
                     }
                 }
                 
-                trayIcon.ToolTipText = isMuted ? "MicControlX - Muted" : "MicControlX - Active";
+                trayIcon.ToolTipText = isMuted ? Strings.TrayTooltipMuted : Strings.TrayTooltipActive;
             }
             catch (Exception ex)
             {
@@ -399,7 +406,8 @@ namespace MicControlX
             {
                 UpdateMicrophoneStatus();
 
-                if (config.ShowOSD && DateTime.Now.Subtract(lastOSDUpdate).TotalMilliseconds > 500)
+                // Only show OSD if app is fully initialized and enough time has passed since last update
+                if (!isInitializing && config.ShowOSD && DateTime.Now.Subtract(lastOSDUpdate).TotalMilliseconds > 500)
                 {
                     osd?.ShowMicrophoneStatus(isMuted);
                     lastOSDUpdate = DateTime.Now;
@@ -424,15 +432,37 @@ namespace MicControlX
             {
                 UpdateMicrophoneStatus();
                 
-                if (config?.ShowOSD == true)
+                // Only show OSD if app is fully initialized
+                if (!isInitializing && config?.ShowOSD == true)
                 {
                     osd?.ShowMicrophoneStatus(isMuted);
                 }
             });
         }
 
+        private void OnLanguageChanged(object? sender, EventArgs e)
+        {
+            // Handle language changes by updating UI elements
+            Dispatcher.Invoke(() =>
+            {
+                // Update dynamic elements that are programmatically set
+                UpdateUI();
+                RefreshContextMenu();
+                
+                // Update window title
+                Title = Strings.AppTitle;
+                
+                // Force visual refresh
+                InvalidateVisual();
+                UpdateLayout();
+            });
+        }
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            // Mark initialization as complete to allow OSD triggers
+            isInitializing = false;
+            
             // Don't hide automatically - let user decide when to minimize to tray
             // The window will show normally and user can minimize it manually
         }
@@ -493,8 +523,8 @@ namespace MicControlX
                 // Show tray notification if enabled
                 if (config.ShowNotifications)
                 {
-                    string title = "MicControlX";
-                    string message = !wasMutedBeforePTT ? "Microphone Temporarily Muted" : "Microphone Temporarily Active";
+                    string title = Strings.AppTitle;
+                    string message = !wasMutedBeforePTT ? Strings.NotificationMicrophoneTemporarilyMuted : Strings.NotificationMicrophoneTemporarilyActive;
                     var icon = !wasMutedBeforePTT ? BalloonIcon.Warning : BalloonIcon.Info;
                     trayIcon?.ShowBalloonTip(title, message, icon);
                 }
@@ -657,8 +687,8 @@ namespace MicControlX
                     // Show tray notification if enabled
                     if (config.ShowNotifications)
                     {
-                        string title = "MicControlX";
-                        string message = currentState ? "Microphone Muted" : "Microphone Active";
+                        string title = Strings.AppTitle;
+                        string message = currentState ? Strings.NotificationMicrophoneMuted : Strings.NotificationMicrophoneActive;
                         var icon = currentState ? BalloonIcon.Warning : BalloonIcon.Info;
                         
                         trayIcon?.ShowBalloonTip(title, message, icon);
@@ -735,14 +765,8 @@ namespace MicControlX
                         var alternatives = string.Join(", ", ConfigurationManager.VirtualKeys.GetSuggestedAlternatives(config.HotKeyVirtualKey));
                         
                         MessageBox.Show(
-                            $"Failed to register the new {config.HotKeyDisplayName} hotkey.\n\n" +
-                            $"Reason: {conflictInfo}\n\n" +
-                            $"Suggested alternatives: {alternatives}\n\n" +
-                            $"The hotkey setting has been saved, but won't work until you:\n" +
-                            $"• Choose a different hotkey in Settings\n" +
-                            $"• Close other applications that might be using {config.HotKeyDisplayName}\n" +
-                            $"• Use the system tray icon to toggle the microphone",
-                            "Hotkey Registration Failed", 
+                            string.Format(Strings.ErrorHotkeyConflictMessage, config.HotKeyDisplayName, conflictInfo, alternatives),
+                            Strings.ErrorHotkeyRegistrationTitle, 
                             System.Windows.MessageBoxButton.OK, 
                             System.Windows.MessageBoxImage.Warning);
                     }
@@ -756,7 +780,7 @@ namespace MicControlX
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"MainWindow: Settings error - {ex.Message}");
-                System.Windows.MessageBox.Show($"Settings error: {ex.Message}", "Error", 
+                System.Windows.MessageBox.Show(string.Format(Strings.SettingsErrorMessage, ex.Message), Strings.ErrorTitle, 
                     System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }
@@ -773,8 +797,8 @@ namespace MicControlX
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Error creating About window: {ex.Message}\n\nStack trace:\n{ex.StackTrace}", 
-                    "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(string.Format(Strings.ErrorAboutWindow, ex.Message, ex.StackTrace), 
+                    Strings.ErrorTitle, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }
         #endregion

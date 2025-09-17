@@ -2,7 +2,7 @@
 
 **Advanced Universal Microphone Control Utility for Windows**
 
-[![Version](https://img.shields.io/badge/version-4.0.1-blue.svg)](https://github.com/Metanome/mic-controlx)
+[![Version](https://img.shields.io/badge/version-4.1.0-blue.svg)](https://github.com/Metanome/mic-controlx)
 [![Downloads](https://img.shields.io/github/downloads/Metanome/mic-controlx/total?color=brightgreen)](https://github.com/Metanome/mic-controlx/releases)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://github.com/Metanome/mic-controlx)
@@ -10,20 +10,20 @@
 
 ## Overview
 
-MicControlX is a powerful universal Windows application designed to provide seamless microphone control for any Windows system. It offers instant mute/unmute functionality through customizable hotkeys, system tray integration, and visual feedback with multiple aesthetic styles inspired by popular software designs.
+MicControlX is a universal Windows application for microphone control. It provides instant mute/unmute functionality through global hotkeys, system tray integration, and visual feedback.
 
 ## Key Features
 
 - **Universal Compatibility**: Works with any Windows-compatible microphone and audio hardware
+- **Multi-Language Support**: English and Turkish with automatic system language detection
 - **Global Hotkeys**: System-wide microphone toggle with intelligent conflict detection
 - **Push-to-Talk Mode**: Hold hotkey for temporary mute/unmute, release to restore original state
-- **Visual Feedback**: Multiple OSD styles with aesthetic themes
+- **Visual Feedback**: Multiple OSD notification styles
 - **System Integration**: Windows startup support and system tray functionality  
 - **Modern UI**: Fluent Design with dark/light theme support
 - **Audio Notifications**: Optional sound feedback for mute/unmute actions
 - **Smart Error Handling**: Helpful guidance when settings conflicts occur
 - **Single Instance**: Prevents multiple instances from running simultaneously
-- **Auto-startup**: Optional Windows startup integration
 - **Real-time Monitoring**: Detects external microphone state changes
 
 ## System Requirements
@@ -31,7 +31,6 @@ MicControlX is a powerful universal Windows application designed to provide seam
 - **Operating System**: Windows 10/11 (x64)
 - **Framework**: .NET 8.0 Runtime
 - **Hardware**: Any Windows-compatible microphone
-- **Compatibility**: Universal - works with all Windows systems and audio hardware
 
 ## Installation
 
@@ -63,14 +62,6 @@ dotnet publish src\MicControlX.csproj --configuration Release --runtime win-x64 
 - **Settings**: Right-click the tray icon or click the Settings button in the main window
 - **Exit**: Right-click tray icon → Exit, or close the main window
 
-### Hotkey Configuration
-1. Open Settings window
-2. Select your preferred function key (F1-F24)
-3. Click OK to save the new configuration
-4. The new hotkey is immediately active
-
-**Note**: Some keys like F8 and F12 may conflict with system functions or other applications but that depends on your system's configuration. The app will notify you if a hotkey fails to register and suggest alternatives.
-
 ### Push-to-Talk Feature
 MicControlX includes an intelligent dual-mode hotkey system:
 
@@ -83,30 +74,31 @@ This is perfect for:
 - **Streaming**: Temporarily unmute for audience interaction without forgetting to mute again
 
 ### OSD Styles
-Choose from three visual overlay styles:
-- **Windows Default**: Clean, universal design suitable for all systems
-- **Lenovo Vantage Style**: Layered icon design inspired by Lenovo Vantage aesthetics
-- **Lenovo Legion Toolkit Style**: Dark theme design inspired by Legion Toolkit aesthetics
+Choose from three notification styles:
+- **Default Style**: Standard MicControlX notification style
+- **Lenovo Vantage Style**: Alternative style option
+- **Lenovo Legion Toolkit Style**: Gaming-focused notification style
 
 ## Architecture
 
 ### Core Components
 
-- **`HotkeyManager.cs`**: Dedicated global hotkey handling using message-only windows for reliable background operation
-- **`AudioController.cs`**: NAudio-based microphone control and monitoring
-- **`MainWindow.xaml`**: Primary WPF interface with Fluent UI styling
+- **`HotkeyManager.cs`**: Global hotkey handling
+- **`AudioController.cs`**: Microphone control and monitoring
+- **`LocalizationManager.cs`**: Multi-language support
+- **`MainWindow.xaml`**: Primary interface
 - **`ApplicationConfig.cs`**: Configuration management and persistence
-- **`OsdOverlay.xaml`**: Visual feedback overlay system
+- **`OsdOverlay.xaml`**: Visual notifications
 - **`ThemeManager.cs`**: Dark/light theme management
 - **`SoundFeedback.cs`**: Audio notification system
 - **`GitHubUpdateChecker.cs`**: Automatic update checking
 
 ### Key Technologies
-- **WPF with Fluent UI**: Modern Windows interface design
-- **NAudio**: Professional audio device management
-- **System Tray Integration**: Persistent background operation
-- **Global Hotkeys**: System-wide keyboard capture
-- **JSON Configuration**: Lightweight settings persistence
+- **WPF**: Modern Windows interface
+- **NAudio**: Audio device management
+- **System Tray Integration**: Background operation
+- **Global Hotkeys**: System-wide keyboard shortcuts
+- **JSON Configuration**: Settings persistence
 
 ## Configuration
 
@@ -121,7 +113,8 @@ Settings are automatically saved to `%AppData%\MicControlX\config.json`:
   "OSDStyle": 0,
   "Theme": 0,
   "AutoStart": false,
-  "EnableSoundFeedback": false
+  "EnableSoundFeedback": false,
+  "Language": "auto"
 }
 ```
 
@@ -130,8 +123,9 @@ Settings are automatically saved to `%AppData%\MicControlX\config.json`:
 - **HotKeyDisplayName**: Name of the hotkey for display in the UI
 - **ShowOSD**: Enable/disable visual overlays
 - **ShowNotifications**: Enable/disable system tray notifications
-- **OSDStyle**: `WindowsDefault (0)`, `VantageStyle (1)`, or `LLTStyle (2)`
+- **OSDStyle**: `DefaultStyle (0)`, `VantageStyle (1)`, or `LLTStyle (2)`
 - **Theme**: `System (0)`, `Dark (1)`, or `Light (2)`
+- **Language**: `"auto"` (system default), `"en"` (English), or `"tr"` (Turkish)
 - **AutoStart**: Launch with Windows
 - **EnableSoundFeedback**: Play sounds on mute/unmute
 

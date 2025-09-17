@@ -30,16 +30,16 @@
     
     <!-- Application properties -->
     <AssemblyTitle>MicControlX</AssemblyTitle>
-    <AssemblyDescription>Advanced microphone control utility for Windows with Lenovo gaming laptop optimization</AssemblyDescription>
+    <AssemblyDescription>Advanced microphone control utility for Windows with multi-language support</AssemblyDescription>
     <AssemblyCompany>MicControlX</AssemblyCompany>
     <AssemblyProduct>MicControlX</AssemblyProduct>
-    <AssemblyVersion>4.0.1.0</AssemblyVersion>
-    <AssemblyFileVersion>4.0.1.0</AssemblyFileVersion>
-    <AssemblyInformationalVersion>4.0.1</AssemblyInformationalVersion>
+    <AssemblyVersion>4.1.0.0</AssemblyVersion>
+    <AssemblyFileVersion>4.1.0.0</AssemblyFileVersion>
+    <AssemblyInformationalVersion>4.1.0</AssemblyInformationalVersion>
 
     <Copyright>Copyright © 2025 Dr. Skinner</Copyright>
-    <FileVersion>4.0.1.0</FileVersion>
-    <Version>4.0.1</Version>
+    <FileVersion>4.1.0.0</FileVersion>
+    <Version>4.1.0</Version>
     
     <!-- Application icon -->
     <ApplicationIcon>..\assets\icons\logo.ico</ApplicationIcon>
@@ -51,6 +51,26 @@
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="WPF-UI" Version="4.0.3" />
+  </ItemGroup>
+
+  <!-- Resource files for localization -->
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>MicControlX</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Strings.tr.resx">
+      <DependentUpon>Strings.resx</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

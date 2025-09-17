@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:tb="http://www.hardcodet.net/taskbar"
-        Title="MicControlX" 
+        xmlns:res="clr-namespace:MicControlX"
+        xmlns:local="clr-namespace:MicControlX"
+        Title="{Binding AppTitle, Source={x:Static local:LocalizationManager.Instance}}" 
         Height="600" 
         Width="520"
         MinHeight="600"
@@ -52,7 +54,7 @@
         </Grid.RowDefinitions>
 
         <!-- Title Bar -->
-        <ui:TitleBar Grid.Row="0" Title="MicControlX" ShowMaximize="False" ShowMinimize="True" />
+        <ui:TitleBar Grid.Row="0" Title="{Binding AppTitle, Source={x:Static local:LocalizationManager.Instance}}" ShowMaximize="False" ShowMinimize="True" />
 
         <!-- Main Content -->
         <StackPanel Grid.Row="1" Margin="20,10,20,20">
@@ -67,7 +69,7 @@
                     </Grid.ColumnDefinitions>
                     
                     <TextBlock Grid.Column="0" 
-                               Text="MicControlX" 
+                               Text="{Binding AppTitle, Source={x:Static local:LocalizationManager.Instance}}" 
                                FontSize="24" 
                                FontWeight="Bold" 
                                VerticalAlignment="Center"
@@ -75,21 +77,21 @@
                     
                     <ui:Button Grid.Column="1" 
                                Name="SettingsButton"
-                               Content="Settings"
+                               Content="{Binding Settings, Source={x:Static local:LocalizationManager.Instance}}"
                                Icon="{ui:SymbolIcon Settings24}"
                                Margin="0,0,8,0"
                                Click="SettingsButton_Click"
-                               ToolTip="Settings"
+                               ToolTip="{Binding Settings, Source={x:Static local:LocalizationManager.Instance}}"
                                Appearance="Secondary"
                                HorizontalContentAlignment="Center"
                                Padding="12,8"/>
                     
                     <ui:Button Grid.Column="2" 
                                Name="InfoButton"
-                               Content="About"
+                               Content="{Binding About, Source={x:Static local:LocalizationManager.Instance}}"
                                Icon="{ui:SymbolIcon Info24}"
                                Click="InfoButton_Click"
-                               ToolTip="About"
+                               ToolTip="{Binding About, Source={x:Static local:LocalizationManager.Instance}}"
                                Appearance="Secondary"
                                HorizontalContentAlignment="Center"
                                Padding="12,8"/>
@@ -98,13 +100,13 @@
                 <!-- Hotkey Card -->
                 <Border Style="{StaticResource PrimaryCardStyle}">
                     <StackPanel>
-                        <TextBlock Text="Global Hotkey" 
+                        <TextBlock Text="{Binding GlobalHotkey, Source={x:Static local:LocalizationManager.Instance}}" 
                                    FontWeight="Bold" 
                                    FontSize="14" 
                                    Foreground="White"
                                    Margin="0,0,0,8"/>
                         <TextBlock Name="HotkeyLabel" 
-                                   Text="Press F11 to toggle, hold to mute/unmute temporarily"
+                                   Text="{Binding HotkeyInstruction, Source={x:Static local:LocalizationManager.Instance}}"
                                    FontSize="12"
                                    Foreground="White"
                                    TextWrapping="Wrap"/>
@@ -114,36 +116,44 @@
                 <!-- Features & Compatibility Card -->
                 <Border Style="{StaticResource CardStyle}">
                     <StackPanel>
-                        <TextBlock Text="Features &amp; Compatibility" 
+                        <TextBlock Text="{Binding FeaturesCompatibility, Source={x:Static local:LocalizationManager.Instance}}" 
                                    FontWeight="Bold" 
                                    FontSize="14" 
                                    Margin="0,0,0,8"/>
-                        <TextBlock TextWrapping="Wrap" 
-                                   FontSize="12" 
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-                            <Run Text="• Universal Windows microphone control utility"/>
-                            <LineBreak/>
-                            <Run Text="• Works with any Windows audio device and system settings"/>
-                        </TextBlock>
+                        <StackPanel>
+                            <TextBlock Text="{Binding FeatureUniversal, Source={x:Static local:LocalizationManager.Instance}}"
+                                       TextWrapping="Wrap" 
+                                       FontSize="12" 
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{Binding FeatureAnyDevice, Source={x:Static local:LocalizationManager.Instance}}"
+                                       TextWrapping="Wrap" 
+                                       FontSize="12" 
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <!-- Alternative Controls Card -->
                 <Border Style="{StaticResource CardStyle}">
                     <StackPanel>
-                        <TextBlock Text="Alternative Controls" 
+                        <TextBlock Text="{Binding AlternativeControls, Source={x:Static local:LocalizationManager.Instance}}" 
                                    FontWeight="Bold" 
                                    FontSize="14" 
                                    Margin="0,0,0,8"/>
-                        <TextBlock TextWrapping="Wrap" 
-                                   FontSize="12" 
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-                            <Run Text="• Single-click system tray icon to toggle"/>
-                            <LineBreak/>
-                            <Run Text="• Double-click tray icon to open app"/>
-                            <LineBreak/>
-                            <Run Text="• Right-click tray icon for options"/>
-                        </TextBlock>
+                        <StackPanel>
+                            <TextBlock Text="{Binding ControlSingleClick, Source={x:Static local:LocalizationManager.Instance}}"
+                                       TextWrapping="Wrap" 
+                                       FontSize="12" 
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{Binding ControlDoubleClick, Source={x:Static local:LocalizationManager.Instance}}"
+                                       TextWrapping="Wrap" 
+                                       FontSize="12" 
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{Binding ControlRightClick, Source={x:Static local:LocalizationManager.Instance}}"
+                                       TextWrapping="Wrap" 
+                                       FontSize="12" 
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
@@ -164,12 +174,12 @@
                                            VerticalAlignment="Center"/>
                             
                             <StackPanel Grid.Column="1">
-                                <TextBlock Text="Microphone Status" 
+                                <TextBlock Text="{Binding MicrophoneStatus, Source={x:Static local:LocalizationManager.Instance}}" 
                                            FontWeight="Bold" 
                                            FontSize="14" 
                                            Margin="0,0,0,4"/>
                                 <TextBlock Name="StatusText" 
-                                           Text="Active" 
+                                           Text="{Binding Active, Source={x:Static local:LocalizationManager.Instance}}" 
                                            FontSize="12" 
                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
@@ -180,7 +190,7 @@
                 <!-- System Information Card -->
                 <Border Style="{StaticResource LastCardStyle}">
                     <StackPanel>
-                        <TextBlock Text="System Information" 
+                        <TextBlock Text="{Binding SystemInformation, Source={x:Static local:LocalizationManager.Instance}}" 
                                    FontWeight="Bold" 
                                    FontSize="14" 
                                    Margin="0,0,0,8"/>
@@ -195,23 +205,23 @@
                             </Grid.RowDefinitions>
                             
                             <TextBlock Grid.Row="0" Grid.Column="0" 
-                                       Text="Brand: " 
+                                       Text="{Binding Brand, Source={x:Static local:LocalizationManager.Instance}}" 
                                        FontSize="12" 
                                        Margin="0,0,8,4"/>
                             <TextBlock Grid.Row="0" Grid.Column="1" 
                                        Name="BrandLabel"
-                                       Text="Unknown System" 
+                                       Text="{Binding UnknownSystem, Source={x:Static local:LocalizationManager.Instance}}" 
                                        FontSize="12" 
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                        Margin="0,0,0,4"/>
                             
                             <TextBlock Grid.Row="1" Grid.Column="0" 
-                                       Text="Platform: " 
+                                       Text="{Binding Platform, Source={x:Static local:LocalizationManager.Instance}}" 
                                        FontSize="12" 
                                        Margin="0,0,8,0"/>
                             <TextBlock Grid.Row="1" Grid.Column="1" 
                                        Name="PlatformLabel"
-                                       Text="Windows 11 Pro 23H2" 
+                                       Text="{Binding Unknown, Source={x:Static local:LocalizationManager.Instance}}" 
                                        FontSize="12" 
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
                         </Grid>

@@ -56,10 +56,10 @@ namespace MicControlX
         {
             switch (_osdStyle)
             {
-                case OSDStyles.WindowsDefault:
+                case OSDStyles.DefaultStyle:
                     Width = 300;
                     Height = 80;
-                    WindowsDefaultContent.Visibility = Visibility.Visible;
+                    DefaultStyleContent.Visibility = Visibility.Visible;
                     VantageStyleContent.Visibility = Visibility.Collapsed;
                     LLTStyleContent.Visibility = Visibility.Collapsed;
                     break;
@@ -67,7 +67,7 @@ namespace MicControlX
                 case OSDStyles.VantageStyle:
                     Width = 160;
                     Height = 160;
-                    WindowsDefaultContent.Visibility = Visibility.Collapsed;
+                    DefaultStyleContent.Visibility = Visibility.Collapsed;
                     VantageStyleContent.Visibility = Visibility.Visible;
                     LLTStyleContent.Visibility = Visibility.Collapsed;
                     break;
@@ -75,7 +75,7 @@ namespace MicControlX
                 case OSDStyles.LLTStyle:
                     Width = 280;
                     Height = 64;
-                    WindowsDefaultContent.Visibility = Visibility.Collapsed;
+                    DefaultStyleContent.Visibility = Visibility.Collapsed;
                     VantageStyleContent.Visibility = Visibility.Collapsed;
                     LLTStyleContent.Visibility = Visibility.Visible;
                     break;
@@ -116,8 +116,8 @@ namespace MicControlX
 
             switch (_osdStyle)
             {
-                case OSDStyles.WindowsDefault:
-                    UpdateWindowsDefaultStyle(statusColor);
+                case OSDStyles.DefaultStyle:
+                    UpdateDefaultStyle(statusColor);
                     break;
                     
                 case OSDStyles.VantageStyle:
@@ -130,10 +130,10 @@ namespace MicControlX
             }
         }
 
-        private void UpdateWindowsDefaultStyle(SolidColorBrush statusColor)
+        private void UpdateDefaultStyle(SolidColorBrush statusColor)
         {
-            WindowsDefaultText.Text = _isMuted ? "Microphone Muted" : "Microphone Active";
-            WindowsDefaultIndicator.Fill = statusColor;
+            DefaultStyleText.Text = _isMuted ? Strings.MicrophoneMuted : Strings.MicrophoneActive;
+            DefaultStyleIndicator.Fill = statusColor;
         }
 
         private void UpdateVantageStyle()
@@ -175,7 +175,7 @@ namespace MicControlX
             var statusText = LLTStyleContent.FindName("LLTStyleText") as TextBlock;
             if (statusText != null)
             {
-                statusText.Text = _isMuted ? "MUTED" : "ACTIVE";
+                statusText.Text = _isMuted ? Strings.Muted : Strings.Active;
             }
         }
 

@@ -11,7 +11,20 @@ namespace MicControlX
         public AboutWindow()
         {
             InitializeComponent();
+            
+            // Subscribe to language changes
+            LocalizationManager.LanguageChanged += OnLanguageChanged;
+            
             LoadVersionInformation();
+        }
+
+        private void OnLanguageChanged(object? sender, EventArgs e)
+        {
+            // Reload version information with new language
+            Dispatcher.Invoke(() =>
+            {
+                LoadVersionInformation();
+            });
         }
 
         private void LoadVersionInformation()
@@ -21,12 +34,14 @@ namespace MicControlX
                 // Get application version
                 var assembly = Assembly.GetExecutingAssembly();
                 var version = assembly.GetName().Version;
-                VersionText.Text = $"Version {version?.ToString(3) ?? "1.0.0"}";
+                var versionString = version?.ToString(3) ?? "1.0.0";
+                // Use the localized string format
+                VersionText.Text = string.Format(Strings.VersionTemplate, versionString);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error loading version information: {ex.Message}");
-                VersionText.Text = "Version 1.0.0";
+                VersionText.Text = Strings.Version;
             }
         }
 
@@ -41,7 +56,7 @@ namespace MicControlX
             {
                 // Disable button during check
                 CheckUpdatesButton.IsEnabled = false;
-                CheckUpdatesButton.Content = "Checking...";
+                CheckUpdatesButton.Content = Strings.Checking;
 
                 // Use GitHubUpdateChecker static method
                 var updateInfo = await GitHubUpdateChecker.CheckForUpdatesAsync();
@@ -49,8 +64,8 @@ namespace MicControlX
                 if (updateInfo != null)
                 {
                     var result = System.Windows.MessageBox.Show(
-                        $"A new version {updateInfo.LatestVersion} is available!\n\nWould you like to download it?",
-                        "Update Available",
+                        string.Format(Strings.UpdateAvailableMessage, updateInfo.LatestVersion),
+                        Strings.UpdateAvailableTitle,
                         System.Windows.MessageBoxButton.YesNo,
                         System.Windows.MessageBoxImage.Information);
 
@@ -62,8 +77,8 @@ namespace MicControlX
                 else
                 {
                     System.Windows.MessageBox.Show(
-                        "You are running the latest version!",
-                        "No Updates",
+                        Strings.NoUpdatesMessage,
+                        Strings.NoUpdatesTitle,
                         System.Windows.MessageBoxButton.OK,
                         System.Windows.MessageBoxImage.Information);
                 }
@@ -80,8 +95,8 @@ namespace MicControlX
                 catch
                 {
                     System.Windows.MessageBox.Show(
-                        "Could not check for updates. Please visit:\nhttps://github.com/Metanome/mic-controlx/releases",
-                        "Update Check Failed",
+                        Strings.UpdateCheckFailedMessage,
+                        Strings.UpdateCheckFailedTitle,
                         System.Windows.MessageBoxButton.OK,
                         System.Windows.MessageBoxImage.Warning);
                 }
@@ -90,8 +105,15 @@ namespace MicControlX
             {
                 // Re-enable button
                 CheckUpdatesButton.IsEnabled = true;
-                CheckUpdatesButton.Content = "Check for Updates";
+                CheckUpdatesButton.Content = Strings.CheckForUpdates;
             }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            // Unsubscribe from language changes to prevent memory leaks
+            LocalizationManager.LanguageChanged -= OnLanguageChanged;
+            base.OnClosed(e);
         }
 
         protected override void OnSourceInitialized(EventArgs e)

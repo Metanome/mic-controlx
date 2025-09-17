@@ -2,7 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="About MicControlX"
+        xmlns:res="clr-namespace:MicControlX"
+        xmlns:local="clr-namespace:MicControlX"
+        Title="{Binding AboutTitle, Source={x:Static local:LocalizationManager.Instance}}"
         Height="485" 
         Width="450"
         MinHeight="485"
@@ -22,7 +24,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <ui:TitleBar Grid.Row="0" Title="About MicControlX" ShowMaximize="False" ShowMinimize="False" />
+        <ui:TitleBar Grid.Row="0" Title="{Binding AboutTitle, Source={x:Static local:LocalizationManager.Instance}}" ShowMaximize="False" ShowMinimize="False" />
         
         <Grid Grid.Row="1" Margin="20,10,20,0">
             <Grid.RowDefinitions>
@@ -38,7 +40,7 @@
         
         <!-- App Name -->
         <TextBlock Grid.Row="0"
-                   Text="MicControlX"
+                   Text="{Binding AppTitle, Source={x:Static local:LocalizationManager.Instance}}"
                    FontSize="28"
                    FontWeight="Bold"
                    HorizontalAlignment="Center"
@@ -47,14 +49,14 @@
         <!-- Version -->
         <TextBlock Grid.Row="1"
                    Name="VersionText"
-                   Text="Version 1.0.0"
+                   Text="{Binding Version, Source={x:Static local:LocalizationManager.Instance}}"
                    FontSize="14"
                    HorizontalAlignment="Center"
                    Margin="0,0,0,12"/>
         
         <!-- Description -->
         <TextBlock Grid.Row="2"
-                   Text="Global microphone control utility with hotkey support and system tray integration."
+                   Text="{Binding AppDescription, Source={x:Static local:LocalizationManager.Instance}}"
                    FontSize="12"
                    TextWrapping="Wrap"
                    HorizontalAlignment="Center"
@@ -63,30 +65,30 @@
         
         <!-- Features -->
         <TextBlock Grid.Row="3"
-                   Text="Features:"
+                   Text="{Binding Features, Source={x:Static local:LocalizationManager.Instance}}"
                    FontSize="14"
                    FontWeight="SemiBold"
                    Margin="0,0,0,6"/>
         
         <StackPanel Grid.Row="4" Margin="20,0,0,15">
-            <TextBlock Text="• Global hotkey support (F1-F24)" FontSize="12" Margin="0,1"/>
-            <TextBlock Text="• System tray integration with context menu" FontSize="12" Margin="0,1"/>
-            <TextBlock Text="• Multiple OSD notification styles" FontSize="12" Margin="0,1"/>
-            <TextBlock Text="• Audio feedback with custom sounds" FontSize="12" Margin="0,1"/>
-            <TextBlock Text="• Hold hotkey to temporarily mute/unmute" FontSize="12" Margin="0,1"/>
-            <TextBlock Text="• Automatic startup and background operation" FontSize="12" Margin="0,1"/>
+            <TextBlock Text="{Binding FeatureGlobalHotkey, Source={x:Static local:LocalizationManager.Instance}}" FontSize="12" Margin="0,1"/>
+            <TextBlock Text="{Binding FeatureSystemTray, Source={x:Static local:LocalizationManager.Instance}}" FontSize="12" Margin="0,1"/>
+            <TextBlock Text="{Binding FeatureMultipleOSD, Source={x:Static local:LocalizationManager.Instance}}" FontSize="12" Margin="0,1"/>
+            <TextBlock Text="{Binding FeatureAudioFeedback, Source={x:Static local:LocalizationManager.Instance}}" FontSize="12" Margin="0,1"/>
+            <TextBlock Text="{Binding FeatureHoldHotkey, Source={x:Static local:LocalizationManager.Instance}}" FontSize="12" Margin="0,1"/>
+            <TextBlock Text="{Binding FeatureAutoStartup, Source={x:Static local:LocalizationManager.Instance}}" FontSize="12" Margin="0,1"/>
         </StackPanel>
         
         <!-- Why needed -->
         <TextBlock Grid.Row="5"
-                   Text="This application provides quick and reliable microphone control for users who need instant mute/unmute functionality during calls, streaming, or recording sessions without interrupting their workflow."
+                   Text="{Binding AboutDescription, Source={x:Static local:LocalizationManager.Instance}}"
                    FontSize="11"
                    TextWrapping="Wrap"
                    Margin="0,0,0,8"/>
         
         <!-- Copyright -->
         <TextBlock Grid.Row="6"
-                   Text="© 2025 Dr. Skinner - GNU General Public License v3.0"
+                   Text="{Binding Copyright, Source={x:Static local:LocalizationManager.Instance}}"
                    FontSize="11"
                    HorizontalAlignment="Center"
                    Margin="0,15,0,15"/>
@@ -101,7 +103,7 @@
             
             <ui:Button Grid.Column="1" 
                        Name="CheckUpdatesButton"
-                       Content="Check for Updates" 
+                       Content="{Binding CheckForUpdates, Source={x:Static local:LocalizationManager.Instance}}" 
                        Appearance="Secondary"
                        Width="Auto"
                        Margin="0,0,8,0"
@@ -109,7 +111,7 @@
             
             <ui:Button Grid.Column="2" 
                        Name="OkButton"
-                       Content="OK" 
+                       Content="{Binding OK, Source={x:Static local:LocalizationManager.Instance}}" 
                        Appearance="Primary"
                        Width="80"
                        Click="OkButton_Click"/>

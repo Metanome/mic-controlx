@@ -21,11 +21,35 @@ namespace MicControlX
 
         public AudioController()
         {
+            // Initialize the current state before starting monitoring to avoid false triggers
+            InitializeCurrentState();
+            
             // Initialize monitoring timer to check state every 200ms for better responsiveness
             stateMonitorTimer = new System.Timers.Timer(200);
             stateMonitorTimer.Elapsed += MonitorMicrophoneState;
             stateMonitorTimer.AutoReset = true;
             stateMonitorTimer.Start();
+        }
+
+        private void InitializeCurrentState()
+        {
+            try
+            {
+                // Get the actual current state without triggering events
+                var captureDevices = audioEnumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active).ToList();
+                
+                if (captureDevices.Any())
+                {
+                    var defaultDevice = captureDevices.First();
+                    isMuted = defaultDevice.AudioEndpointVolume.Mute;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Initial state detection failed: {ex.Message}");
+                // Default to false if we can't detect
+                isMuted = false;
+            }
         }
 
         private void MonitorMicrophoneState(object? sender, ElapsedEventArgs e)
@@ -81,7 +105,7 @@ namespace MicControlX
                 if (!captureDevices.Any())
                 {
                     internalChange = false;
-                    ErrorOccurred?.Invoke("No active microphones found");
+                    ErrorOccurred?.Invoke(Strings.NoActiveMicrophones);
                     return false;
                 }
 
@@ -105,7 +129,7 @@ namespace MicControlX
             catch (Exception ex)
             {
                 internalChange = false;
-                ErrorOccurred?.Invoke($"NAudio Error: {ex.Message}");
+                ErrorOccurred?.Invoke($"{Strings.NAudioError}: {ex.Message}");
                 return false;
             }
         }
@@ -123,7 +147,7 @@ namespace MicControlX
                 if (!captureDevices.Any())
                 {
                     internalChange = false;
-                    ErrorOccurred?.Invoke("No active microphones found");
+                    ErrorOccurred?.Invoke(Strings.NoActiveMicrophones);
                     return false;
                 }
 
@@ -142,7 +166,7 @@ namespace MicControlX
             catch (Exception ex)
             {
                 internalChange = false;
-                ErrorOccurred?.Invoke($"NAudio Error: {ex.Message}");
+                ErrorOccurred?.Invoke($"{Strings.NAudioError}: {ex.Message}");
                 return false;
             }
         }
@@ -165,7 +189,7 @@ namespace MicControlX
             }
             catch (Exception ex)
             {
-                ErrorOccurred?.Invoke($"State Check Error: {ex.Message}");
+                ErrorOccurred?.Invoke($"{Strings.StateCheckError}: {ex.Message}");
                 return false;
             }
         }
