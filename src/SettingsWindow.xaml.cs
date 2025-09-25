@@ -52,8 +52,14 @@ namespace MicControlX
                     if (OsdNotificationRadio != null)
                         OsdNotificationRadio.IsChecked = true;
                     PopulateOsdStyleComboBox();
+                    PopulateOsdPositionComboBox();
+                    InitializeOsdDurationSlider();
                     if (OsdStylePanel != null)
                         OsdStylePanel.Visibility = Visibility.Visible;
+                    if (OsdPositionPanel != null)
+                        OsdPositionPanel.Visibility = Visibility.Visible;
+                    if (OsdDurationPanel != null)
+                        OsdDurationPanel.Visibility = Visibility.Visible;
                 }
                 else
                 {
@@ -61,6 +67,10 @@ namespace MicControlX
                         TrayNotificationRadio.IsChecked = true;
                     if (OsdStylePanel != null)
                         OsdStylePanel.Visibility = Visibility.Collapsed;
+                    if (OsdPositionPanel != null)
+                        OsdPositionPanel.Visibility = Visibility.Collapsed;
+                    if (OsdDurationPanel != null)
+                        OsdDurationPanel.Visibility = Visibility.Collapsed;
                 }
                 
                 // Wire up events after initialization
@@ -77,6 +87,8 @@ namespace MicControlX
                     AutoStartToggleSwitch.IsChecked = Configuration.AutoStart;
                 if (SoundFeedbackToggleSwitch != null)
                     SoundFeedbackToggleSwitch.IsChecked = Configuration.EnableSoundFeedback;
+                if (FocusAssistToggleSwitch != null)
+                    FocusAssistToggleSwitch.IsChecked = Configuration.RespectFocusAssist;
                 
                 // Populate and select language
                 PopulateLanguageComboBox();
@@ -171,7 +183,66 @@ namespace MicControlX
                 OSDStyles.DefaultStyle => Strings.OSDDefaultStyle,
                 OSDStyles.VantageStyle => Strings.OSDVantageStyle,
                 OSDStyles.LLTStyle => Strings.OSDLLTStyle,
+                OSDStyles.TranslucentStyle => Strings.OSDTranslucentStyle,
                 _ => style.ToString()
+            };
+        }
+
+        private void PopulateOsdPositionComboBox()
+        {
+            if (OsdPositionComboBox == null) return;
+            
+            OsdPositionComboBox.Items.Clear();
+            
+            // Add OSD position options
+            foreach (OSDPosition position in Enum.GetValues<OSDPosition>())
+            {
+                OsdPositionComboBox.Items.Add(new OsdPositionItem(GetOsdPositionDisplayName(position), position));
+            }
+            
+            // Select current position
+            for (int i = 0; i < OsdPositionComboBox.Items.Count; i++)
+            {
+                if (OsdPositionComboBox.Items[i] is OsdPositionItem item && item.Position == Configuration.OSDPosition)
+                {
+                    OsdPositionComboBox.SelectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        private void InitializeOsdDurationSlider()
+        {
+            if (OsdDurationSlider == null || OsdDurationValueLabel == null) return;
+            
+            // Set current duration value
+            OsdDurationSlider.Value = Configuration.OSDDurationSeconds;
+            OsdDurationValueLabel.Text = $"{Configuration.OSDDurationSeconds:F0}s";
+            
+            // Wire up value changed event
+            OsdDurationSlider.ValueChanged += OsdDurationSlider_ValueChanged;
+        }
+
+        private void OsdDurationSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (OsdDurationValueLabel != null)
+            {
+                OsdDurationValueLabel.Text = $"{e.NewValue:F0}s";
+            }
+        }
+
+        private string GetOsdPositionDisplayName(OSDPosition position)
+        {
+            return position switch
+            {
+                OSDPosition.TopLeft => Strings.OSDTopLeft,
+                OSDPosition.TopCenter => Strings.OSDTopCenter,
+                OSDPosition.TopRight => Strings.OSDTopRight,
+                OSDPosition.MiddleCenter => Strings.OSDMiddleCenter,
+                OSDPosition.BottomLeft => Strings.OSDBottomLeft,
+                OSDPosition.BottomCenter => Strings.OSDBottomCenter,
+                OSDPosition.BottomRight => Strings.OSDBottomRight,
+                _ => position.ToString()
             };
         }
 
@@ -192,21 +263,14 @@ namespace MicControlX
             
             LanguageComboBox.Items.Clear();
             
-            // Add language options using localized strings
-            LanguageComboBox.Items.Add(new LanguageItem(GetLanguageDisplayName("auto"), "auto"));
-            LanguageComboBox.Items.Add(new LanguageItem(GetLanguageDisplayName("en"), "en"));
-            LanguageComboBox.Items.Add(new LanguageItem(GetLanguageDisplayName("tr"), "tr"));
-        }
-
-        private string GetLanguageDisplayName(string languageCode)
-        {
-            return languageCode switch
+            // Add language options using LocalizationManager
+            var languages = LocalizationManager.GetAvailableLanguages();
+            var displayNames = LocalizationManager.GetLanguageDisplayNames();
+            
+            for (int i = 0; i < languages.Length; i++)
             {
-                "auto" => Strings.LanguageAuto,
-                "en" => Strings.LanguageEnglish,
-                "tr" => Strings.LanguageTurkish,
-                _ => languageCode
-            };
+                LanguageComboBox.Items.Add(new LanguageItem(displayNames[i], languages[i]));
+            }
         }
 
         private void SelectCurrentLanguage()
@@ -229,8 +293,14 @@ namespace MicControlX
             if (OsdNotificationRadio?.IsChecked == true)
             {
                 PopulateOsdStyleComboBox();
+                PopulateOsdPositionComboBox();
+                InitializeOsdDurationSlider();
                 if (OsdStylePanel != null)
                     OsdStylePanel.Visibility = Visibility.Visible;
+                if (OsdPositionPanel != null)
+                    OsdPositionPanel.Visibility = Visibility.Visible;
+                if (OsdDurationPanel != null)
+                    OsdDurationPanel.Visibility = Visibility.Visible;
             }
         }
 
@@ -240,6 +310,10 @@ namespace MicControlX
             {
                 if (OsdStylePanel != null)
                     OsdStylePanel.Visibility = Visibility.Collapsed;
+                if (OsdPositionPanel != null)
+                    OsdPositionPanel.Visibility = Visibility.Collapsed;
+                if (OsdDurationPanel != null)
+                    OsdDurationPanel.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -292,6 +366,27 @@ namespace MicControlX
                     }
                 }
 
+                // Apply OSD position (always save it, regardless of notification preference)
+                if (OsdPositionComboBox.SelectedItem is OsdPositionItem osdPositionItem)
+                {
+                    if (Configuration.OSDPosition != osdPositionItem.Position)
+                    {
+                        Configuration.OSDPosition = osdPositionItem.Position;
+                        hasChanges = true;
+                    }
+                }
+
+                // Apply OSD duration (always save it, regardless of notification preference)
+                if (OsdDurationSlider != null)
+                {
+                    double newDuration = OsdDurationSlider.Value;
+                    if (Math.Abs(Configuration.OSDDurationSeconds - newDuration) > 0.01)
+                    {
+                        Configuration.OSDDurationSeconds = newDuration;
+                        hasChanges = true;
+                    }
+                }
+
                 // Apply app theme
                 if (ThemeComboBox.SelectedItem is ThemeItem themeItem)
                 {
@@ -319,6 +414,7 @@ namespace MicControlX
                 // Apply other settings
                 bool newAutoStart = AutoStartToggleSwitch.IsChecked == true;
                 bool newSoundFeedback = SoundFeedbackToggleSwitch.IsChecked == true;
+                bool newRespectFocusAssist = FocusAssistToggleSwitch.IsChecked == true;
                 
                 if (Configuration.AutoStart != newAutoStart)
                 {
@@ -329,6 +425,12 @@ namespace MicControlX
                 if (Configuration.EnableSoundFeedback != newSoundFeedback)
                 {
                     Configuration.EnableSoundFeedback = newSoundFeedback;
+                    hasChanges = true;
+                }
+                
+                if (Configuration.RespectFocusAssist != newRespectFocusAssist)
+                {
+                    Configuration.RespectFocusAssist = newRespectFocusAssist;
                     hasChanges = true;
                 }
 
@@ -450,6 +552,20 @@ namespace MicControlX
         {
             DisplayName = displayName;
             Style = style;
+        }
+
+        public override string ToString() => DisplayName;
+    }
+
+    public class OsdPositionItem
+    {
+        public string DisplayName { get; }
+        public OSDPosition Position { get; }
+
+        public OsdPositionItem(string displayName, OSDPosition position)
+        {
+            DisplayName = displayName;
+            Position = position;
         }
 
         public override string ToString() => DisplayName;

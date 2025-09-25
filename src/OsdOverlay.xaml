@@ -34,12 +34,13 @@
     
     <Grid Name="MainContainer">
         
-        <!-- Default Style - MicControlX standard notification design -->
+        <!-- Default Style - MicControlX standard notification design with theme support -->
         <Border Name="DefaultStyleContent" 
-                Background="#1E1E1E" 
-                BorderBrush="#404040"
+                Background="{DynamicResource SolidBackgroundFillColorBaseBrush}" 
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 CornerRadius="12"
+                Opacity="0.95"
                 Visibility="Collapsed">
             <Border.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="15" ShadowDepth="5" Opacity="0.6"/>
@@ -55,7 +56,7 @@
                          VerticalAlignment="Center"/>
                 <TextBlock Name="DefaultStyleText"
                            Text="{Binding MicrophoneStatus, Source={x:Static local:LocalizationManager.Instance}}"
-                           Foreground="White"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                            FontFamily="Segoe UI"
                            FontSize="16"
                            FontWeight="Medium"
@@ -85,12 +86,13 @@
             </Grid>
         </Border>
 
-        <!-- Lenovo Legion Toolkit Inspired Style -->
+        <!-- Lenovo Legion Toolkit Inspired Style with theme support -->
         <Border Name="LLTStyleContent"
-                Background="#212121"
-                BorderBrush="#333333"
+                Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
-                CornerRadius="8"
+                CornerRadius="12"
+                Opacity="0.95"
                 Visibility="Collapsed">
             <Border.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="8" Opacity="0.8"/>
@@ -101,7 +103,7 @@
                         Margin="16,12">
                 <!-- LLT-style icon placeholder -->
                 <Border Width="24" Height="24" 
-                        Background="#2D2D30"
+                        Background="{DynamicResource ControlFillColorDefaultBrush}"
                         CornerRadius="4"
                         Margin="0,0,12,0"
                         VerticalAlignment="Center">
@@ -113,18 +115,58 @@
                 </Border>
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                     <TextBlock Text="{Binding Microphone, Source={x:Static local:LocalizationManager.Instance}}"
-                               Foreground="#CCCCCC"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                FontFamily="Segoe UI"
                                FontSize="11"
                                FontWeight="Normal"/>
                     <TextBlock Name="LLTStyleText"
                                Text="{Binding Active, Source={x:Static local:LocalizationManager.Instance}}"
-                               Foreground="White"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                FontFamily="Segoe UI"
                                FontSize="13"
                                FontWeight="SemiBold"
                                Margin="0,2,0,0"/>
                 </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Translucent Style - Beautiful theme-aware translucent design -->
+        <Border Name="ModernTranslucentStyleContent"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Visibility="Collapsed">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="8" Opacity="0.3"/>
+            </Border.Effect>
+            
+            <!-- Content layer -->
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="24,16">
+                <!-- Simple icon container -->
+                <Border Width="32" Height="32" 
+                        Background="#20000000"
+                        CornerRadius="8"
+                        Margin="0,0,16,0"
+                        VerticalAlignment="Center">
+                    <Ellipse Name="ModernTranslucentStyleIndicator"
+                             Width="12"
+                             Height="12"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"/>
+                </Border>
+                
+                <!-- Text content -->
+                <TextBlock Name="ModernTranslucentStyleText"
+                           Text="{Binding Active, Source={x:Static local:LocalizationManager.Instance}}"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                           FontFamily="Segoe UI"
+                           FontSize="15"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
             </StackPanel>
         </Border>
         

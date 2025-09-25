@@ -120,6 +120,51 @@
                                   MinWidth="150"
                                   HorizontalAlignment="Left"/>
                     </Grid>
+                    
+                    <Grid Name="OsdPositionPanel" Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" 
+                                   Text="{Binding OSDPositionLabel, Source={x:Static local:LocalizationManager.Instance}}" 
+                                   VerticalAlignment="Center"
+                                   Margin="20,0,16,0"/>
+                        <ComboBox Grid.Column="1" 
+                                  Name="OsdPositionComboBox"
+                                  MinWidth="150"
+                                  HorizontalAlignment="Left"/>
+                    </Grid>
+                    
+                    <Grid Name="OsdDurationPanel" Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" 
+                                   Text="{Binding OSDDurationLabel, Source={x:Static local:LocalizationManager.Instance}}" 
+                                   VerticalAlignment="Center"
+                                   Margin="20,0,16,0"/>
+                        <Slider Grid.Column="1" 
+                                Name="OsdDurationSlider"
+                                Minimum="1"
+                                Maximum="10"
+                                Value="2"
+                                TickFrequency="1"
+                                TickPlacement="BottomRight"
+                                IsSnapToTickEnabled="True"
+                                MinWidth="150"
+                                VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" 
+                                   Name="OsdDurationValueLabel"
+                                   Text="2s"
+                                   VerticalAlignment="Center"
+                                   MinWidth="25"
+                                   Margin="8,0,0,0"/>
+                    </Grid>
                 </StackPanel>
             </Border>
 
@@ -137,6 +182,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -171,7 +217,12 @@
                         
                         <ui:ToggleSwitch Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                                          Name="SoundFeedbackToggleSwitch"
-                                         Content="{Binding EnableSoundFeedback, Source={x:Static local:LocalizationManager.Instance}}"/>
+                                         Content="{Binding EnableSoundFeedback, Source={x:Static local:LocalizationManager.Instance}}"
+                                         Margin="0,0,0,8"/>
+                        
+                        <ui:ToggleSwitch Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                                         Name="FocusAssistToggleSwitch"
+                                         Content="{Binding RespectFocusAssist, Source={x:Static local:LocalizationManager.Instance}}"/>
                     </Grid>
                 </StackPanel>
             </Border>

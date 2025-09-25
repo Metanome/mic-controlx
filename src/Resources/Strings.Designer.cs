@@ -241,6 +241,15 @@ namespace MicControlX {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Respect Focus Assist (Do Not Disturb).
+        /// </summary>
+        public static string RespectFocusAssist {
+            get {
+                return ResourceManager.GetString("RespectFocusAssist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error creating About window: {0}...
         /// </summary>
         public static string ErrorAboutWindow {
@@ -565,6 +574,15 @@ namespace MicControlX {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deutsch.
+        /// </summary>
+        public static string LanguageGerman {
+            get {
+                return ResourceManager.GetString("LanguageGerman", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Microphone.
         /// </summary>
         public static string Microphone {
@@ -745,6 +763,15 @@ namespace MicControlX {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Translucent Style.
+        /// </summary>
+        public static string OSDTranslucentStyle {
+            get {
+                return ResourceManager.GetString("OSDTranslucentStyle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OSD Style:.
         /// </summary>
         public static string OSDStyleLabel {
@@ -763,11 +790,101 @@ namespace MicControlX {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OSD Position:.
+        /// </summary>
+        public static string OSDPositionLabel {
+            get {
+                return ResourceManager.GetString("OSDPositionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Left.
+        /// </summary>
+        public static string OSDTopLeft {
+            get {
+                return ResourceManager.GetString("OSDTopLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Center.
+        /// </summary>
+        public static string OSDTopCenter {
+            get {
+                return ResourceManager.GetString("OSDTopCenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Right.
+        /// </summary>
+        public static string OSDTopRight {
+            get {
+                return ResourceManager.GetString("OSDTopRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Middle Center.
+        /// </summary>
+        public static string OSDMiddleCenter {
+            get {
+                return ResourceManager.GetString("OSDMiddleCenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bottom Left.
+        /// </summary>
+        public static string OSDBottomLeft {
+            get {
+                return ResourceManager.GetString("OSDBottomLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bottom Center.
+        /// </summary>
+        public static string OSDBottomCenter {
+            get {
+                return ResourceManager.GetString("OSDBottomCenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bottom Right.
+        /// </summary>
+        public static string OSDBottomRight {
+            get {
+                return ResourceManager.GetString("OSDBottomRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OSD Duration (seconds):.
+        /// </summary>
+        public static string OSDDurationLabel {
+            get {
+                return ResourceManager.GetString("OSDDurationLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Platform: .
         /// </summary>
         public static string Platform {
             get {
                 return ResourceManager.GetString("Platform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Microphone: .
+        /// </summary>
+        public static string MicrophoneDevice {
+            get {
+                return ResourceManager.GetString("MicrophoneDevice", resourceCulture);
             }
         }
         

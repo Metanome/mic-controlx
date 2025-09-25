@@ -69,303 +69,303 @@
   <!-- MAIN WINDOW -->
   <!-- ============================================ -->
   <data name="Settings" xml:space="preserve">
-    <value>Ayarlar</value>
+    <value>Einstellungen</value>
   </data>
   <data name="About" xml:space="preserve">
-    <value>Hakkında</value>
+    <value>Über</value>
   </data>
   <data name="GlobalHotkey" xml:space="preserve">
-    <value>Genel Kısayol</value>
+    <value>Globale Tastenkombination</value>
   </data>
   <data name="HotkeyInstruction" xml:space="preserve">
-    <value>Geçiş için F11’e basın, basılı tutarak geçici olarak sessize alın/açın</value>
+    <value>F11 zum Umschalten drücken, gedrückt halten für vorübergehende Stummschaltung</value>
   </data>
   <data name="HotkeyInstructionTemplate" xml:space="preserve">
-    <value>Geçiş için {0} tuşuna basın, basılı tutarak geçici olarak sessize alın/açın</value>
+    <value>{0} zum Umschalten drücken, gedrückt halten für vorübergehende Stummschaltung</value>
   </data>
   <data name="FeaturesCompatibility" xml:space="preserve">
-    <value>Özellikler &amp; Uyumluluk</value>
+    <value>Funktionen &amp; Kompatibilität</value>
   </data>
   <data name="FeatureUniversal" xml:space="preserve">
-    <value>• Evrensel Windows mikrofon kontrol aracı</value>
+    <value>• Universelles Windows Mikrofon-Steuerungsprogramm</value>
   </data>
   <data name="FeatureAnyDevice" xml:space="preserve">
-    <value>• Herhangi bir Windows ses aygıtı ve sistem ayarlarıyla çalışır</value>
+    <value>• Funktioniert mit jedem Windows-Audiogerät und Systemeinstellungen</value>
   </data>
   <data name="AlternativeControls" xml:space="preserve">
-    <value>Alternatif Kontroller</value>
+    <value>Weitere Bedienoptionen</value>
   </data>
   <data name="ControlSingleClick" xml:space="preserve">
-    <value>• Geçiş için sistem tepsisi simgesine tek tık</value>
+    <value>• Einzelklick auf Infobereich-Symbol zum Umschalten</value>
   </data>
   <data name="ControlDoubleClick" xml:space="preserve">
-    <value>• Uygulamayı açmak için simgeye çift tık</value>
+    <value>• Doppelklick auf Symbol zum Öffnen der App</value>
   </data>
   <data name="ControlRightClick" xml:space="preserve">
-    <value>• Seçenekler için simgeye sağ tık</value>
+    <value>• Rechtsklick auf Symbol für Optionen</value>
   </data>
   
   <!-- ============================================ -->
   <!-- MICROPHONE STATUS & CONTROL -->
   <!-- ============================================ -->
   <data name="MicrophoneStatus" xml:space="preserve">
-    <value>Mikrofon Durumu</value>
+    <value>Mikrofonstatus</value>
   </data>
   <data name="Microphone" xml:space="preserve">
     <value>Mikrofon</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>Aktif</value>
+    <value>Aktiv</value>
   </data>
   <data name="Muted" xml:space="preserve">
-    <value>Sessiz</value>
+    <value>Stumm</value>
   </data>
   
   <!-- ============================================ -->
   <!-- SYSTEM INFORMATION -->
   <!-- ============================================ -->
   <data name="SystemInformation" xml:space="preserve">
-    <value>Sistem Bilgisi</value>
+    <value>Systeminformationen</value>
   </data>
   <data name="Brand" xml:space="preserve">
-    <value>Marka: </value>
+    <value>Marke: </value>
   </data>
   <data name="Platform" xml:space="preserve">
-    <value>Platform: </value>
+    <value>Plattform: </value>
   </data>
   <data name="MicrophoneDevice" xml:space="preserve">
     <value>Mikrofon: </value>
   </data>
   <data name="UnknownSystem" xml:space="preserve">
-    <value>Bilinmeyen Sistem</value>
+    <value>Unbekanntes System</value>
   </data>
   <data name="UnknownSystemDescription" xml:space="preserve">
-    <value>Bilinmeyen Sistem - Evrensel Uyumluluk Modu</value>
+    <value>Unbekanntes System - Universeller Kompatibilitätsmodus</value>
   </data>
   <data name="RecommendedSettingsDescription" xml:space="preserve">
-    <value>Tercihinize göre herhangi bir OSD stilini seçin - tüm stiller evrensel olarak çalışır</value>
+    <value>Wählen Sie einen beliebigen OSD-Stil nach Ihren Vorlieben - alle Stile funktionieren universell</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>Bilinmeyen</value>
+    <value>Unbekannt</value>
   </data>
   
   <!-- ============================================ -->
   <!-- SETTINGS WINDOW -->
   <!-- ============================================ -->
   <data name="SettingsTitle" xml:space="preserve">
-    <value>MicControlX Ayarları</value>
+    <value>MicControlX Einstellungen</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>Tamam</value>
+    <value>OK</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>İptal</value>
+    <value>Abbrechen</value>
   </data>
   
   <!-- Hotkey Settings -->
   <data name="HotkeySettings" xml:space="preserve">
-    <value>Kısayol Ayarları</value>
+    <value>Tastenkombination-Einstellungen</value>
   </data>
   <data name="GlobalHotkeyLabel" xml:space="preserve">
-    <value>Genel Kısayol:</value>
+    <value>Globale Tastenkombination:</value>
   </data>
 
   <!-- Notification Settings -->
   <data name="NotificationType" xml:space="preserve">
-    <value>Bildirim Türü</value>
+    <value>Benachrichtigungstyp</value>
   </data>
   <data name="ShowOSDOverlay" xml:space="preserve">
-    <value>OSD katmanını göster</value>
+    <value>OSD-Overlay anzeigen</value>
   </data>
   <data name="ShowTrayNotifications" xml:space="preserve">
-    <value>Tepsi bildirimlerini göster</value>
+    <value>Infobereich-Benachrichtigungen anzeigen</value>
   </data>
   <data name="OSDStyleLabel" xml:space="preserve">
-    <value>OSD Stili:</value>
+    <value>OSD-Stil:</value>
   </data>
   <data name="OSDDefaultStyle" xml:space="preserve">
-    <value>Varsayılan Stil</value>
+    <value>Standard-Stil</value>
   </data>
   <data name="OSDVantageStyle" xml:space="preserve">
-    <value>Vantage Stili</value>
+    <value>Vantage-Stil</value>
   </data>
   <data name="OSDLLTStyle" xml:space="preserve">
-    <value>Legion Toolkit Stili</value>
+    <value>Legion Toolkit-Stil</value>
   </data>
   <data name="OSDTranslucentStyle" xml:space="preserve">
-    <value>Şeffaf Stil</value>
+    <value>Durchsichtiger Stil</value>
   </data>
   <data name="OSDPositionLabel" xml:space="preserve">
-    <value>OSD Konumu:</value>
+    <value>OSD-Position:</value>
   </data>
   <data name="OSDTopLeft" xml:space="preserve">
-    <value>Sol Üst</value>
+    <value>Oben Links</value>
   </data>
   <data name="OSDTopCenter" xml:space="preserve">
-    <value>Üst Orta</value>
+    <value>Oben Mitte</value>
   </data>
   <data name="OSDTopRight" xml:space="preserve">
-    <value>Sağ Üst</value>
+    <value>Oben Rechts</value>
   </data>
   <data name="OSDMiddleCenter" xml:space="preserve">
-    <value>Orta Merkez</value>
+    <value>Mitte Zentrum</value>
   </data>
   <data name="OSDBottomLeft" xml:space="preserve">
-    <value>Sol Alt</value>
+    <value>Unten Links</value>
   </data>
   <data name="OSDBottomCenter" xml:space="preserve">
-    <value>Alt Orta</value>
+    <value>Unten Mitte</value>
   </data>
   <data name="OSDBottomRight" xml:space="preserve">
-    <value>Sağ Alt</value>
+    <value>Unten Rechts</value>
   </data>
   <data name="OSDDurationLabel" xml:space="preserve">
-    <value>OSD Süresi:</value>
+    <value>OSD-Dauer:</value>
   </data>
   
   <!-- Language Settings -->
   <data name="LanguageLabel" xml:space="preserve">
-    <value>Dil:</value>
+    <value>Sprache:</value>
   </data>
   <data name="LanguageAuto" xml:space="preserve">
-    <value>Otomatik (Sistem Varsayılanı)</value>
+    <value>Automatisch (Systemstandard)</value>
   </data>
   <data name="LanguageEnglish" xml:space="preserve">
-    <value>İngilizce</value>
+    <value>Englisch</value>
   </data>
   <data name="LanguageTurkish" xml:space="preserve">
-    <value>Türkçe</value>
+    <value>Türkisch</value>
   </data>
   <data name="LanguageGerman" xml:space="preserve">
-    <value>Almanca</value>
+    <value>Deutsch</value>
   </data>
 
   <!-- Theme Settings -->
   <data name="ApplicationSettings" xml:space="preserve">
-    <value>Uygulama Ayarları</value>
+    <value>Anwendungseinstellungen</value>
   </data>
   <data name="ThemeLabel" xml:space="preserve">
-    <value>Tema:</value>
+    <value>Design:</value>
   </data>
   <data name="ThemeSystem" xml:space="preserve">
-    <value>Otomatik (Sistem Varsayılanı)</value>
+    <value>Automatisch (Systemstandard)</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Koyu</value>
+    <value>Dunkel</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Açık</value>
+    <value>Hell</value>
   </data>
 
   <!-- Startup Settings -->
   <data name="StartWithWindows" xml:space="preserve">
-    <value>Windows ile Başlat</value>
+    <value>Mit Windows starten</value>
   </data>
 
   <!-- Sound Feedback Settings -->
   <data name="EnableSoundFeedback" xml:space="preserve">
-    <value>Sesli geri bildirimi etkinleştir</value>
+    <value>Audio-Feedback aktivieren</value>
   </data>
   
   <!-- Focus Assist Settings -->
   <data name="RespectFocusAssist" xml:space="preserve">
-    <value>Odaklanma Yardımcısı'nı Dikkate Al (DND)</value>
+    <value>Fokus-Assistent respektieren (DND)</value>
   </data>
   
   <!-- ============================================ -->
   <!-- ABOUT WINDOW -->
   <!-- ============================================ -->
   <data name="AboutTitle" xml:space="preserve">
-    <value>MicControlX Hakkında</value>
+    <value>Über MicControlX</value>
   </data>
   <data name="VersionTemplate" xml:space="preserve">
-    <value>Sürüm {0}</value>
+    <value>Version {0}</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>Sürüm</value>
+    <value>Version</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Kısayol tuş desteği ve sistem çubuğu entegrasyonu ile global mikrofon kontrol programı.</value>
+    <value>Globales Mikrofon-Steuerungsprogramm mit Tastenkombination-Unterstützung und Infobereich-Integration.</value>
   </data>
 
   <!-- Feature Descriptions -->
   <data name="Features" xml:space="preserve">
-    <value>Özellikler:</value>
+    <value>Funktionen:</value>
   </data>
   <data name="FeatureGlobalHotkey" xml:space="preserve">
-    <value>• Genel kısayol desteği (F1-F24)</value>
+    <value>• Globale Tastenkombination-Unterstützung (F1-F24)</value>
   </data>
   <data name="FeatureSystemTray" xml:space="preserve">
-    <value>• Bağlam menüsü ile sistem tepsisi entegrasyonu</value>
+    <value>• Infobereich-Integration mit Kontextmenü</value>
   </data>
   <data name="FeatureMultipleOSD" xml:space="preserve">
-    <value>• Birden fazla OSD bildirim stili</value>
+    <value>• Mehrere OSD-Benachrichtigungsstile</value>
   </data>
   <data name="FeatureAudioFeedback" xml:space="preserve">
-    <value>• Özel seslerle sesli geri bildirim</value>
+    <value>• Audio-Feedback mit benutzerdefinierten Tönen</value>
   </data>
   <data name="FeatureHoldHotkey" xml:space="preserve">
-    <value>• Geçici olarak sessize almak/açmak için kısayola basılı tut</value>
+    <value>• Tastenkombination gedrückt halten für vorübergehende Stummschaltung</value>
   </data>
   <data name="FeatureAutoStartup" xml:space="preserve">
-    <value>• Otomatik başlatma ve arka planda çalışma</value>
+    <value>• Automatischer Start und Hintergrundbetrieb</value>
   </data>
 
   <data name="AboutDescription" xml:space="preserve">
-    <value>Bu uygulama, kullanıcıların iş akışlarını bölmeden aramalar, yayınlar veya kayıtlar sırasında anında sessize alma/açma işlevine ihtiyaç duyması için hızlı ve güvenilir mikrofon kontrolü sağlar.</value>
+    <value>Diese Anwendung bietet schnelle und zuverlässige Mikrofonsteuerung für Benutzer, die sofortige Stummschaltung/Aktivierung während Anrufen, Streams oder Aufnahmen benötigen, ohne ihren Arbeitsablauf zu unterbrechen.</value>
   </data>
   <data name="Copyright" xml:space="preserve">
-    <value>© 2025 Dr. Skinner - GNU Genel Kamu Lisansı v3.0</value>
+    <value>© 2025 Dr. Skinner - GNU General Public License v3.0</value>
   </data>
   
   <!-- Update Functionality -->
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>Güncellemeleri Denetle</value>
+    <value>Nach Updates suchen</value>
   </data>
   <data name="Checking" xml:space="preserve">
-    <value>Denetleniyor...</value>
+    <value>Überprüfung läuft...</value>
   </data>
   <data name="UpdateAvailableTitle" xml:space="preserve">
-    <value>Güncelleme Mevcut</value>
+    <value>Update verfügbar</value>
   </data>
   <data name="UpdateAvailableMessage" xml:space="preserve">
-    <value>Yeni bir sürüm {0} mevcut!
+    <value>Eine neue Version {0} ist verfügbar!
 
-İndirmek ister misiniz?</value>
+Möchten Sie sie herunterladen?</value>
   </data>
   <data name="UpdateCheckFailedTitle" xml:space="preserve">
-    <value>Güncelleme Denetimi Başarısız</value>
+    <value>Update-Überprüfung fehlgeschlagen</value>
   </data>
   <data name="UpdateCheckFailedMessage" xml:space="preserve">
-    <value>Güncellemeler denetlenemedi. Lütfen şu adresi ziyaret edin:
+    <value>Updates konnten nicht überprüft werden. Besuchen Sie bitte:
 https://github.com/Metanome/mic-controlx/releases</value>
   </data>
   <data name="NoUpdatesTitle" xml:space="preserve">
-    <value>Güncelleme Yok</value>
+    <value>Keine Updates</value>
   </data>
   <data name="NoUpdatesMessage" xml:space="preserve">
-    <value>En son sürümü kullanıyorsunuz!</value>
+    <value>Sie verwenden die neueste Version!</value>
   </data>
   <data name="NoReleaseNotes" xml:space="preserve">
-    <value>Sürüm notu mevcut değil.</value>
+    <value>Keine Versionshinweise verfügbar.</value>
   </data>
   
   <!-- ============================================ -->
   <!-- CONTEXT MENU & SYSTEM TRAY -->
   <!-- ============================================ -->
   <data name="ToggleMicrophone" xml:space="preserve">
-    <value>Mikrofonu Aç/Kapat</value>
+    <value>Mikrofon umschalten</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Çıkış</value>
+    <value>Beenden</value>
   </data>
 
   <!-- Tray Tooltips -->
   <data name="TrayTooltipMuted" xml:space="preserve">
-    <value>MicControlX - Sessiz</value>
+    <value>MicControlX - Stumm</value>
   </data>
   <data name="TrayTooltipActive" xml:space="preserve">
-    <value>MicControlX - Aktif</value>
+    <value>MicControlX - Aktiv</value>
   </data>
   
   <!-- ============================================ -->
@@ -373,35 +373,35 @@ https://github.com/Metanome/mic-controlx/releases</value>
   <!-- ============================================ -->
   <!-- Basic Status Messages -->
   <data name="MicrophoneMuted" xml:space="preserve">
-    <value>Mikrofon Sessizde</value>
+    <value>Mikrofon stumm</value>
   </data>
   <data name="MicrophoneActive" xml:space="preserve">
-    <value>Mikrofon Aktif</value>
+    <value>Mikrofon aktiv</value>
   </data>
   
   <!-- Notification Messages -->
   <data name="NotificationMicrophoneMuted" xml:space="preserve">
-    <value>Mikrofon Sessizde</value>
+    <value>Mikrofon stumm</value>
   </data>
   <data name="NotificationMicrophoneActive" xml:space="preserve">
-    <value>Mikrofon Aktif</value>
+    <value>Mikrofon aktiv</value>
   </data>
   <data name="NotificationMicrophoneTemporarilyMuted" xml:space="preserve">
-    <value>Mikrofon Geçici Olarak Sessizde</value>
+    <value>Mikrofon temporär stumm</value>
   </data>
   <data name="NotificationMicrophoneTemporarilyActive" xml:space="preserve">
-    <value>Mikrofon Geçici Olarak Aktif</value>
+    <value>Mikrofon temporär aktiv</value>
   </data>
   
   <!-- General Status -->
   <data name="NoActiveMicrophones" xml:space="preserve">
-    <value>Etkin mikrofon bulunamadı</value>
+    <value>Keine aktiven Mikrofone gefunden</value>
   </data>
   <data name="NAudioError" xml:space="preserve">
-    <value>NAudio Hatası</value>
+    <value>NAudio Fehler</value>
   </data>
   <data name="StateCheckError" xml:space="preserve">
-    <value>Durum Denetim Hatası</value>
+    <value>Statusprüfungsfehler</value>
   </data>
   
   <!-- ============================================ -->
@@ -409,130 +409,130 @@ https://github.com/Metanome/mic-controlx/releases</value>
   <!-- ============================================ -->
   <!-- General Errors -->
   <data name="ErrorTitle" xml:space="preserve">
-    <value>Hata</value>
+    <value>Fehler</value>
   </data>
   <data name="AppAlreadyRunning" xml:space="preserve">
-    <value>MicControlX zaten çalışıyor. Sistem tepsisini kontrol edin.</value>
+    <value>MicControlX läuft bereits. Überprüfen Sie die Taskleiste.</value>
   </data>
   
   <!-- Startup Errors -->
   <data name="ErrorStartupTitle" xml:space="preserve">
-    <value>Başlatma Hatası</value>
+    <value>Startfehler</value>
   </data>
   <data name="StartupError" xml:space="preserve">
-    <value>Başlatma Hatası</value>
+    <value>Startfehler</value>
   </data>
   <data name="ErrorInitializationMessage" xml:space="preserve">
-    <value>Başlatma hatası: {0}
+    <value>Initialisierungsfehler: {0}
 
-Yığın izleme:
+Stack-Trace:
 {1}</value>
   </data>
   <data name="ErrorStartupSettingTitle" xml:space="preserve">
-    <value>Başlatma Ayarı Başarısız</value>
+    <value>Autostart-Einstellung fehlgeschlagen</value>
   </data>
   <data name="ErrorStartupSettingMessage" xml:space="preserve">
-    <value>Uyarı: Windows başlangıç ayarını {0} işlemi başarısız oldu.
+    <value>Warnung: {0} der Windows-Autostart-Einstellung fehlgeschlagen.
 
-Hata: {1}
+Fehler: {1}
 
-Bunun nedeni olabilir:
-• Yetersiz kayıt defteri izinleri
-• Kayıt defteri değişikliklerini engelleyen antivirüs yazılımı
-• Grup ilkesi kısıtlamaları
+Dies kann verursacht werden durch:
+• Unzureichende Registry-Berechtigungen
+• Antivirus-Software blockiert Registry-Änderungen
+• Gruppenrichtlinien-Beschränkungen
 
-Diğer ayarlarınız başarıyla kaydedildi.</value>
+Ihre anderen Einstellungen wurden erfolgreich gespeichert.</value>
   </data>
   
   <!-- Settings Errors -->
   <data name="ErrorSettingsTitle" xml:space="preserve">
-    <value>Ayar Hatası</value>
+    <value>Einstellungsfehler</value>
   </data>
   <data name="ErrorSettingsInitMessage" xml:space="preserve">
-    <value>AyarlarPenceresi başlatma hatası: {0}
+    <value>Initialisierungsfehler des Einstellungsfensters: {0}
 
-Yığın izi:
+Stack-Trace:
 {1}</value>
   </data>
   <data name="ErrorLoadSettingsMessage" xml:space="preserve">
-    <value>LoadCurrentSettings hatası: {0}</value>
+    <value>LoadCurrentSettings Fehler: {0}</value>
   </data>
   <data name="ErrorSettingsException" xml:space="preserve">
-    <value>OkButton_Click’te özel durum: {0}
+    <value>Ausnahme in OkButton_Click: {0}
 
-Yığın izi: {1}</value>
+Stack-Trace: {1}</value>
   </data>
   <data name="SettingsErrorMessage" xml:space="preserve">
-    <value>Ayar hatası: {0}</value>
+    <value>Einstellungsfehler: {0}</value>
   </data>
   <data name="ErrorConfigSaveTitle" xml:space="preserve">
-    <value>Yapılandırma Kaydetme Hatası</value>
+    <value>Konfiguration speichern fehlgeschlagen</value>
   </data>
   <data name="ErrorConfigSaveMessage" xml:space="preserve">
-    <value>Yapılandırma ayarları kaydedilemedi.
+    <value>Konfigurationseinstellungen konnten nicht gespeichert werden.
 
-Hata: {0}
+Fehler: {0}
 
-Bunun nedeni olabilir:
-• AppData klasörüne yazmak için yetersiz izin
-• Disk alanı sorunları
-• Dosya erişimini engelleyen antivirüs yazılımı
+Dies kann verursacht werden durch:
+• Unzureichende Berechtigungen zum Schreiben in AppData-Ordner
+• Festplattenspeicher-Probleme
+• Antivirus-Software blockiert Dateizugriff
 
-Ayarlarınız kaydedilemedi.</value>
+Ihre Einstellungen konnten nicht gespeichert werden.</value>
   </data>
   
   <!-- Hotkey Errors -->
   <data name="ErrorHotkeyRegistrationTitle" xml:space="preserve">
-    <value>Kısayol Kaydı Başarısız</value>
+    <value>Tastenkombination-Registrierung fehlgeschlagen</value>
   </data>
   <data name="ErrorHotkeyRegistrationMessage" xml:space="preserve">
-    <value>{0} kısayolu kaydedilemedi.
+    <value>Die {0} Tastenkombination konnte nicht registriert werden.
 
-Olası nedenler:
-• Başka bir uygulama bu tuşu zaten kullanıyor
-• Sistem düzeyinde kısıtlamalar
-• Fonksiyon tuşu çakışmaları
+Mögliche Ursachen:
+• Eine andere Anwendung verwendet bereits diese Taste
+• System-Einschränkungen
+• Funktionstasten-Konflikte
 
-Yapabilecekleriniz:
-• Ayarlardan kısayolu değiştirin
-• Mikrofonu aç/kapat için sistem tepsisi simgesini kullanın
-• {0} tuşunu kullanıyor olabilecek uygulamaları kapatın</value>
+Sie können:
+• Die Tastenkombination in den Einstellungen ändern
+• Das Infobereich-Symbol verwenden um das Mikrofon umzuschalten
+• Anwendungen schließen, die möglicherweise {0} verwenden</value>
   </data>
   <data name="ErrorHotkeyConflictMessage" xml:space="preserve">
-    <value>Yeni {0} kısayolu kaydedilemedi.
+    <value>Die neue {0} Tastenkombination konnte nicht registriert werden.
 
-Neden: {1}
+Ursache: {1}
 
-Önerilen alternatifler: {2}
+Vorgeschlagene Alternativen: {2}
 
-Kısayol ayarı kaydedildi, ancak şunları yapana kadar çalışmayacak:
-• Ayarlardan farklı bir kısayol seçin
-• {0} tuşunu kullanıyor olabilecek diğer uygulamaları kapatın
-• MicControlX’i yeniden başlatın</value>
+Die Tastenkombination-Einstellung wurde gespeichert, funktioniert aber erst wenn Sie:
+• Eine andere Tastenkombination in den Einstellungen wählen
+• Andere Anwendungen schließen, die möglicherweise {0} verwenden
+• MicControlX neustarten</value>
   </data>
   
   <!-- About Window Errors -->
   <data name="ErrorAboutWindow" xml:space="preserve">
-    <value>Hakkında penceresi oluşturulurken hata: {0}
+    <value>Fehler beim Erstellen des Über-Fensters: {0}
 
-Yığın izi:
+Stack-Trace:
 {1}</value>
   </data>
   
   <!-- OSD Errors -->
   <data name="OSDInitializationWarningTitle" xml:space="preserve">
-    <value>OSD Başlatma Uyarısı</value>
+    <value>OSD-Initialisierungswarnung</value>
   </data>
   <data name="OSDInitializationWarningMessage" xml:space="preserve">
-    <value>Uyarı: Görsel katman (OSD) başlatma başarısız.
+    <value>Warnung: Initialisierung des visuellen Overlays (OSD) fehlgeschlagen.
 
-Hata: {0}
+Fehler: {0}
 
-Uygulama normal çalışacak, ancak mikrofonu açıp kapatırken görsel geri bildirim göremeyeceksiniz.
+Die Anwendung wird normal funktionieren, aber Sie sehen keine visuelle Rückmeldung beim Umschalten des Mikrofons.
 
-Şunları deneyebilirsiniz:
-• Ayarlardan OSD stilini değiştirmek
-• Sorun devam ederse OSD’yi devre dışı bırakmak</value>
+Sie können versuchen:
+• Den OSD-Stil in den Einstellungen zu ändern
+• OSD in den Einstellungen zu deaktivieren, falls das Problem weiterhin besteht</value>
   </data>
   
   <!-- ============================================ -->
@@ -540,9 +540,9 @@ Uygulama normal çalışacak, ancak mikrofonu açıp kapatırken görsel geri bi
   <!-- ============================================ -->
   <!-- Action Descriptions -->
   <data name="ActionEnable" xml:space="preserve">
-    <value>etkinleştir</value>
+    <value>aktivieren</value>
   </data>
   <data name="ActionDisable" xml:space="preserve">
-    <value>devre dışı bırak</value>
+    <value>deaktivieren</value>
   </data>
 </root>

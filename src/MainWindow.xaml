@@ -6,9 +6,9 @@
         xmlns:res="clr-namespace:MicControlX"
         xmlns:local="clr-namespace:MicControlX"
         Title="{Binding AppTitle, Source={x:Static local:LocalizationManager.Instance}}" 
-        Height="600" 
+        Height="620" 
         Width="520"
-        MinHeight="600"
+        MinHeight="620"
         MinWidth="520"
         WindowStartupLocation="CenterScreen"
         WindowBackdropType="Mica"
@@ -202,6 +202,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             
                             <TextBlock Grid.Row="0" Grid.Column="0" 
@@ -218,9 +219,21 @@
                             <TextBlock Grid.Row="1" Grid.Column="0" 
                                        Text="{Binding Platform, Source={x:Static local:LocalizationManager.Instance}}" 
                                        FontSize="12" 
-                                       Margin="0,0,8,0"/>
+                                       Margin="0,0,8,4"/>
                             <TextBlock Grid.Row="1" Grid.Column="1" 
                                        Name="PlatformLabel"
+                                       Text="{Binding Unknown, Source={x:Static local:LocalizationManager.Instance}}" 
+                                       FontSize="12" 
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       Margin="0,0,0,4"/>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="0" 
+                                       Text="{Binding MicrophoneDevice, Source={x:Static local:LocalizationManager.Instance}}" 
+                                       FontSize="12" 
+                                       Margin="0,0,8,0"
+                                       Name="MicrophoneLabel"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" 
+                                       Name="MicrophoneDeviceLabel"
                                        Text="{Binding Unknown, Source={x:Static local:LocalizationManager.Instance}}" 
                                        FontSize="12" 
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>

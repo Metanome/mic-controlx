@@ -2,7 +2,7 @@
 
 **Advanced Universal Microphone Control Utility for Windows**
 
-[![Version](https://img.shields.io/badge/version-4.1.0-blue.svg)](https://github.com/Metanome/mic-controlx)
+[![Version](https://img.shields.io/badge/version-4.2.0-blue.svg)](https://github.com/Metanome/mic-controlx)
 [![Downloads](https://img.shields.io/github/downloads/Metanome/mic-controlx/total?color=brightgreen)](https://github.com/Metanome/mic-controlx/releases)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://github.com/Metanome/mic-controlx)
@@ -15,11 +15,13 @@ MicControlX is a universal Windows application for microphone control. It provid
 ## Key Features
 
 - **Universal Compatibility**: Works with any Windows-compatible microphone and audio hardware
-- **Multi-Language Support**: English and Turkish with automatic system language detection
+- **Multi-Language Support**: English, German, and Turkish with automatic system language detection
 - **Global Hotkeys**: System-wide microphone toggle with intelligent conflict detection
 - **Push-to-Talk Mode**: Hold hotkey for temporary mute/unmute, release to restore original state
-- **Visual Feedback**: Multiple OSD notification styles
-- **System Integration**: Windows startup support and system tray functionality  
+- **Advanced OSD System**: Multiple notification styles with smart positioning, configurable duration, and theme integration
+- **Focus Assist Integration**: Respects Windows "Do Not Disturb" mode to prevent interruptions
+- **Device Information**: Displays current microphone device name and system details
+- **System Integration**: Windows startup support and system tray functionality
 - **Modern UI**: Fluent Design with dark/light theme support
 - **Audio Notifications**: Optional sound feedback for mute/unmute actions
 - **Smart Error Handling**: Helpful guidance when settings conflicts occur
@@ -74,24 +76,34 @@ This is perfect for:
 - **Streaming**: Temporarily unmute for audience interaction without forgetting to mute again
 
 ### OSD Styles
-Choose from three notification styles:
-- **Default Style**: Standard MicControlX notification style
-- **Lenovo Vantage Style**: Alternative style option
-- **Lenovo Legion Toolkit Style**: Gaming-focused notification style
+Choose from four notification styles with multiple positioning options:
+- **Default Style**: Standard MicControlX notification with modern rounded design
+- **Vantage Style**: Lenovo Vantage-inspired layered icon design
+- **Legion Toolkit Style**: Gaming-focused compact horizontal layout
+- **Translucent Style**: Beautiful theme-aware translucent overlay with modern aesthetics
+
+### OSD Positioning & Customization
+- **7 Position Options**: Top Left/Center/Right, Middle Center, Bottom Left/Center/Right
+- **Smart Taskbar Detection**: Automatically adjusts position when taskbar visibility changes
+- **Configurable Duration**: Set display time from 1-10 seconds
+- **Theme Integration**: All styles automatically adapt to Windows dark/light theme
+- **Focus Assist Respect**: OSD notifications honor Windows "Do Not Disturb" mode
 
 ## Architecture
 
 ### Core Components
 
-- **`HotkeyManager.cs`**: Global hotkey handling
-- **`AudioController.cs`**: Microphone control and monitoring
-- **`LocalizationManager.cs`**: Multi-language support
-- **`MainWindow.xaml`**: Primary interface
-- **`ApplicationConfig.cs`**: Configuration management and persistence
-- **`OsdOverlay.xaml`**: Visual notifications
-- **`ThemeManager.cs`**: Dark/light theme management
-- **`SoundFeedback.cs`**: Audio notification system
-- **`GitHubUpdateChecker.cs`**: Automatic update checking
+- **`HotkeyManager.cs`**: Global hotkey handling and push-to-talk functionality
+- **`AudioController.cs`**: Microphone control and real-time monitoring
+- **`FocusAssistMonitor.cs`**: Windows "Do Not Disturb" integration and monitoring
+- **`LocalizationManager.cs`**: Multi-language support and resource management
+- **`MainWindow.xaml`**: Primary user interface and system information display
+- **`SettingsWindow.xaml`**: Configuration interface for all application settings
+- **`ApplicationConfig.cs`**: Configuration management and JSON persistence
+- **`OsdOverlay.xaml`**: Visual notification overlays with multiple styles
+- **`ThemeManager.cs`**: Dark/light theme management and system integration
+- **`SoundFeedback.cs`**: Audio notification system for mute/unmute events
+- **`GitHubUpdateChecker.cs`**: Automatic update checking and release management
 
 ### Key Technologies
 - **WPF**: Modern Windows interface
@@ -111,9 +123,12 @@ Settings are automatically saved to `%AppData%\MicControlX\config.json`:
   "ShowOSD": true,
   "ShowNotifications": false,
   "OSDStyle": 0,
+  "OSDPosition": 6,
+  "OSDDurationSeconds": 2.0,
   "Theme": 0,
   "AutoStart": false,
   "EnableSoundFeedback": false,
+  "RespectFocusAssist": false,
   "Language": "auto"
 }
 ```
@@ -123,11 +138,14 @@ Settings are automatically saved to `%AppData%\MicControlX\config.json`:
 - **HotKeyDisplayName**: Name of the hotkey for display in the UI
 - **ShowOSD**: Enable/disable visual overlays
 - **ShowNotifications**: Enable/disable system tray notifications
-- **OSDStyle**: `DefaultStyle (0)`, `VantageStyle (1)`, or `LLTStyle (2)`
+- **OSDStyle**: `DefaultStyle (0)`, `VantageStyle (1)`, `LLTStyle (2)`, or `TranslucentStyle (3)`
+- **OSDPosition**: Position options (0=TopLeft, 1=TopCenter, 2=TopRight, 3=MiddleCenter, 4=BottomLeft, 5=BottomCenter, 6=BottomRight)
+- **OSDDurationSeconds**: Display duration in seconds (1.0-10.0)
 - **Theme**: `System (0)`, `Dark (1)`, or `Light (2)`
-- **Language**: `"auto"` (system default), `"en"` (English), or `"tr"` (Turkish)
+- **Language**: `"auto"` (system default), `"en"` (English), `"tr"` (Turkish), or `"de"` (German)
 - **AutoStart**: Launch with Windows
 - **EnableSoundFeedback**: Play sounds on mute/unmute
+- **RespectFocusAssist**: Respect Windows "Do Not Disturb" mode
 
 ## Development
 
@@ -135,11 +153,15 @@ Settings are automatically saved to `%AppData%\MicControlX\config.json`:
 ```
 mic-controlx/
 ├── src/                    # Source code
+│   ├── Resources/         # Localization files
+│   │   ├── Strings.resx   # English resources
+│   │   ├── Strings.de.resx # German resources
+│   │   └── Strings.tr.resx # Turkish resources
 │   ├── *.xaml             # WPF user interfaces
 │   ├── *.xaml.cs          # UI code-behind
 │   ├── *.cs               # Core application logic
 │   └── MicControlX.csproj # Project file
-├── assets/                # Resources
+├── assets/                # Application resources
 │   ├── icons/             # Application icons
 │   └── sounds/            # Audio feedback files
 ├── build-standalone.bat   # Build script
@@ -152,6 +174,7 @@ mic-controlx/
 - **WPF-UI**: Modern Fluent Design components
 - **Hardcodet.NotifyIcon.Wpf**: System tray functionality
 - **System.Management**: System information detection
+- **System.Text.Json**: Configuration serialization
 
 ### Building
 The project targets **.NET 8.0-windows** and produces a single-file executable for easy distribution.
@@ -165,10 +188,10 @@ Contributions are welcome! Please feel free to:
 
 ## Acknowledgments
 
-- **NAudio**: Professional audio library for .NET
-- **WPF-UI**: Modern Fluent Design components
-- **Community Contributors**: Feedback and testing support
-- **Design Inspirations**: Lenovo Vantage and Legion Toolkit for visual style inspiration
+- **Open Source Libraries**: NAudio, WPF-UI, and other .NET ecosystem contributors
+- **Community Contributors**: Feedback, testing, and language translation support
+- **Design Inspirations**: Lenovo Vantage and Legion Toolkit for visual style concepts
+- **Microsoft**: Windows APIs and development frameworks
 
 ## Support
 

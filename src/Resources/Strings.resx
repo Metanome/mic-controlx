@@ -133,6 +133,9 @@
   <data name="Platform" xml:space="preserve">
     <value>Platform: </value>
   </data>
+  <data name="MicrophoneDevice" xml:space="preserve">
+    <value>Microphone: </value>
+  </data>
   <data name="UnknownSystem" xml:space="preserve">
     <value>Unknown System</value>
   </data>
@@ -188,7 +191,37 @@
   </data>
   <data name="OSDLLTStyle" xml:space="preserve">
     <value>Legion Toolkit Style</value>
-  </data>  
+  </data>
+  <data name="OSDTranslucentStyle" xml:space="preserve">
+    <value>Translucent Style</value>
+  </data>
+  <data name="OSDPositionLabel" xml:space="preserve">
+    <value>OSD Position:</value>
+  </data>
+  <data name="OSDTopLeft" xml:space="preserve">
+    <value>Top Left</value>
+  </data>
+  <data name="OSDTopCenter" xml:space="preserve">
+    <value>Top Center</value>
+  </data>
+  <data name="OSDTopRight" xml:space="preserve">
+    <value>Top Right</value>
+  </data>
+  <data name="OSDMiddleCenter" xml:space="preserve">
+    <value>Middle Center</value>
+  </data>
+  <data name="OSDBottomLeft" xml:space="preserve">
+    <value>Bottom Left</value>
+  </data>
+  <data name="OSDBottomCenter" xml:space="preserve">
+    <value>Bottom Center</value>
+  </data>
+  <data name="OSDBottomRight" xml:space="preserve">
+    <value>Bottom Right</value>
+  </data>
+  <data name="OSDDurationLabel" xml:space="preserve">
+    <value>OSD Duration:</value>
+  </data>
   
   <!-- Language Settings -->
   <data name="LanguageLabel" xml:space="preserve">
@@ -202,6 +235,9 @@
   </data>
   <data name="LanguageTurkish" xml:space="preserve">
     <value>Türkçe</value>
+  </data>
+  <data name="LanguageGerman" xml:space="preserve">
+    <value>Deutsch</value>
   </data>
 
   <!-- Theme Settings -->
@@ -229,6 +265,11 @@
   <!-- Sound Feedback Settings -->
   <data name="EnableSoundFeedback" xml:space="preserve">
     <value>Enable sound feedback</value>
+  </data>
+  
+  <!-- Focus Assist Settings -->
+  <data name="RespectFocusAssist" xml:space="preserve">
+    <value>Respect Focus Assist (DND)</value>
   </data>
   
   <!-- ============================================ -->

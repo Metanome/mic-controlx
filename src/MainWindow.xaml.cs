@@ -14,8 +14,7 @@ using MessageBox = System.Windows.MessageBox;
 namespace MicControlX
 {
     /// <summary>
-    /// Main Window for MicControlX WPF Application
-    /// Provides microphone control with Legion Toolkit styling
+    /// Main Window for MicControlX WPF - Provides microphone control with Legion Toolkit styling
     /// </summary>
     public partial class MainWindow : FluentWindow
     {
@@ -26,6 +25,7 @@ namespace MicControlX
 
         #region Fields
         private readonly AudioController micController = new();
+        private readonly FocusAssistMonitor focusAssistMonitor = new();
         private OsdOverlay? osd;
         private ApplicationConfig config = null!;
         private DateTime lastOSDUpdate = DateTime.MinValue;
@@ -56,12 +56,14 @@ namespace MicControlX
                 // Initialize components safely
                 InitializeTimers();
                 InitializeSystemTray();
+                InitializeFocusAssistMonitor();
                 UpdateUI();
                 
                 // Wire up events
                 micController.MuteStateChanged += OnMuteStateChanged;
                 micController.ErrorOccurred += OnMicrophoneError;
                 micController.ExternalChangeDetected += OnExternalChangeDetected;
+                micController.DeviceChanged += OnDeviceChanged;
                 LocalizationManager.LanguageChanged += OnLanguageChanged;
                 
                 // Initialize hotkey manager (works regardless of window visibility)
@@ -119,7 +121,14 @@ namespace MicControlX
 
         private void InitializeOsd()
         {
-            osd = new OsdOverlay(config.OSDStyle);
+            osd = new OsdOverlay(config.OSDStyle, config.OSDPosition, config.OSDDurationSeconds);
+        }
+
+        private void RefreshOsd()
+        {
+            // Dispose the old OSD and create a new one with updated settings
+            osd?.Close();
+            osd = new OsdOverlay(config.OSDStyle, config.OSDPosition, config.OSDDurationSeconds);
         }
 
         private void InitializeHotkeyManager()
@@ -133,9 +142,6 @@ namespace MicControlX
                 bool success = hotkeyManager.RegisterHotkey(config.HotKeyVirtualKey);
                 if (!success)
                 {
-                    var conflictInfo = ConfigurationManager.VirtualKeys.GetKeyConflictInfo(config.HotKeyVirtualKey);
-                    var alternatives = string.Join(", ", ConfigurationManager.VirtualKeys.GetSuggestedAlternatives(config.HotKeyVirtualKey));
-                    
                     MessageBox.Show(
                         string.Format(Strings.ErrorHotkeyRegistrationMessage, config.HotKeyDisplayName),
                         Strings.ErrorHotkeyRegistrationTitle, 
@@ -172,6 +178,24 @@ namespace MicControlX
             catch (Exception ex)
             {
                 Debug.WriteLine($"Tray initialization failed: {ex.Message}");
+            }
+        }
+
+        private void InitializeFocusAssistMonitor()
+        {
+            try
+            {
+                // Start monitoring Focus Assist status
+                focusAssistMonitor.StartMonitoring();
+                
+                // Subscribe to status changes for debugging/logging
+                focusAssistMonitor.StatusChanged += OnFocusAssistStatusChanged;
+                
+                Debug.WriteLine($"Focus Assist monitoring started. Current status: {focusAssistMonitor.CurrentStatus}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Focus Assist monitor initialization failed: {ex.Message}");
             }
         }
 
@@ -214,8 +238,14 @@ namespace MicControlX
                 BrandLabel.Text = $"{config.DetectedBrand} {config.DetectedModel}";
                 PlatformLabel.Text = GetDetailedWindowsVersion();
                 
+                // Update microphone device display
+                UpdateMicrophoneDeviceDisplay();
+                
                 // Update microphone status
                 UpdateMicrophoneStatus();
+                
+                // Refresh OSD with updated settings
+                RefreshOsd();
                 
                 // Force visual refresh
                 InvalidateVisual();
@@ -296,20 +326,6 @@ namespace MicControlX
             }
         }
 
-        private string GetNAudioVersion()
-        {
-            try
-            {
-                var assembly = typeof(NAudio.CoreAudioApi.MMDevice).Assembly;
-                var version = assembly.GetName().Version;
-                return version?.ToString() ?? Strings.Unknown;
-            }
-            catch
-            {
-                return Strings.Unknown;
-            }
-        }
-
         private void UpdateMicrophoneStatus()
         {
             try
@@ -347,17 +363,34 @@ namespace MicControlX
             }
         }
 
-        private string? GetDefaultMicrophoneName()
+        private void UpdateMicrophoneDeviceDisplay()
         {
             try
             {
-                using var enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
-                var device = enumerator.GetDefaultAudioEndpoint(NAudio.CoreAudioApi.DataFlow.Capture, NAudio.CoreAudioApi.Role.Communications);
-                return device.FriendlyName;
+                // Get current microphone device name
+                string deviceName = micController.GetCurrentMicrophoneDeviceName();
+                
+                if (!string.IsNullOrEmpty(deviceName))
+                {
+                    MicrophoneDeviceLabel.Text = deviceName;
+                }
+                else
+                {
+                    MicrophoneDeviceLabel.Text = Strings.Unknown;
+                }
+                
+                // Always show the microphone device information
+                MicrophoneLabel.Visibility = Visibility.Visible;
+                MicrophoneDeviceLabel.Visibility = Visibility.Visible;
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                Debug.WriteLine($"Update microphone device display error: {ex.Message}");
+                
+                // Show "Unknown" on error instead of hiding
+                MicrophoneDeviceLabel.Text = Strings.Unknown;
+                MicrophoneLabel.Visibility = Visibility.Visible;
+                MicrophoneDeviceLabel.Visibility = Visibility.Visible;
             }
         }
 
@@ -397,6 +430,29 @@ namespace MicControlX
                 Debug.WriteLine($"Tray icon update failed: {ex.Message}");
             }
         }
+        
+        /// <summary>
+        /// Determines if OSD should be shown based on configuration and Focus Assist status
+        /// </summary>
+        /// <returns>True if OSD should be shown, false if it should be suppressed</returns>
+        private bool ShouldShowOSD()
+        {
+            if (!config.ShowOSD || isInitializing)
+                return false;
+            
+            // Check if Focus Assist should suppress the OSD
+            if (config.RespectFocusAssist)
+            {
+                // Get current Focus Assist status and check if OSD should be suppressed
+                var shouldSuppress = focusAssistMonitor.ShouldSuppressOSD(config.RespectFocusAssist);
+                
+                if (shouldSuppress)
+                    return false;
+            }
+            
+            return true;
+        }
+        
         #endregion
 
         #region Event Handlers
@@ -406,8 +462,8 @@ namespace MicControlX
             {
                 UpdateMicrophoneStatus();
 
-                // Only show OSD if app is fully initialized and enough time has passed since last update
-                if (!isInitializing && config.ShowOSD && DateTime.Now.Subtract(lastOSDUpdate).TotalMilliseconds > 500)
+                // Only show OSD if conditions allow and enough time has passed since last update
+                if (ShouldShowOSD() && DateTime.Now.Subtract(lastOSDUpdate).TotalMilliseconds > 500)
                 {
                     osd?.ShowMicrophoneStatus(isMuted);
                     lastOSDUpdate = DateTime.Now;
@@ -432,11 +488,21 @@ namespace MicControlX
             {
                 UpdateMicrophoneStatus();
                 
-                // Only show OSD if app is fully initialized
-                if (!isInitializing && config?.ShowOSD == true)
+                // Only show OSD if conditions allow
+                if (ShouldShowOSD())
                 {
                     osd?.ShowMicrophoneStatus(isMuted);
                 }
+            });
+        }
+
+        private void OnDeviceChanged()
+        {
+            // Handle microphone device changes (e.g., plugging/unplugging headsets)
+            System.Diagnostics.Debug.WriteLine("MainWindow: OnDeviceChanged called - updating microphone device display");
+            Dispatcher.Invoke(() =>
+            {
+                UpdateMicrophoneDeviceDisplay();
             });
         }
 
@@ -456,6 +522,11 @@ namespace MicControlX
                 InvalidateVisual();
                 UpdateLayout();
             });
+        }
+
+        private void OnFocusAssistStatusChanged(object? sender, FocusAssistStatusChangedEventArgs e)
+        {
+            // Status change is logged in FocusAssistMonitor - no additional logging needed here
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -515,7 +586,7 @@ namespace MicControlX
                 micController.SetMuted(!wasMutedBeforePTT);
                 
                 // Show OSD for temporary change
-                if (config.ShowOSD)
+                if (ShouldShowOSD())
                 {
                     osd?.ShowMicrophoneStatus(!wasMutedBeforePTT);
                 }
@@ -547,7 +618,7 @@ namespace MicControlX
                     micController.SetMuted(wasMutedBeforePTT);
                     
                     // Show OSD for state restoration
-                    if (config.ShowOSD)
+                    if (ShouldShowOSD())
                     {
                         osd?.ShowMicrophoneStatus(wasMutedBeforePTT);
                     }
@@ -589,7 +660,7 @@ namespace MicControlX
             try
             {
                 micController.SetMuted(true);
-                if (config.ShowOSD)
+                if (ShouldShowOSD())
                 {
                     osd?.ShowMicrophoneStatus(true);
                 }
@@ -605,7 +676,7 @@ namespace MicControlX
             try
             {
                 micController.SetMuted(false);
-                if (config.ShowOSD)
+                if (ShouldShowOSD())
                 {
                     osd?.ShowMicrophoneStatus(false);
                 }
@@ -679,7 +750,7 @@ namespace MicControlX
                     bool currentState = micController.IsMuted;
                     
                     // Show OSD if enabled
-                    if (config.ShowOSD)
+                    if (ShouldShowOSD())
                     {
                         osd?.ShowMicrophoneStatus(currentState);
                     }
@@ -820,6 +891,7 @@ namespace MicControlX
                 trayIcon?.Dispose();
                 osd?.Close();
                 micController?.Dispose();
+                focusAssistMonitor?.Dispose();
             }
             catch (Exception ex)
             {

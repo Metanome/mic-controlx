@@ -1,6 +1,8 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -16,8 +18,29 @@ namespace MicControlX
     public partial class OsdOverlay : Window
     {
         private readonly OSDStyles _osdStyle;
+        private readonly OSDPosition _position;
+        private readonly double _durationSeconds;
         private readonly DispatcherTimer _hideTimer;
         private bool _isMuted;
+        private HwndSource? _hwndSource;
+        private const int WM_DISPLAYCHANGE = 0x007E;
+        private const int WM_WININICHANGE = 0x001A;
+        
+        // P/Invoke for real-time taskbar detection
+        [DllImport("user32.dll")]
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
         
         // Asset paths for Lenovo Vantage inspired style (layered icons)
         private const string MutedBorderPath = "pack://application:,,,/assets/icons/mic_mute-rounded_square.png";
@@ -25,19 +48,42 @@ namespace MicControlX
         private const string UnmutedBorderPath = "pack://application:,,,/assets/icons/mic_unmute-rounded_square.png";
         private const string UnmutedIconPath = "pack://application:,,,/assets/icons/mic_unmute.png";
 
-        public OsdOverlay(OSDStyles style)
+        public OsdOverlay(OSDStyles style, OSDPosition position, double durationSeconds)
         {
             InitializeComponent();
             _osdStyle = style;
+            _position = position;
+            _durationSeconds = durationSeconds;
             
-            // Initialize hide timer
+            // Initialize hide timer with configurable duration
             _hideTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(2)
+                Interval = TimeSpan.FromSeconds(_durationSeconds)
             };
             _hideTimer.Tick += HideTimer_Tick;
             
             InitializeOSD();
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            
+            // Hook into Windows messages for real-time display/taskbar changes
+            var helper = new WindowInteropHelper(this);
+            _hwndSource = HwndSource.FromHwnd(helper.Handle);
+            _hwndSource.AddHook(WndProc);
+        }
+
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            // Listen for display changes and taskbar state changes
+            if (msg == WM_DISPLAYCHANGE || msg == WM_WININICHANGE)
+            {
+                // Reposition immediately when display settings or taskbar changes
+                Dispatcher.BeginInvoke(() => PositionWindow());
+            }
+            return IntPtr.Zero;
         }
 
         private void InitializeOSD()
@@ -62,6 +108,7 @@ namespace MicControlX
                     DefaultStyleContent.Visibility = Visibility.Visible;
                     VantageStyleContent.Visibility = Visibility.Collapsed;
                     LLTStyleContent.Visibility = Visibility.Collapsed;
+                    ModernTranslucentStyleContent.Visibility = Visibility.Collapsed;
                     break;
                     
                 case OSDStyles.VantageStyle:
@@ -70,6 +117,7 @@ namespace MicControlX
                     DefaultStyleContent.Visibility = Visibility.Collapsed;
                     VantageStyleContent.Visibility = Visibility.Visible;
                     LLTStyleContent.Visibility = Visibility.Collapsed;
+                    ModernTranslucentStyleContent.Visibility = Visibility.Collapsed;
                     break;
                     
                 case OSDStyles.LLTStyle:
@@ -78,18 +126,92 @@ namespace MicControlX
                     DefaultStyleContent.Visibility = Visibility.Collapsed;
                     VantageStyleContent.Visibility = Visibility.Collapsed;
                     LLTStyleContent.Visibility = Visibility.Visible;
+                    ModernTranslucentStyleContent.Visibility = Visibility.Collapsed;
+                    break;
+                    
+                case OSDStyles.TranslucentStyle:
+                    Width = 300;
+                    Height = 80;
+                    DefaultStyleContent.Visibility = Visibility.Collapsed;
+                    VantageStyleContent.Visibility = Visibility.Collapsed;
+                    LLTStyleContent.Visibility = Visibility.Collapsed;
+                    ModernTranslucentStyleContent.Visibility = Visibility.Visible;
                     break;
             }
         }
 
         private void PositionWindow()
         {
-            // Position at bottom-center of primary screen
-            var screen = SystemParameters.WorkArea;
-            const int bottomMargin = 60;
+            // Use WorkArea to respect taskbar and auto-hide settings
+            var workArea = SystemParameters.WorkArea;
+            const int cornerMargin = 20; // Reduced spacing for corners
+            const int centerMargin = 60; // Keep original spacing for center positions
             
-            Left = screen.Left + (screen.Width - Width) / 2;
-            Top = screen.Bottom - Height - bottomMargin;
+            // Use Width and Height instead of ActualWidth and ActualHeight since the window
+            // hasn't been rendered yet when this method is called
+            double windowWidth = Width;
+            double windowHeight = Height;
+            
+            switch (_position)
+            {
+                case OSDPosition.TopLeft:
+                    Left = workArea.Left + cornerMargin;
+                    Top = workArea.Top + cornerMargin;
+                    break;
+                    
+                case OSDPosition.TopCenter:
+                    Left = workArea.Left + (workArea.Width - windowWidth) / 2;
+                    Top = workArea.Top + centerMargin;
+                    break;
+                    
+                case OSDPosition.TopRight:
+                    Left = workArea.Right - windowWidth - cornerMargin;
+                    Top = workArea.Top + cornerMargin;
+                    break;
+                    
+                case OSDPosition.MiddleCenter:
+                    Left = workArea.Left + (workArea.Width - windowWidth) / 2;
+                    Top = workArea.Top + (workArea.Height - windowHeight) / 2;
+                    break;
+                    
+                case OSDPosition.BottomLeft:
+                    Left = workArea.Left + cornerMargin;
+                    Top = workArea.Bottom - windowHeight - cornerMargin;
+                    break;
+                    
+                case OSDPosition.BottomCenter:
+                default:
+                    Left = workArea.Left + (workArea.Width - windowWidth) / 2;
+                    Top = workArea.Bottom - windowHeight - centerMargin;
+                    break;
+                    
+                case OSDPosition.BottomRight:
+                    Left = workArea.Right - windowWidth - cornerMargin;
+                    Top = workArea.Bottom - windowHeight - cornerMargin;
+                    break;
+            }
+            
+            // Ensure the window stays within screen bounds as a safety measure
+            EnsureOnScreen();
+        }
+        
+        private void EnsureOnScreen()
+        {
+            var workArea = SystemParameters.WorkArea;
+            
+            // Use Width and Height instead of ActualWidth and ActualHeight
+            double windowWidth = Width;
+            double windowHeight = Height;
+            
+            // Clamp position to ensure window is fully visible
+            if (Left < workArea.Left)
+                Left = workArea.Left;
+            if (Top < workArea.Top)
+                Top = workArea.Top;
+            if (Left + windowWidth > workArea.Right)
+                Left = workArea.Right - windowWidth;
+            if (Top + windowHeight > workArea.Bottom)
+                Top = workArea.Bottom - windowHeight;
         }
 
         public void ShowMicrophoneStatus(bool isMuted)
@@ -97,7 +219,7 @@ namespace MicControlX
             _isMuted = isMuted;
             UpdateVisualState();
             
-            // Stop any existing timer
+            // Stop any existing timers
             _hideTimer.Stop();
             
             // Show window with fade-in animation
@@ -126,6 +248,10 @@ namespace MicControlX
                     
                 case OSDStyles.LLTStyle:
                     UpdateLLTStyle(statusColor);
+                    break;
+                    
+                case OSDStyles.TranslucentStyle:
+                    UpdateTranslucentStyle(statusColor);
                     break;
             }
         }
@@ -166,17 +292,15 @@ namespace MicControlX
         private void UpdateLLTStyle(SolidColorBrush statusColor)
         {
             // Use Legion Toolkit inspired colors
-            var indicator = LLTStyleContent.FindName("LLTStyleIndicator") as Ellipse;
-            if (indicator != null)
-            {
-                indicator.Fill = new SolidColorBrush(_isMuted ? Color.FromRgb(255, 33, 33) : Color.FromRgb(0, 255, 0));
-            }
+            LLTStyleIndicator.Fill = new SolidColorBrush(_isMuted ? Color.FromRgb(255, 33, 33) : Color.FromRgb(0, 255, 0));
+            LLTStyleText.Text = _isMuted ? Strings.Muted : Strings.Active;
+        }
 
-            var statusText = LLTStyleContent.FindName("LLTStyleText") as TextBlock;
-            if (statusText != null)
-            {
-                statusText.Text = _isMuted ? Strings.Muted : Strings.Active;
-            }
+        private void UpdateTranslucentStyle(SolidColorBrush statusColor)
+        {
+            // Update the translucent style elements
+            ModernTranslucentStyleIndicator.Fill = statusColor;
+            ModernTranslucentStyleText.Text = _isMuted ? Strings.MicrophoneMuted : Strings.MicrophoneActive;
         }
 
         private void BeginFadeIn()
@@ -207,7 +331,10 @@ namespace MicControlX
         protected override void OnClosed(EventArgs e)
         {
             _hideTimer?.Stop();
+            _hwndSource?.RemoveHook(WndProc);
+            _hwndSource?.Dispose();
             base.OnClosed(e);
         }
+
     }
 }

@@ -32,6 +32,7 @@ namespace MicControlX
         public string Brand => Strings.Brand;
         public string UnknownSystem => Strings.UnknownSystem;
         public string Platform => Strings.Platform;
+        public string MicrophoneDevice => Strings.MicrophoneDevice;
         public string Unknown => Strings.Unknown;
         
         // OSD Overlay strings
@@ -45,11 +46,18 @@ namespace MicControlX
         public string ShowOSDOverlay => Strings.ShowOSDOverlay;
         public string ShowTrayNotifications => Strings.ShowTrayNotifications;
         public string OSDStyleLabel => Strings.OSDStyleLabel;
+        public string OSDPositionLabel => Strings.OSDPositionLabel;
+        public string OSDDurationLabel => Strings.OSDDurationLabel;
         public string ApplicationSettings => Strings.ApplicationSettings;
         public string LanguageLabel => Strings.LanguageLabel;
+        public string LanguageAuto => Strings.LanguageAuto;
+        public string LanguageEnglish => Strings.LanguageEnglish;
+        public string LanguageTurkish => Strings.LanguageTurkish;
+        public string LanguageGerman => Strings.LanguageGerman;
         public string ThemeLabel => Strings.ThemeLabel;
         public string StartWithWindows => Strings.StartWithWindows;
         public string EnableSoundFeedback => Strings.EnableSoundFeedback;
+        public string RespectFocusAssist => Strings.RespectFocusAssist;
         public string OK => Strings.OK;
         public string Cancel => Strings.Cancel;
         
@@ -107,7 +115,7 @@ namespace MicControlX
         /// <summary>
         /// Initializes the application culture based on the configuration
         /// </summary>
-        /// <param name="languageCode">Language code (auto, en, tr)</param>
+        /// <param name="languageCode">Language code (auto, en, tr, de)</param>
         public static void Initialize(string languageCode)
         {
             CultureInfo culture;
@@ -119,6 +127,9 @@ namespace MicControlX
                     break;
                 case "tr":
                     culture = new CultureInfo("tr-TR");
+                    break;
+                case "de":
+                    culture = new CultureInfo("de-DE");
                     break;
                 case "auto":
                 default:
@@ -132,11 +143,14 @@ namespace MicControlX
                         case "tr":
                             culture = new CultureInfo("tr-TR");
                             break;
+                        case "de":
+                            culture = new CultureInfo("de-DE");
+                            break;
                         case "en":
                             culture = new CultureInfo("en-US");
                             break;
                         default:
-                            // For unsupported languages (de, fr, es, etc.), default to English
+                            // For unsupported languages (fr, es, etc.), default to English
                             // This provides the best user experience since English is widely understood
                             culture = new CultureInfo("en-US");
                             break;
@@ -156,7 +170,7 @@ namespace MicControlX
         /// <summary>
         /// Sets the application language
         /// </summary>
-        /// <param name="languageCode">Language code (auto, en, tr)</param>
+        /// <param name="languageCode">Language code (auto, en, tr, de)</param>
         public static void SetLanguage(string languageCode)
         {
             Initialize(languageCode);
@@ -177,6 +191,7 @@ namespace MicControlX
             return culture.TwoLetterISOLanguageName switch
             {
                 "tr" => "Türkçe",
+                "de" => "Deutsch",
                 "en" => "English",
                 _ => "English"
             };
@@ -187,7 +202,7 @@ namespace MicControlX
         /// </summary>
         public static string[] GetAvailableLanguages()
         {
-            return new[] { "auto", "en", "tr" };
+            return new[] { "auto", "en", "tr", "de" };
         }
 
         /// <summary>
@@ -195,7 +210,12 @@ namespace MicControlX
         /// </summary>
         public static string[] GetLanguageDisplayNames()
         {
-            return new[] { "Auto (System)", "English", "Türkçe" };
+            return new[] { 
+                Strings.LanguageAuto, 
+                Strings.LanguageEnglish, 
+                Strings.LanguageTurkish,
+                Strings.LanguageGerman
+            };
         }
 
         /// <summary>
@@ -209,6 +229,7 @@ namespace MicControlX
             return systemLanguage switch
             {
                 "tr" => "Auto (Turkish - System)",
+                "de" => "Auto (German - System)",
                 "en" => "Auto (English - System)", 
                 _ => $"Auto (English - Default for {systemCulture.DisplayName})"
             };

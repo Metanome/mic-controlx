@@ -18,7 +18,30 @@ namespace MicControlX
         /// <summary>Vantage Style - Lenovo Vantage inspired design</summary>
         VantageStyle,
         /// <summary>LLT Style - Lenovo Legion Toolkit inspired design</summary>
-        LLTStyle
+        LLTStyle,
+        /// <summary>Translucent Style - Semi-transparent design with blur effects</summary>
+        TranslucentStyle
+    }
+
+    /// <summary>
+    /// OSD overlay position options for screen placement
+    /// </summary>
+    public enum OSDPosition
+    {
+        /// <summary>Top Left corner of screen</summary>
+        TopLeft,
+        /// <summary>Top Center of screen</summary>
+        TopCenter,
+        /// <summary>Top Right corner of screen</summary>
+        TopRight,
+        /// <summary>Middle Center of screen</summary>
+        MiddleCenter,
+        /// <summary>Bottom Left corner of screen</summary>
+        BottomLeft,
+        /// <summary>Bottom Center of screen (default)</summary>
+        BottomCenter,
+        /// <summary>Bottom Right corner of screen</summary>
+        BottomRight
     }
 
     /// <summary>
@@ -50,6 +73,12 @@ namespace MicControlX
         /// <summary>OSD visual style preference</summary>
         public OSDStyles OSDStyle { get; set; } = OSDStyles.DefaultStyle;
         
+        /// <summary>OSD overlay position on screen</summary>
+        public OSDPosition OSDPosition { get; set; } = OSDPosition.BottomCenter;
+        
+        /// <summary>OSD display duration in seconds (1-10)</summary>
+        public double OSDDurationSeconds { get; set; } = 2.0;
+        
         /// <summary>Application UI theme (Dark/Light/System)</summary>
         public AppTheme Theme { get; set; } = AppTheme.System;
         
@@ -58,6 +87,9 @@ namespace MicControlX
         
         /// <summary>Enable sound feedback on mute/unmute</summary>
         public bool EnableSoundFeedback { get; set; } = false;
+        
+        /// <summary>Respect Windows Focus Assist (Do Not Disturb) to suppress OSD when active</summary>
+        public bool RespectFocusAssist { get; set; } = false;
         
         /// <summary>Application language (auto, en, tr)</summary>
         public string Language { get; set; } = "auto";
@@ -192,6 +224,8 @@ namespace MicControlX
         {
             // Always use Default Style as the universal choice
             config.OSDStyle = OSDStyles.DefaultStyle;
+            config.OSDPosition = OSDPosition.BottomCenter;
+            config.OSDDurationSeconds = 2.0;
         }
 
         private static string? GetSystemInfo(string keyName)
