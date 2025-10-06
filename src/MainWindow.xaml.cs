@@ -70,7 +70,6 @@ namespace MicControlX
                 InitializeHotkeyManager();
                 
                 // Handle window events
-                Loaded += MainWindow_Loaded;
                 Closing += MainWindow_Closing;
                 StateChanged += MainWindow_StateChanged;
                 WindowState = WindowState.Normal;
@@ -90,6 +89,9 @@ namespace MicControlX
                         System.Windows.MessageBoxButton.OK,
                         System.Windows.MessageBoxImage.Warning);
                 }
+                
+                // Mark initialization as complete - works even when starting minimized
+                isInitializing = false;
             }
             catch (Exception ex)
             {
@@ -122,6 +124,22 @@ namespace MicControlX
         private void InitializeOsd()
         {
             osd = new OsdOverlay(config.OSDStyle, config.OSDPosition, config.OSDDurationSeconds);
+        }
+        
+        private void EnsureOsdReady()
+        {
+            // Lazy initialization - create OSD if it doesn't exist or was disposed
+            if (osd == null)
+            {
+                try
+                {
+                    InitializeOsd();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"OSD lazy initialization failed: {ex.Message}");
+                }
+            }
         }
 
         private void RefreshOsd()
@@ -465,6 +483,7 @@ namespace MicControlX
                 // Only show OSD if conditions allow and enough time has passed since last update
                 if (ShouldShowOSD() && DateTime.Now.Subtract(lastOSDUpdate).TotalMilliseconds > 500)
                 {
+                    EnsureOsdReady();
                     osd?.ShowMicrophoneStatus(isMuted);
                     lastOSDUpdate = DateTime.Now;
                 }
@@ -491,6 +510,7 @@ namespace MicControlX
                 // Only show OSD if conditions allow
                 if (ShouldShowOSD())
                 {
+                    EnsureOsdReady();
                     osd?.ShowMicrophoneStatus(isMuted);
                 }
             });
@@ -527,15 +547,6 @@ namespace MicControlX
         private void OnFocusAssistStatusChanged(object? sender, FocusAssistStatusChangedEventArgs e)
         {
             // Status change is logged in FocusAssistMonitor - no additional logging needed here
-        }
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Mark initialization as complete to allow OSD triggers
-            isInitializing = false;
-            
-            // Don't hide automatically - let user decide when to minimize to tray
-            // The window will show normally and user can minimize it manually
         }
 
         private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -588,6 +599,7 @@ namespace MicControlX
                 // Show OSD for temporary change
                 if (ShouldShowOSD())
                 {
+                    EnsureOsdReady();
                     osd?.ShowMicrophoneStatus(!wasMutedBeforePTT);
                 }
                 
@@ -620,6 +632,7 @@ namespace MicControlX
                     // Show OSD for state restoration
                     if (ShouldShowOSD())
                     {
+                        EnsureOsdReady();
                         osd?.ShowMicrophoneStatus(wasMutedBeforePTT);
                     }
                     
@@ -662,6 +675,7 @@ namespace MicControlX
                 micController.SetMuted(true);
                 if (ShouldShowOSD())
                 {
+                    EnsureOsdReady();
                     osd?.ShowMicrophoneStatus(true);
                 }
             }
@@ -678,6 +692,7 @@ namespace MicControlX
                 micController.SetMuted(false);
                 if (ShouldShowOSD())
                 {
+                    EnsureOsdReady();
                     osd?.ShowMicrophoneStatus(false);
                 }
             }
@@ -752,6 +767,7 @@ namespace MicControlX
                     // Show OSD if enabled
                     if (ShouldShowOSD())
                     {
+                        EnsureOsdReady();
                         osd?.ShowMicrophoneStatus(currentState);
                     }
                     
