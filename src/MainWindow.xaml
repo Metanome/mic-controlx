@@ -47,23 +47,25 @@
         </Style>
     </ui:FluentWindow.Resources>
 
-    <Grid>
+    <Grid MouseDown="MainGrid_MouseDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Title Bar -->
         <ui:TitleBar Grid.Row="0" Title="{Binding AppTitle, Source={x:Static local:LocalizationManager.Instance}}" ShowMaximize="False" ShowMinimize="True" />
 
         <!-- Main Content -->
-        <StackPanel Grid.Row="1" Margin="20,10,20,20">
+        <StackPanel Grid.Row="1" Margin="20,10,20,0">
             <StackPanel>
                 
-                <!-- Header with Settings and Info buttons -->
+                <!-- Header with Update, Settings and Info buttons -->
                 <Grid Margin="0,0,0,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
@@ -76,17 +78,32 @@
                                Margin="0,0,16,0"/>
                     
                     <ui:Button Grid.Column="1" 
+                               x:Name="UpdateButton"
+                               ToolTip="{Binding CheckForUpdates, Source={x:Static local:LocalizationManager.Instance}}"
+                               Appearance="Transparent"
+                               Background="Transparent"
+                               BorderThickness="0"
+                               HorizontalContentAlignment="Center"
+                               Padding="10,7"
+                               Margin="0,0,4,0"
+                               Click="UpdateButton_Click">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="ArrowSync24" FontSize="20"/>
+                        </ui:Button.Icon>
+                    </ui:Button>
+                    
+                    <ui:Button Grid.Column="2" 
                                Name="SettingsButton"
                                Content="{Binding Settings, Source={x:Static local:LocalizationManager.Instance}}"
                                Icon="{ui:SymbolIcon Settings24}"
-                               Margin="0,0,8,0"
+                               Margin="0,0,4,0"
                                Click="SettingsButton_Click"
                                ToolTip="{Binding Settings, Source={x:Static local:LocalizationManager.Instance}}"
                                Appearance="Secondary"
                                HorizontalContentAlignment="Center"
                                Padding="12,8"/>
                     
-                    <ui:Button Grid.Column="2" 
+                    <ui:Button Grid.Column="3" 
                                Name="InfoButton"
                                Content="{Binding About, Source={x:Static local:LocalizationManager.Instance}}"
                                Icon="{ui:SymbolIcon Info24}"
@@ -243,6 +260,9 @@
 
             </StackPanel>
         </StackPanel>
+        
+        <!-- Update Panel (slides down from bottom) -->
+        <local:UpdatePanel x:Name="UpdatePanel" Grid.Row="2"/>
     </Grid>
 
 </ui:FluentWindow>

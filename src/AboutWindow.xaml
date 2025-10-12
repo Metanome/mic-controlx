@@ -5,11 +5,11 @@
         xmlns:res="clr-namespace:MicControlX"
         xmlns:local="clr-namespace:MicControlX"
         Title="{Binding AboutTitle, Source={x:Static local:LocalizationManager.Instance}}"
-        Height="485" 
+        Height="420" 
         Width="450"
-        MinHeight="485"
+        MinHeight="420"
         MinWidth="450"
-        MaxHeight="485"
+        MaxHeight="420"
         MaxWidth="450"
         WindowStartupLocation="CenterOwner"
         WindowBackdropType="Mica"
@@ -28,7 +28,6 @@
         
         <Grid Grid.Row="1" Margin="20,10,20,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -92,30 +91,6 @@
                    FontSize="11"
                    HorizontalAlignment="Center"
                    Margin="0,15,0,15"/>
-        
-        <!-- Action Buttons -->
-        <Grid Grid.Row="7" Margin="20,10,0,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            
-            <ui:Button Grid.Column="1" 
-                       Name="CheckUpdatesButton"
-                       Content="{Binding CheckForUpdates, Source={x:Static local:LocalizationManager.Instance}}" 
-                       Appearance="Secondary"
-                       Width="Auto"
-                       Margin="0,0,8,0"
-                       Click="CheckUpdatesButton_Click"/>
-            
-            <ui:Button Grid.Column="2" 
-                       Name="OkButton"
-                       Content="{Binding OK, Source={x:Static local:LocalizationManager.Instance}}" 
-                       Appearance="Primary"
-                       Width="80"
-                       Click="OkButton_Click"/>
-        </Grid>
         </Grid>
     </Grid>
 </ui:FluentWindow>

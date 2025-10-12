@@ -322,32 +322,68 @@
   <data name="CheckForUpdates" xml:space="preserve">
     <value>Güncellemeleri Denetle</value>
   </data>
-  <data name="Checking" xml:space="preserve">
-    <value>Denetleniyor...</value>
-  </data>
-  <data name="UpdateAvailableTitle" xml:space="preserve">
-    <value>Güncelleme Mevcut</value>
+  <data name="CheckingForUpdates" xml:space="preserve">
+    <value>Güncellemeler kontrol ediliyor...</value>
   </data>
   <data name="UpdateAvailableMessage" xml:space="preserve">
-    <value>Yeni bir sürüm {0} mevcut!
-
-İndirmek ister misiniz?</value>
+    <value>Yeni sürüm {0} mevcut. Şimdi indir?</value>
   </data>
-  <data name="UpdateCheckFailedTitle" xml:space="preserve">
-    <value>Güncelleme Denetimi Başarısız</value>
+  <data name="DownloadingUpdate" xml:space="preserve">
+    <value>Güncelleme indiriliyor...</value>
   </data>
-  <data name="UpdateCheckFailedMessage" xml:space="preserve">
-    <value>Güncellemeler denetlenemedi. Lütfen şu adresi ziyaret edin:
-https://github.com/Metanome/mic-controlx/releases</value>
+  <data name="DownloadingProgress" xml:space="preserve">
+    <value>İndiriliyor... {0}</value>
   </data>
-  <data name="NoUpdatesTitle" xml:space="preserve">
-    <value>Güncelleme Yok</value>
+  <data name="UpdateReadyToRestart" xml:space="preserve">
+    <value>Güncelleme indirildi. Yeniden başlat?</value>
   </data>
-  <data name="NoUpdatesMessage" xml:space="preserve">
-    <value>En son sürümü kullanıyorsunuz!</value>
+  <data name="UpToDate" xml:space="preserve">
+    <value>En güncel sürümü kullanıyorsunuz!</value>
   </data>
-  <data name="NoReleaseNotes" xml:space="preserve">
-    <value>Sürüm notu mevcut değil.</value>
+  
+  <!-- Update Action Buttons -->
+  <data name="Download" xml:space="preserve">
+    <value>İndir</value>
+  </data>
+  <data name="RestartAndUpdate" xml:space="preserve">
+    <value>Yeniden Başlat &amp; Güncelle</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Tekrar Dene</value>
+  </data>
+  
+  <!-- Update Error Messages -->
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Güncelleme başarısız: {0}</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Güncelleme kontrolü başarısız</value>
+  </data>
+  <data name="UpdateErrorRateLimited" xml:space="preserve">
+    <value>GitHub tarafından sınırlandırıldı. Lütfen bir saat sonra tekrar deneyin.</value>
+  </data>
+  <data name="UpdateErrorNetworkError" xml:space="preserve">
+    <value>İnternet bağlantısı mevcut değil</value>
+  </data>
+  <data name="UpdateErrorNotFound" xml:space="preserve">
+    <value>Güncelleme deposuna erişilemiyor</value>
+  </data>
+  <data name="UpdateErrorInvalidResponse" xml:space="preserve">
+    <value>Güncelleme sunucusundan geçersiz yanıt</value>
+  </data>
+  
+  <!-- Download Error Messages -->
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>İndirme başarısız</value>
+  </data>
+  <data name="DownloadCancelledByUser" xml:space="preserve">
+    <value>İndirme kullanıcı tarafından iptal edildi</value>
+  </data>
+  <data name="DownloadErrorTimeout" xml:space="preserve">
+    <value>Bağlantı zaman aşımı</value>
+  </data>
+  <data name="DownloadErrorNetwork" xml:space="preserve">
+    <value>Ağ bağlantı hatası</value>
   </data>
   
   <!-- ============================================ -->
@@ -456,11 +492,6 @@ Yığın izi:
   </data>
   <data name="ErrorLoadSettingsMessage" xml:space="preserve">
     <value>LoadCurrentSettings hatası: {0}</value>
-  </data>
-  <data name="ErrorSettingsException" xml:space="preserve">
-    <value>OkButton_Click’te özel durum: {0}
-
-Yığın izi: {1}</value>
   </data>
   <data name="SettingsErrorMessage" xml:space="preserve">
     <value>Ayar hatası: {0}</value>

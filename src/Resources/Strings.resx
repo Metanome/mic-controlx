@@ -322,32 +322,68 @@
   <data name="CheckForUpdates" xml:space="preserve">
     <value>Check for Updates</value>
   </data>
-  <data name="Checking" xml:space="preserve">
-    <value>Checking...</value>
-  </data>
-  <data name="UpdateAvailableTitle" xml:space="preserve">
-    <value>Update Available</value>
+  <data name="CheckingForUpdates" xml:space="preserve">
+    <value>Checking for updates...</value>
   </data>
   <data name="UpdateAvailableMessage" xml:space="preserve">
-    <value>A new version {0} is available!
-
-Would you like to download it?</value>
+    <value>New version {0} available. Download now?</value>
   </data>
-  <data name="UpdateCheckFailedTitle" xml:space="preserve">
-    <value>Update Check Failed</value>
+  <data name="DownloadingUpdate" xml:space="preserve">
+    <value>Downloading update...</value>
   </data>
-  <data name="UpdateCheckFailedMessage" xml:space="preserve">
-    <value>Could not check for updates. Please visit:
-https://github.com/Metanome/mic-controlx/releases</value>
+  <data name="DownloadingProgress" xml:space="preserve">
+    <value>Downloading... {0}</value>
   </data>
-  <data name="NoUpdatesTitle" xml:space="preserve">
-    <value>No Updates</value>
+  <data name="UpdateReadyToRestart" xml:space="preserve">
+    <value>Update downloaded. Restart to apply?</value>
   </data>
-  <data name="NoUpdatesMessage" xml:space="preserve">
-    <value>You are running the latest version!</value>
+  <data name="UpToDate" xml:space="preserve">
+    <value>You're up to date!</value>
   </data>
-  <data name="NoReleaseNotes" xml:space="preserve">
-    <value>No release notes available.</value>
+  
+  <!-- Update Action Buttons -->
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="RestartAndUpdate" xml:space="preserve">
+    <value>Restart &amp; Update</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Try Again</value>
+  </data>
+  
+  <!-- Update Error Messages -->
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Update failed: {0}</value>
+  </data>
+  <data name="UpdateCheckFailed" xml:space="preserve">
+    <value>Update check failed</value>
+  </data>
+  <data name="UpdateErrorRateLimited" xml:space="preserve">
+    <value>Rate limited by GitHub. Please try again in an hour.</value>
+  </data>
+  <data name="UpdateErrorNetworkError" xml:space="preserve">
+    <value>No internet connection available</value>
+  </data>
+  <data name="UpdateErrorNotFound" xml:space="preserve">
+    <value>Update repository not accessible</value>
+  </data>
+  <data name="UpdateErrorInvalidResponse" xml:space="preserve">
+    <value>Invalid response from update server</value>
+  </data>
+  
+  <!-- Download Error Messages -->
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Download failed</value>
+  </data>
+  <data name="DownloadCancelledByUser" xml:space="preserve">
+    <value>Download cancelled by user</value>
+  </data>
+  <data name="DownloadErrorTimeout" xml:space="preserve">
+    <value>Connection timeout</value>
+  </data>
+  <data name="DownloadErrorNetwork" xml:space="preserve">
+    <value>Network connection error</value>
   </data>
   
   <!-- ============================================ -->
@@ -456,11 +492,6 @@ Stack trace:
   </data>
   <data name="ErrorLoadSettingsMessage" xml:space="preserve">
     <value>LoadCurrentSettings error: {0}</value>
-  </data>
-  <data name="ErrorSettingsException" xml:space="preserve">
-    <value>Exception in OkButton_Click: {0}
-
-Stack trace: {1}</value>
   </data>
   <data name="SettingsErrorMessage" xml:space="preserve">
     <value>Settings error: {0}</value>

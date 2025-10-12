@@ -187,11 +187,92 @@ namespace MicControlX {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Checking....
+        ///   Looks up a localized string similar to Checking for updates....
         /// </summary>
-        public static string Checking {
+        public static string CheckingForUpdates {
             get {
-                return ResourceManager.GetString("Checking", resourceCulture);
+                return ResourceManager.GetString("CheckingForUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download failed.
+        /// </summary>
+        public static string DownloadFailed {
+            get {
+                return ResourceManager.GetString("DownloadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading... {0}.
+        /// </summary>
+        public static string DownloadingProgress {
+            get {
+                return ResourceManager.GetString("DownloadingProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading update....
+        /// </summary>
+        public static string DownloadingUpdate {
+            get {
+                return ResourceManager.GetString("DownloadingUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download cancelled by user.
+        /// </summary>
+        public static string DownloadCancelledByUser {
+            get {
+                return ResourceManager.GetString("DownloadCancelledByUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection timeout.
+        /// </summary>
+        public static string DownloadErrorTimeout {
+            get {
+                return ResourceManager.GetString("DownloadErrorTimeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Network connection error.
+        /// </summary>
+        public static string DownloadErrorNetwork {
+            get {
+                return ResourceManager.GetString("DownloadErrorNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string Download {
+            get {
+                return ResourceManager.GetString("Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart &amp; Update.
+        /// </summary>
+        public static string RestartAndUpdate {
+            get {
+                return ResourceManager.GetString("RestartAndUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Try Again.
+        /// </summary>
+        public static string TryAgain {
+            get {
+                return ResourceManager.GetString("TryAgain", resourceCulture);
             }
         }
         
@@ -646,33 +727,6 @@ namespace MicControlX {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No release notes available..
-        /// </summary>
-        public static string NoReleaseNotes {
-            get {
-                return ResourceManager.GetString("NoReleaseNotes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You are running the latest version!.
-        /// </summary>
-        public static string NoUpdatesMessage {
-            get {
-                return ResourceManager.GetString("NoUpdatesMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No Updates.
-        /// </summary>
-        public static string NoUpdatesTitle {
-            get {
-                return ResourceManager.GetString("NoUpdatesTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Microphone Active.
         /// </summary>
         public static string NotificationMicrophoneActive {
@@ -1060,25 +1114,16 @@ namespace MicControlX {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not check for updates. Please visit: https://github.com/Metanome/mic-controlx/releases.
+        ///   Looks up a localized string similar to You're up to date!.
         /// </summary>
-        public static string UpdateCheckFailedMessage {
+        public static string UpToDate {
             get {
-                return ResourceManager.GetString("UpdateCheckFailedMessage", resourceCulture);
+                return ResourceManager.GetString("UpToDate", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update Check Failed.
-        /// </summary>
-        public static string UpdateCheckFailedTitle {
-            get {
-                return ResourceManager.GetString("UpdateCheckFailedTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A new version {0} is available! Would you like to download it?.
+        ///   Looks up a localized string similar to New version {0} available. Download now?.
         /// </summary>
         public static string UpdateAvailableMessage {
             get {
@@ -1087,11 +1132,65 @@ namespace MicControlX {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update Available.
+        ///   Looks up a localized string similar to Update failed: {0}.
         /// </summary>
-        public static string UpdateAvailableTitle {
+        public static string UpdateFailed {
             get {
-                return ResourceManager.GetString("UpdateAvailableTitle", resourceCulture);
+                return ResourceManager.GetString("UpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update check failed.
+        /// </summary>
+        public static string UpdateCheckFailed {
+            get {
+                return ResourceManager.GetString("UpdateCheckFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rate limited by GitHub. Please try again in an hour..
+        /// </summary>
+        public static string UpdateErrorRateLimited {
+            get {
+                return ResourceManager.GetString("UpdateErrorRateLimited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No internet connection available.
+        /// </summary>
+        public static string UpdateErrorNetworkError {
+            get {
+                return ResourceManager.GetString("UpdateErrorNetworkError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update repository not accessible.
+        /// </summary>
+        public static string UpdateErrorNotFound {
+            get {
+                return ResourceManager.GetString("UpdateErrorNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid response from update server.
+        /// </summary>
+        public static string UpdateErrorInvalidResponse {
+            get {
+                return ResourceManager.GetString("UpdateErrorInvalidResponse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update downloaded. Restart to apply?.
+        /// </summary>
+        public static string UpdateReadyToRestart {
+            get {
+                return ResourceManager.GetString("UpdateReadyToRestart", resourceCulture);
             }
         }
         

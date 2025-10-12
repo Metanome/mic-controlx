@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,6 +37,7 @@ namespace MicControlX
         private bool wasMutedBeforePTT = false;
         private DispatcherTimer? pttHoldTimer;
         private DispatcherTimer? keyReleaseMonitor;
+        private DispatcherTimer? startupUpdateTimer;
         private const int PTT_HOLD_THRESHOLD = 400; // ms to detect hold vs quick press
         private const int KEY_MONITOR_INTERVAL = 30; // ms to check key release
         private readonly object configLock = new object();
@@ -65,6 +68,9 @@ namespace MicControlX
                 micController.ExternalChangeDetected += OnExternalChangeDetected;
                 micController.DeviceChanged += OnDeviceChanged;
                 LocalizationManager.LanguageChanged += OnLanguageChanged;
+                
+                // Initialize update UI
+                InitializeUpdateUI();
                 
                 // Initialize hotkey manager (works regardless of window visibility)
                 InitializeHotkeyManager();
@@ -119,6 +125,12 @@ namespace MicControlX
             keyReleaseMonitor = new DispatcherTimer();
             keyReleaseMonitor.Interval = TimeSpan.FromMilliseconds(KEY_MONITOR_INTERVAL);
             keyReleaseMonitor.Tick += KeyReleaseMonitor_Tick;
+
+            // Startup update timer - checks for updates 5 seconds after app start
+            startupUpdateTimer = new DispatcherTimer();
+            startupUpdateTimer.Interval = TimeSpan.FromSeconds(5);
+            startupUpdateTimer.Tick += StartupUpdateTimer_Tick;
+            startupUpdateTimer.Start(); // Start immediately when app loads
         }
 
         private void InitializeOsd()
@@ -214,6 +226,36 @@ namespace MicControlX
             catch (Exception ex)
             {
                 Debug.WriteLine($"Focus Assist monitor initialization failed: {ex.Message}");
+            }
+        }
+
+        private void InitializeUpdateUI()
+        {
+            try
+            {
+                // Wire up update button click event
+                if (UpdateButton != null)
+                {
+                    UpdateButton.Click += UpdateButton_Click;
+                }
+                
+                // Wire up update panel events
+                if (UpdatePanel != null)
+                {
+                    UpdatePanel.PanelClosed += OnUpdatePanelClosed;
+                    UpdatePanel.UpdateRequested += OnUpdateRequested;
+                    UpdatePanel.DownloadRequested += OnDownloadRequested;
+                    UpdatePanel.RestartRequested += OnRestartRequested;
+                }
+                
+                // Wire up UpdateChecker events for button state management
+                UpdateChecker.DownloadCompleted += OnUpdateCheckerDownloadCompleted;
+                
+                Debug.WriteLine("Update UI initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Update UI initialization failed: {ex.Message}");
             }
         }
 
@@ -448,6 +490,25 @@ namespace MicControlX
                 Debug.WriteLine($"Tray icon update failed: {ex.Message}");
             }
         }
+
+        private void ShowUpdateNotification(UpdateInfo updateInfo)
+        {
+            if (trayIcon == null) return;
+            
+            try
+            {
+                // Show balloon tip notification for update availability
+                trayIcon.ShowBalloonTip(
+                    Strings.AppTitle,
+                    string.Format(Strings.UpdateAvailableMessage, updateInfo.LatestVersion),
+                    Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info
+                );
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Update notification failed: {ex.Message}");
+            }
+        }
         
         /// <summary>
         /// Determines if OSD should be shown based on configuration and Focus Assist status
@@ -667,6 +728,39 @@ namespace MicControlX
             isDoubleClick = false;
         }
 
+        private async void StartupUpdateTimer_Tick(object? sender, EventArgs e)
+        {
+            // Stop the timer - we only want to check once on startup
+            startupUpdateTimer?.Stop();
+            
+            try
+            {
+                // Silent background update check with detailed results
+                var result = await UpdateChecker.CheckForUpdatesWithResultAsync();
+                
+                if (result.Success && result.UpdateInfo != null)
+                {
+                    // Update available - show green dot on update button
+                    SetUpdateButtonAvailable(true);
+                    
+                    // Show balloon tip notification in system tray
+                    ShowUpdateNotification(result.UpdateInfo);
+                }
+                
+                // For startup checks, we don't show errors to the user
+                // They can manually check if they want to see error details
+                if (!result.Success)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Startup update check failed: {result.ErrorMessage} ({result.ErrorType})");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Silent failure for startup checks - just log
+                System.Diagnostics.Debug.WriteLine($"Startup update check failed: {ex.Message}");
+            }
+        }
+
         // Manual Control Events
         private void MuteButton_Click(object sender, RoutedEventArgs e)
         {
@@ -751,6 +845,275 @@ namespace MicControlX
         private void TrayExit_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void MainGrid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Dismiss update panel if it's in a dismissible state
+            if (UpdatePanel.Visibility == Visibility.Visible)
+            {
+                if (IsDismissibleState(UpdatePanel.CurrentState))
+                {
+                    UpdatePanel.HidePanel();
+                }
+            }
+        }
+
+        private bool IsDismissibleState(UpdatePanelState state)
+        {
+            return state == UpdatePanelState.UpdateAvailable ||
+                   state == UpdatePanelState.Error ||
+                   state == UpdatePanelState.NoUpdates;
+        }
+
+        private UpdatePanelState GetCurrentUpdatePanelState()
+        {
+            // We'll need to track this in UpdatePanel, for now assume it's dismissible
+            // This is a simplified approach - ideally UpdatePanel should expose its current state
+            return UpdatePanelState.UpdateAvailable; // Default to dismissible
+        }
+        #endregion
+
+        #region Update Event Handlers
+        private async void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Stop startup timer if it's still running (user manually triggered check)
+                startupUpdateTimer?.Stop();
+                
+                // Set button to checking state (spinning icon)
+                SetUpdateButtonChecking(true);
+                
+                // Show update panel in checking state
+                UpdatePanel?.ShowChecking();
+                
+                // Check for updates with detailed error information
+                var result = await UpdateChecker.CheckForUpdatesWithResultAsync();
+                
+                if (result.Success)
+                {
+                    if (result.UpdateInfo != null)
+                    {
+                        // Update available
+                        SetUpdateButtonChecking(false);
+                        SetUpdateButtonAvailable(true);
+                        UpdatePanel?.ShowUpdateAvailable(result.UpdateInfo);
+                    }
+                    else
+                    {
+                        // No updates available
+                        SetUpdateButtonChecking(false);
+                        UpdatePanel?.ShowNoUpdates();
+                    }
+                }
+                else
+                {
+                    // Error occurred - show specific error message
+                    SetUpdateButtonChecking(false);
+                    SetUpdateButtonError(true);
+                    
+                    // Show user-friendly error messages
+                    string userMessage = result.ErrorType switch
+                    {
+                        UpdateErrorType.RateLimited => Strings.UpdateErrorRateLimited,
+                        UpdateErrorType.NetworkError => Strings.UpdateErrorNetworkError,
+                        UpdateErrorType.NotFound => Strings.UpdateErrorNotFound,
+                        _ => result.ErrorMessage ?? Strings.UpdateCheckFailed
+                    };
+                    
+                    UpdatePanel?.ShowError(userMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                // This should rarely happen now
+                Debug.WriteLine($"Unexpected update error: {ex.Message}");
+                SetUpdateButtonChecking(false);
+                SetUpdateButtonError(true);
+                UpdatePanel?.ShowError(ex.Message);
+            }
+        }
+        
+        private void OnUpdatePanelClosed(object? sender, EventArgs e)
+        {
+            // Reset update button to normal state when panel is closed
+            SetUpdateButtonChecking(false);
+            SetUpdateButtonAvailable(false);
+            SetUpdateButtonError(false);
+        }
+        
+        private void OnUpdateRequested(object? sender, EventArgs e)
+        {
+            UpdateButton_Click(this, new RoutedEventArgs());
+        }
+
+        private void OnUpdateCheckerDownloadCompleted(object? sender, DownloadCompletedEventArgs e)
+        {
+            // Reset update button state when download completes (success or failure)
+            Dispatcher.Invoke(() =>
+            {
+                SetUpdateButtonChecking(false);
+                if (e.Success)
+                {
+                    // Download succeeded - button will show restart state through normal flow
+                    SetUpdateButtonAvailable(false);
+                }
+                else
+                {
+                    // Download failed - show error state
+                    SetUpdateButtonError(true);
+                }
+            });
+        }
+        
+        private async void OnDownloadRequested(object? sender, EventArgs e)
+        {
+            try
+            {
+                // Disable update button during download
+                SetUpdateButtonChecking(true); // This disables the button with spinner
+                
+                // Get the current update info from the panel
+                if (UpdatePanel?.currentUpdateInfo != null)
+                {
+                    await UpdateChecker.DownloadUpdateAsync(UpdatePanel.currentUpdateInfo);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Download initiation failed: {ex.Message}");
+                UpdatePanel?.ShowError($"Could not start download: {ex.Message}");
+                
+                // Re-enable button on error
+                SetUpdateButtonChecking(false);
+                SetUpdateButtonAvailable(true);
+            }
+        }
+        
+        private void OnRestartRequested(object? sender, EventArgs e)
+        {
+            try
+            {
+                // Get the downloaded file path from the panel
+                if (UpdatePanel?.downloadedFilePath != null)
+                {
+                    UpdateChecker.ReplaceAndRestart(UpdatePanel.downloadedFilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Restart failed: {ex.Message}");
+                UpdatePanel?.ShowError($"Failed to restart: {ex.Message}");
+            }
+        }
+        #endregion
+
+        #region Update Button Helper Methods
+        private void SetUpdateButtonChecking(bool isChecking)
+        {
+            if (UpdateButton == null) return;
+            
+            if (isChecking)
+            {
+                // Replace icon with animated progress ring
+                UpdateButton.Icon = null;
+                UpdateButton.Content = new Wpf.Ui.Controls.ProgressRing 
+                { 
+                    IsIndeterminate = true, 
+                    Width = 20, 
+                    Height = 20 
+                };
+                UpdateButton.IsEnabled = false;
+                
+                // Preserve transparency
+                UpdateButton.Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent;
+                UpdateButton.Background = System.Windows.Media.Brushes.Transparent;
+                UpdateButton.BorderThickness = new System.Windows.Thickness(0);
+            }
+            else
+            {
+                // Restore normal icon and clear content
+                UpdateButton.Content = null;
+                UpdateButton.Icon = new Wpf.Ui.Controls.SymbolIcon 
+                { 
+                    Symbol = Wpf.Ui.Controls.SymbolRegular.ArrowSync24,
+                    FontSize = 20
+                };
+                UpdateButton.IsEnabled = true;
+                
+                // Preserve transparency
+                UpdateButton.Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent;
+                UpdateButton.Background = System.Windows.Media.Brushes.Transparent;
+                UpdateButton.BorderThickness = new System.Windows.Thickness(0);
+            }
+        }
+        
+        private void SetUpdateButtonAvailable(bool isAvailable)
+        {
+            if (UpdateButton == null) return;
+            
+            // Always clear content first
+            UpdateButton.Content = null;
+            
+            if (isAvailable)
+            {
+                // Show green ArrowSync icon to indicate update available
+                UpdateButton.Icon = new Wpf.Ui.Controls.SymbolIcon 
+                { 
+                    Symbol = Wpf.Ui.Controls.SymbolRegular.ArrowSync24, // Same icon but green
+                    FontSize = 20,
+                    Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Green)
+                };
+                UpdateButton.IsEnabled = true;
+            }
+            else
+            {
+                // Normal sync icon
+                UpdateButton.Icon = new Wpf.Ui.Controls.SymbolIcon 
+                { 
+                    Symbol = Wpf.Ui.Controls.SymbolRegular.ArrowSync24,
+                    FontSize = 20
+                };
+                UpdateButton.IsEnabled = true;
+            }
+            
+            // Always preserve transparency
+            UpdateButton.Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent;
+            UpdateButton.Background = System.Windows.Media.Brushes.Transparent;
+            UpdateButton.BorderThickness = new System.Windows.Thickness(0);
+        }
+        
+        private void SetUpdateButtonError(bool hasError)
+        {
+            if (UpdateButton == null) return;
+            
+            // Always clear content first
+            UpdateButton.Content = null;
+            
+            if (hasError)
+            {
+                UpdateButton.Icon = new Wpf.Ui.Controls.SymbolIcon 
+                { 
+                    Symbol = Wpf.Ui.Controls.SymbolRegular.ErrorCircle24,
+                    FontSize = 20
+                };
+                UpdateButton.IsEnabled = false; // Disable button during error - use Try Again in panel instead
+            }
+            else
+            {
+                UpdateButton.Icon = new Wpf.Ui.Controls.SymbolIcon 
+                { 
+                    Symbol = Wpf.Ui.Controls.SymbolRegular.ArrowSync24,
+                    FontSize = 20
+                };
+                UpdateButton.IsEnabled = true;
+            }
+            
+            // Always preserve transparency
+            UpdateButton.Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent;
+            UpdateButton.Background = System.Windows.Media.Brushes.Transparent;
+            UpdateButton.BorderThickness = new System.Windows.Thickness(0);
         }
         #endregion
 
@@ -899,9 +1262,13 @@ namespace MicControlX
                 singleClickTimer?.Stop();
                 pttHoldTimer?.Stop();
                 keyReleaseMonitor?.Stop();
+                startupUpdateTimer?.Stop();
                 
                 // Dispose hotkey manager
                 hotkeyManager?.Dispose();
+                
+                // Unsubscribe from UpdateChecker events
+                UpdateChecker.DownloadCompleted -= OnUpdateCheckerDownloadCompleted;
                 
                 // Dispose resources
                 trayIcon?.Dispose();

@@ -74,7 +74,34 @@ namespace MicControlX
         public string FeatureAutoStartup => Strings.FeatureAutoStartup;
         public string AboutDescription => Strings.AboutDescription;
         public string Copyright => Strings.Copyright;
+        
+        // Update functionality strings
         public string CheckForUpdates => Strings.CheckForUpdates;
+        public string CheckingForUpdates => Strings.CheckingForUpdates;
+        public string UpdateAvailableMessage => Strings.UpdateAvailableMessage;
+        public string DownloadingUpdate => Strings.DownloadingUpdate;
+        public string DownloadingProgress => Strings.DownloadingProgress;
+        public string UpdateReadyToRestart => Strings.UpdateReadyToRestart;
+        public string UpToDate => Strings.UpToDate;
+        
+        // Update action buttons
+        public string Download => Strings.Download;
+        public string RestartAndUpdate => Strings.RestartAndUpdate;
+        public string TryAgain => Strings.TryAgain;
+        
+        // Update error messages
+        public string UpdateFailed => Strings.UpdateFailed;
+        public string UpdateCheckFailed => Strings.UpdateCheckFailed;
+        public string UpdateErrorRateLimited => Strings.UpdateErrorRateLimited;
+        public string UpdateErrorNetworkError => Strings.UpdateErrorNetworkError;
+        public string UpdateErrorNotFound => Strings.UpdateErrorNotFound;
+        public string UpdateErrorInvalidResponse => Strings.UpdateErrorInvalidResponse;
+        
+        // Download error messages
+        public string DownloadFailed => Strings.DownloadFailed;
+        public string DownloadCancelledByUser => Strings.DownloadCancelledByUser;
+        public string DownloadErrorTimeout => Strings.DownloadErrorTimeout;
+        public string DownloadErrorNetwork => Strings.DownloadErrorNetwork;
 
         /// <summary>
         /// Called when language changes to notify all properties have changed
