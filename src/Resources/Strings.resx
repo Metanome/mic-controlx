@@ -374,7 +374,7 @@
   
   <!-- Download Error Messages -->
   <data name="DownloadFailed" xml:space="preserve">
-    <value>Download failed</value>
+    <value>Download failed: {0}</value>
   </data>
   <data name="DownloadCancelledByUser" xml:space="preserve">
     <value>Download cancelled by user</value>

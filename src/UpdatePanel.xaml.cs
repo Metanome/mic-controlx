@@ -78,8 +78,13 @@ namespace MicControlX
         /// </summary>
         public void ShowError(string errorMessage)
         {
+            // Use appropriate error prefix based on current context
+            string errorFormat = CurrentState == UpdatePanelState.Downloading 
+                ? Strings.DownloadFailed 
+                : Strings.UpdateFailed;
+                
             SetState(UpdatePanelState.Error);
-            StatusText.Text = string.Format(Strings.UpdateFailed, errorMessage);
+            StatusText.Text = string.Format(errorFormat, errorMessage);
             ShowPanel();
         }
 

@@ -31,7 +31,7 @@ namespace MicControlX
         {
             // Set user agent as required by GitHub API
             httpClient.DefaultRequestHeaders.Add("User-Agent", "MicControlX-UpdateChecker");
-            httpClient.Timeout = TimeSpan.FromSeconds(15); // Reasonable timeout for API calls
+            httpClient.Timeout = TimeSpan.FromSeconds(10); // Reasonable timeout for API calls
         }
         
         /// <summary>
@@ -166,17 +166,17 @@ namespace MicControlX
                 isUserCancellation = false;
                 
                 downloadCancellationTokenSource = new CancellationTokenSource();
-                // Add 20 second timeout for downloads - reasonable but not too long
-                downloadCancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(20));
+                // Add 5 second timeout for downloads - more responsive timeout
+                downloadCancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(5));
                 var cancellationToken = downloadCancellationTokenSource.Token;
                 
-                // Create temp directory for updates
-                var tempDir = Path.Combine(Path.GetTempPath(), "MicControlX", "Updates");
-                Directory.CreateDirectory(tempDir);
+                // Create updates directory in AppData (same location as config)
+                var updatesDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MicControlX", "Updates");
+                Directory.CreateDirectory(updatesDir);
                 
                 // Generate filename from URL or use default
                 var fileName = GetFileNameFromUrl(updateInfo.DownloadUrl) ?? "MicControlX.exe";
-                var filePath = Path.Combine(tempDir, fileName);
+                var filePath = Path.Combine(updatesDir, fileName);
                 
                 // Delete existing file if it exists
                 if (File.Exists(filePath))

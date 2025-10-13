@@ -1025,11 +1025,6 @@ namespace MicControlX
                     Height = 20 
                 };
                 UpdateButton.IsEnabled = false;
-                
-                // Preserve transparency
-                UpdateButton.Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent;
-                UpdateButton.Background = System.Windows.Media.Brushes.Transparent;
-                UpdateButton.BorderThickness = new System.Windows.Thickness(0);
             }
             else
             {
@@ -1041,11 +1036,6 @@ namespace MicControlX
                     FontSize = 20
                 };
                 UpdateButton.IsEnabled = true;
-                
-                // Preserve transparency
-                UpdateButton.Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent;
-                UpdateButton.Background = System.Windows.Media.Brushes.Transparent;
-                UpdateButton.BorderThickness = new System.Windows.Thickness(0);
             }
         }
         
@@ -1077,11 +1067,6 @@ namespace MicControlX
                 };
                 UpdateButton.IsEnabled = true;
             }
-            
-            // Always preserve transparency
-            UpdateButton.Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent;
-            UpdateButton.Background = System.Windows.Media.Brushes.Transparent;
-            UpdateButton.BorderThickness = new System.Windows.Thickness(0);
         }
         
         private void SetUpdateButtonError(bool hasError)
@@ -1096,7 +1081,8 @@ namespace MicControlX
                 UpdateButton.Icon = new Wpf.Ui.Controls.SymbolIcon 
                 { 
                     Symbol = Wpf.Ui.Controls.SymbolRegular.ErrorCircle24,
-                    FontSize = 20
+                    FontSize = 20,
+                    Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Red)
                 };
                 UpdateButton.IsEnabled = false; // Disable button during error - use Try Again in panel instead
             }
@@ -1109,11 +1095,6 @@ namespace MicControlX
                 };
                 UpdateButton.IsEnabled = true;
             }
-            
-            // Always preserve transparency
-            UpdateButton.Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent;
-            UpdateButton.Background = System.Windows.Media.Brushes.Transparent;
-            UpdateButton.BorderThickness = new System.Windows.Thickness(0);
         }
         #endregion
 

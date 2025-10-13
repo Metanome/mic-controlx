@@ -2,7 +2,7 @@
 
 **Advanced Universal Microphone Control Utility for Windows**
 
-[![Version](https://img.shields.io/badge/version-4.2.1-blue.svg)](https://github.com/Metanome/mic-controlx)
+[![Version](https://img.shields.io/badge/version-4.3.0-blue.svg)](https://github.com/Metanome/mic-controlx)
 [![Downloads](https://img.shields.io/github/downloads/Metanome/mic-controlx/total?color=brightgreen)](https://github.com/Metanome/mic-controlx/releases)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://github.com/Metanome/mic-controlx)
@@ -27,6 +27,7 @@ MicControlX is a universal Windows application for microphone control. It provid
 - **Smart Error Handling**: Helpful guidance when settings conflicts occur
 - **Single Instance**: Prevents multiple instances from running simultaneously
 - **Real-time Monitoring**: Detects external microphone state changes
+- **Auto-Update System**: Built-in updater checks for new releases and provides seamless installation
 
 ## System Requirements
 
@@ -38,7 +39,7 @@ MicControlX is a universal Windows application for microphone control. It provid
 
 ### Quick Start
 1. Download the latest stable release from the [Releases](https://github.com/Metanome/mic-controlx/releases) page
-2. Run the application
+2. Run the application - it will automatically check for updates on startup if an internet connection is available
 3. Configure your preferred hotkey in Settings
 4. Enjoy!
 
@@ -62,6 +63,7 @@ dotnet publish src\MicControlX.csproj --configuration Release --runtime win-x64 
 - **Quick Toggle**: Press your configured hotkey (default: F11) to permanently toggle mute/unmute
 - **Push-to-Talk**: Hold your configured hotkey for temporary mute/unmute - releases back to original state when you let go
 - **Settings**: Right-click the tray icon or click the Settings button in the main window
+- **Updates**: Check for updates manually using the update button in the main window or let the app auto-check on startup
 - **Exit**: Right-click tray icon → Exit, or close the main window
 
 ### Push-to-Talk Feature
@@ -103,7 +105,7 @@ Choose from four notification styles with multiple positioning options:
 - **`OsdOverlay.xaml`**: Visual notification overlays with multiple styles
 - **`ThemeManager.cs`**: Dark/light theme management and system integration
 - **`SoundFeedback.cs`**: Audio notification system for mute/unmute events
-- **`GitHubUpdateChecker.cs`**: Automatic update checking and release management
+- **`UpdateChecker.cs`**: Built-in auto-updater with GitHub integration and seamless installation
 
 ### Key Technologies
 - **WPF**: Modern Windows interface

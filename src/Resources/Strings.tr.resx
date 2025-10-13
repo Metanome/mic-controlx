@@ -374,7 +374,7 @@
   
   <!-- Download Error Messages -->
   <data name="DownloadFailed" xml:space="preserve">
-    <value>İndirme başarısız</value>
+    <value>İndirme başarısız: {0}</value>
   </data>
   <data name="DownloadCancelledByUser" xml:space="preserve">
     <value>İndirme kullanıcı tarafından iptal edildi</value>
