@@ -172,16 +172,21 @@ namespace MicControlX
                 bool success = hotkeyManager.RegisterHotkey(config.HotKeyVirtualKey);
                 if (!success)
                 {
+                    Logger.Warn($"Failed to register hotkey: {config.HotKeyDisplayName} (key code: {config.HotKeyVirtualKey})");
                     MessageBox.Show(
                         string.Format(Strings.ErrorHotkeyRegistrationMessage, config.HotKeyDisplayName),
                         Strings.ErrorHotkeyRegistrationTitle, 
                         System.Windows.MessageBoxButton.OK, 
                         System.Windows.MessageBoxImage.Warning);
                 }
+                else
+                {
+                    Logger.Info($"Hotkey registered: {config.HotKeyDisplayName}");
+                }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Hotkey manager initialization failed: {ex.Message}");
+                Logger.Error($"Hotkey manager initialization failed: {ex.Message}");
             }
         }
 
@@ -221,11 +226,11 @@ namespace MicControlX
                 // Subscribe to status changes for debugging/logging
                 focusAssistMonitor.StatusChanged += OnFocusAssistStatusChanged;
                 
-                Debug.WriteLine($"Focus Assist monitoring started. Current status: {focusAssistMonitor.CurrentStatus}");
+                Logger.Info($"Focus Assist monitoring started. Status: {focusAssistMonitor.CurrentStatus}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Focus Assist monitor initialization failed: {ex.Message}");
+                Logger.Warn($"Focus Assist monitor initialization failed: {ex.Message}");
             }
         }
 
@@ -335,55 +340,7 @@ namespace MicControlX
 
         private string GetDetailedWindowsVersion()
         {
-            try
-            {
-                var osVersion = Environment.OSVersion;
-                string version = "Windows";
-                
-                if (osVersion.Version.Major == 10)
-                {
-                    if (osVersion.Version.Build >= 22000)
-                        version = "Windows 11";
-                    else
-                        version = "Windows 10";
-                }
-                else
-                {
-                    version = $"Windows {osVersion.Version.Major}.{osVersion.Version.Minor}";
-                }
-                
-                // Try to get edition and build info
-                try
-                {
-                    using var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-                    if (key != null)
-                    {
-                        string? edition = key.GetValue("EditionID")?.ToString();
-                        string? buildNumber = key.GetValue("CurrentBuild")?.ToString();
-                        string? displayVersion = key.GetValue("DisplayVersion")?.ToString();
-                        
-                        if (!string.IsNullOrEmpty(edition) && edition != "Core")
-                        {
-                            version += $" {edition}";
-                        }
-                        
-                        if (!string.IsNullOrEmpty(displayVersion))
-                        {
-                            version += $" {displayVersion}";
-                        }
-                    }
-                }
-                catch
-                {
-                    // Fallback to basic version
-                }
-                
-                return version;
-            }
-            catch
-            {
-                return Environment.OSVersion.VersionString;
-            }
+            return Logger.GetFriendlyWindowsVersion();
         }
 
         private void UpdateMicrophoneStatus()
@@ -557,7 +514,7 @@ namespace MicControlX
             {
                 // StatusLabel.Text = "Microphone error"; // Control doesn't exist in simplified UI
                 // DeviceLabel.Text = errorMessage; // Control doesn't exist in simplified UI
-                Debug.WriteLine($"Audio error: {errorMessage}");
+                Logger.Error($"Audio error: {errorMessage}");
             });
         }
 
@@ -580,7 +537,7 @@ namespace MicControlX
         private void OnDeviceChanged()
         {
             // Handle microphone device changes (e.g., plugging/unplugging headsets)
-            System.Diagnostics.Debug.WriteLine("MainWindow: OnDeviceChanged called - updating microphone device display");
+            Logger.Info("Device changed - updating microphone device display");
             Dispatcher.Invoke(() =>
             {
                 UpdateMicrophoneDeviceDisplay();
@@ -642,7 +599,7 @@ namespace MicControlX
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Hotkey handling error: {ex.Message}");
+                Logger.Error($"Hotkey handling error: {ex.Message}");
             }
         }
 
@@ -1195,11 +1152,17 @@ namespace MicControlX
                         var conflictInfo = ConfigurationManager.VirtualKeys.GetKeyConflictInfo(config.HotKeyVirtualKey);
                         var alternatives = string.Join(", ", ConfigurationManager.VirtualKeys.GetSuggestedAlternatives(config.HotKeyVirtualKey));
                         
+                        Logger.Warn($"Failed to register hotkey: {config.HotKeyDisplayName} (key code: {config.HotKeyVirtualKey}). Conflict: {conflictInfo}");
+                        
                         MessageBox.Show(
                             string.Format(Strings.ErrorHotkeyConflictMessage, config.HotKeyDisplayName, conflictInfo, alternatives),
                             Strings.ErrorHotkeyRegistrationTitle, 
                             System.Windows.MessageBoxButton.OK, 
                             System.Windows.MessageBoxImage.Warning);
+                    }
+                    else
+                    {
+                        Logger.Info($"Hotkey changed to: {config.HotKeyDisplayName}");
                     }
                     
                     // Reinitialize OSD with new style
@@ -1256,12 +1219,14 @@ namespace MicControlX
                 osd?.Close();
                 micController?.Dispose();
                 focusAssistMonitor?.Dispose();
+                UpdatePanel?.Dispose();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Cleanup error: {ex.Message}");
             }
             
+            Logger.Info("=== MicControlX Exiting ===");
             base.OnClosed(e);
         }
         #endregion

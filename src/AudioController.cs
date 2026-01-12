@@ -39,6 +39,9 @@ namespace MicControlX
             // Initialize the current state before starting monitoring to avoid false triggers
             InitializeCurrentState();
             
+            // Log detected microphones for diagnostics
+            LogDetectedMicrophones();
+            
             // Initialize monitoring timer to check state every 200ms for better responsiveness
             stateMonitorTimer = new System.Timers.Timer(200);
             stateMonitorTimer.Elapsed += MonitorMicrophoneState;
@@ -52,6 +55,24 @@ namespace MicControlX
 
             // Register for device change notifications
             audioEnumerator.RegisterEndpointNotificationCallback(this);
+        }
+        
+        private void LogDetectedMicrophones()
+        {
+            try
+            {
+                var captureDevices = audioEnumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active).ToList();
+                Logger.Info($"Detected {captureDevices.Count} active microphone(s):");
+                foreach (var device in captureDevices)
+                {
+                    var muteState = device.AudioEndpointVolume.Mute ? "Muted" : "Active";
+                    Logger.Info($"  - {device.FriendlyName} [{muteState}]");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Failed to enumerate microphones", ex);
+            }
         }
 
         private void InitializeCurrentState()
@@ -69,7 +90,7 @@ namespace MicControlX
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Initial state detection failed: {ex.Message}");
+                Logger.Warn($"Initial microphone state detection failed: {ex.Message}");
                 // Default to false if we can't detect
                 isMuted = false;
             }
@@ -111,7 +132,7 @@ namespace MicControlX
             catch (Exception ex)
             {
                 // Don't spam error messages during monitoring
-                System.Diagnostics.Debug.WriteLine($"Monitor Error: {ex.Message}");
+                Logger.Error($"Microphone monitor error: {ex.Message}");
             }
         }
 
@@ -138,9 +159,31 @@ namespace MicControlX
                 
                 // Toggle mute state for all capture devices
                 bool newMute = !currentMute;
+                int failedDevices = 0;
                 foreach (var device in captureDevices)
                 {
-                    device.AudioEndpointVolume.Mute = newMute;
+                    try
+                    {
+                        device.AudioEndpointVolume.Mute = newMute;
+                        
+                        // Verify the mute actually worked
+                        if (device.AudioEndpointVolume.Mute != newMute)
+                        {
+                            failedDevices++;
+                            Logger.Warn($"Mute verification failed for: {device.FriendlyName}");
+                        }
+                    }
+                    catch (Exception deviceEx)
+                    {
+                        failedDevices++;
+                        Logger.Error($"Failed to mute device {device.FriendlyName}", deviceEx);
+                    }
+                }
+                
+                // Warn if any devices failed to mute
+                if (failedDevices > 0)
+                {
+                    Logger.Warn($"{failedDevices} device(s) failed to mute");
                 }
                 
                 // Update our state
@@ -175,9 +218,31 @@ namespace MicControlX
                 }
 
                 // Set mute state for all capture devices
+                int failedDevices = 0;
                 foreach (var device in captureDevices)
                 {
-                    device.AudioEndpointVolume.Mute = mute;
+                    try
+                    {
+                        device.AudioEndpointVolume.Mute = mute;
+                        
+                        // Verify the mute actually worked
+                        if (device.AudioEndpointVolume.Mute != mute)
+                        {
+                            failedDevices++;
+                            Logger.Warn($"Mute verification failed for: {device.FriendlyName}");
+                        }
+                    }
+                    catch (Exception deviceEx)
+                    {
+                        failedDevices++;
+                        Logger.Error($"Failed to mute device {device.FriendlyName}", deviceEx);
+                    }
+                }
+                
+                // Warn if any devices failed to mute
+                if (failedDevices > 0)
+                {
+                    Logger.Warn($"{failedDevices} device(s) failed to mute");
                 }
                 
                 // Update our state

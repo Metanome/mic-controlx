@@ -58,14 +58,16 @@ namespace MicControlX
                         LatestVersion = release.tag_name,
                         DownloadUrl = GetDownloadUrl(release)
                     };
+                    Logger.Info($"Update available: {release.tag_name}");
                     return UpdateResult.SuccessWithUpdate(updateInfo);
                 }
                 
+                Logger.Info("Update check: No updates available");
                 return UpdateResult.SuccessNoUpdate();
             }
             catch (HttpRequestException ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Network error checking for updates: {ex.Message}");
+                Logger.Error($"Network error checking for updates: {ex.Message}");
                 
                 // Check for specific error types
                 if (ex.Message.Contains("403") || ex.Message.Contains("API rate limit exceeded"))
@@ -95,17 +97,6 @@ namespace MicControlX
                 return UpdateResult.Error(ex.Message, UpdateErrorType.Other);
             }
         }
-
-        /// <summary>
-        /// Check for updates asynchronously (legacy method for backward compatibility)
-        /// </summary>
-        /// <returns>Update information or null if no update available or error occurred</returns>
-        public static async Task<UpdateInfo?> CheckForUpdatesAsync()
-        {
-            var result = await CheckForUpdatesWithResultAsync();
-            return result.Success ? result.UpdateInfo : null;
-        }
-        
         /// <summary>
         /// Get current application version
         /// </summary>
@@ -166,8 +157,8 @@ namespace MicControlX
                 isUserCancellation = false;
                 
                 downloadCancellationTokenSource = new CancellationTokenSource();
-                // Add 5 second timeout for downloads - more responsive timeout
-                downloadCancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(5));
+                // Add 60 second timeout for downloads - allows for slower connections
+                downloadCancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(60));
                 var cancellationToken = downloadCancellationTokenSource.Token;
                 
                 // Create updates directory in AppData (same location as config)

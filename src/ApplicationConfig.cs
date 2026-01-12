@@ -159,6 +159,7 @@ namespace MicControlX
                         {
                             // Successfully loaded existing config, just detect dynamic properties
                             DetectSystemProperties(config);
+                            Logger.Info("Configuration loaded");
                             return config;
                         }
                     }
@@ -166,7 +167,7 @@ namespace MicControlX
                 catch (Exception ex)
                 {
                     // Log the error and proceed to create a new config
-                    System.Diagnostics.Debug.WriteLine($"ConfigManager: Failed to load config - {ex.Message}");
+                    Logger.Warn($"Failed to load config, creating new: {ex.Message}");
                 }
             }
             
@@ -248,10 +249,11 @@ namespace MicControlX
                 Directory.CreateDirectory(Path.GetDirectoryName(ConfigFilePath)!);
                 string json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(ConfigFilePath, json);
+                Logger.Info("Configuration saved");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"ConfigManager: Failed to save configuration - {ex.Message}");
+                Logger.Error($"Failed to save configuration: {ex.Message}");
                 MessageBox.Show(
                     string.Format(Strings.ErrorConfigSaveMessage, ex.Message),
                     Strings.ErrorConfigSaveTitle, 

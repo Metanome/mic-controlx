@@ -16,6 +16,9 @@ namespace MicControlX
         {
             try
             {                
+                // Initialize logging first
+                Logger.Initialize();
+                
                 // Single instance check
                 bool isNewInstance;
                 applicationMutex = new Mutex(true, APP_MUTEX_NAME, out isNewInstance);

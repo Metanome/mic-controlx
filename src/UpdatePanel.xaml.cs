@@ -91,15 +91,17 @@ namespace MicControlX
         /// <summary>
         /// Hide the panel
         /// </summary>
+        private bool _fadeOutHandlerAdded = false;
+        
         public void HidePanel()
         {
             if (fadeOutAnimation != null)
             {
-                fadeOutAnimation.Completed += (s, e) =>
+                if (!_fadeOutHandlerAdded)
                 {
-                    this.Visibility = Visibility.Collapsed;
-                    PanelClosed?.Invoke(this, EventArgs.Empty);
-                };
+                    fadeOutAnimation.Completed += FadeOut_Completed;
+                    _fadeOutHandlerAdded = true;
+                }
                 fadeOutAnimation.Begin(this);
             }
             else
@@ -107,6 +109,12 @@ namespace MicControlX
                 this.Visibility = Visibility.Collapsed;
                 PanelClosed?.Invoke(this, EventArgs.Empty);
             }
+        }
+        
+        private void FadeOut_Completed(object? sender, EventArgs e)
+        {
+            this.Visibility = Visibility.Collapsed;
+            PanelClosed?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

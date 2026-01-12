@@ -54,10 +54,7 @@ namespace MicControlX
             CreateMessageWindow();
         }
         
-        ~HotkeyManager()
-        {
-            Dispose(false);
-        }
+
         #endregion
         
         #region Public Methods
@@ -116,7 +113,7 @@ namespace MicControlX
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Failed to create message window: {ex.Message}");
+                Logger.Error($"Failed to create hotkey message window: {ex.Message}");
             }
         }
         

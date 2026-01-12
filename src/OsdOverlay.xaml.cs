@@ -309,11 +309,22 @@ namespace MicControlX
             fadeIn.Begin(this);
         }
 
+        private bool _fadeOutHandlerAdded = false;
+        
         private void BeginFadeOut()
         {
             var fadeOut = (Storyboard)FindResource("FadeOutAnimation");
-            fadeOut.Completed += (s, e) => Hide();
+            if (!_fadeOutHandlerAdded)
+            {
+                fadeOut.Completed += FadeOut_Completed;
+                _fadeOutHandlerAdded = true;
+            }
             fadeOut.Begin(this);
+        }
+        
+        private void FadeOut_Completed(object? sender, EventArgs e)
+        {
+            Hide();
         }
 
         private void HideTimer_Tick(object? sender, EventArgs e)
