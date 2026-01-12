@@ -23,7 +23,7 @@ jobs:
 
     - name: Publish (Single File)
       run: |
-        dotnet publish src\MicControlX.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
+        dotnet publish src\MicControlX.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o publish
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
