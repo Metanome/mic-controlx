@@ -795,7 +795,6 @@ namespace MicControlX
 
         private void TraySettings_Click(object sender, RoutedEventArgs e)
         {
-            ShowMainWindow();
             ShowSettings();
         }
 
