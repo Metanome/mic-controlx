@@ -22,7 +22,7 @@ namespace MicControlX
                 "MicControlX",
                 "Logs"
             );
-            LogFilePath = Path.Combine(LogDirectory, "miccontrolx.log");
+            LogFilePath = Path.Combine(LogDirectory, "mic-controlx.log");
         }
         
         /// <summary>
@@ -42,7 +42,7 @@ namespace MicControlX
                     var fileInfo = new FileInfo(LogFilePath);
                     if (fileInfo.Length > 1024 * 1024) // 1MB
                     {
-                        var backupPath = Path.Combine(LogDirectory, "miccontrolx.old.log");
+                        var backupPath = Path.Combine(LogDirectory, "mic-controlx.old.log");
                         if (File.Exists(backupPath))
                             File.Delete(backupPath);
                         File.Move(LogFilePath, backupPath);

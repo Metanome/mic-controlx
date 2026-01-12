@@ -2,7 +2,7 @@
 
 **Advanced Universal Microphone Control Utility for Windows**
 
-[![Version](https://img.shields.io/badge/version-4.3.0-blue.svg)](https://github.com/Metanome/mic-controlx)
+[![Version](https://img.shields.io/badge/version-4.4.0-blue.svg)](https://github.com/Metanome/mic-controlx)
 [![Downloads](https://img.shields.io/github/downloads/Metanome/mic-controlx/total?color=brightgreen)](https://github.com/Metanome/mic-controlx/releases)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://github.com/Metanome/mic-controlx)
@@ -200,6 +200,17 @@ Contributions are welcome! Please feel free to:
 - **Issues**: [GitHub Issues](https://github.com/Metanome/mic-controlx/issues)
 - **Documentation**: This README and inline code comments
 - **Updates**: Automatic checking available in application
+- **Logs**: `%AppData%\MicControlX\Logs\mic-controlx.log` is available for debugging issues.
+
+## Troubleshooting
+
+If you encounter issues, please check the log file located at:
+`%AppData%\MicControlX\Logs\mic-controlx.log`
+
+This file contains detailed information about:
+- Microphone detection and status
+- Hotkey registration and conflicts
+- Application errors and diagnostics
 
 ---
 

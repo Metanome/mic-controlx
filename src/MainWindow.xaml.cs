@@ -708,13 +708,13 @@ namespace MicControlX
                 // They can manually check if they want to see error details
                 if (!result.Success)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Startup update check failed: {result.ErrorMessage} ({result.ErrorType})");
+                    Logger.Warn($"Startup update check failed: {result.ErrorMessage} ({result.ErrorType})");
                 }
             }
             catch (Exception ex)
             {
                 // Silent failure for startup checks - just log
-                System.Diagnostics.Debug.WriteLine($"Startup update check failed: {ex.Message}");
+                Logger.Error($"Startup update check failed: {ex.Message}");
             }
         }
 

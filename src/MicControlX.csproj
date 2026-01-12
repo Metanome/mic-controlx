@@ -33,13 +33,13 @@
     <AssemblyDescription>Advanced microphone control utility for Windows with multi-language support</AssemblyDescription>
     <AssemblyCompany>MicControlX</AssemblyCompany>
     <AssemblyProduct>MicControlX</AssemblyProduct>
-    <AssemblyVersion>4.3.0.0</AssemblyVersion>
-    <AssemblyFileVersion>4.3.0.0</AssemblyFileVersion>
-    <AssemblyInformationalVersion>4.3.0</AssemblyInformationalVersion>
+    <AssemblyVersion>4.4.0.0</AssemblyVersion>
+    <AssemblyFileVersion>4.4.0.0</AssemblyFileVersion>
+    <AssemblyInformationalVersion>4.4.0</AssemblyInformationalVersion>
 
     <Copyright>Copyright © 2025 Dr. Skinner</Copyright>
-    <FileVersion>4.3.0.0</FileVersion>
-    <Version>4.3.0</Version>
+    <FileVersion>4.4.0.0</FileVersion>
+    <Version>4.4.0</Version>
     
     <!-- Application icon -->
     <ApplicationIcon>..\assets\icons\logo.ico</ApplicationIcon>
